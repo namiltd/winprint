@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Menus, Trayicon, ExtCtrls, ImgList, ConfigFormUnit, CEVersionInfo;
+  Menus, Trayicon, ExtCtrls, ImgList, ConfigFormUnit, CEVersionInfo, Xml10n;
 
 type
   TMainForm = class(TForm)
@@ -19,6 +19,7 @@ type
     Timer2: TTimer;
     SaveDialog1: TSaveDialog;
     CEVersionInfo1: TCEVersionInfo;
+    Xml10n1: TXml10n;
     procedure Zakocz1Click(Sender: TObject);
     procedure TrayIcon1DblClick(Sender: TObject);
     procedure Konfiguracja1Click(Sender: TObject);
@@ -51,7 +52,6 @@ uses
   FileCtrl, ShellAPI, Math, PrintStringsUnit, Printers, MyStrings, ConversionUnit;
 
 {$R *.DFM}
-{$R resources/icons32x32/icons.res}
 
 var
   Atom1: TAtom;
