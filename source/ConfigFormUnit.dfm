@@ -1,6 +1,6 @@
 object ConfigForm: TConfigForm
-  Left = 582
-  Top = 204
+  Left = 576
+  Top = 140
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   BorderWidth = 8
