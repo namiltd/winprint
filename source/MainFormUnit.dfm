@@ -86,8 +86,8 @@ object MainForm: TMainForm
     Top = 64
   end
   object Xml10n1: TXml10n
-    ResourceLinksFile = 'links'
-    ResourceStringsFile = 'strings'
+    ResourceLinksFile = 'links.xml'
+    ResourceStringsFile = 'strings.xml'
     Left = 192
     Top = 116
   end
