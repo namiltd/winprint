@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 327
-  Top = 208
+  Left = 304
+  Top = 207
   BorderStyle = bsSingle
   Caption = 'MainForm'
   ClientHeight = 179
@@ -84,5 +84,11 @@ object MainForm: TMainForm
   object CEVersionInfo1: TCEVersionInfo
     Left = 32
     Top = 64
+  end
+  object Xml10n1: TXml10n
+    ResourceLinksFile = 'links'
+    ResourceStringsFile = 'strings'
+    Left = 192
+    Top = 116
   end
 end
