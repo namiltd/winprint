@@ -335,7 +335,10 @@ procedure TConfigForm.FormCreate(Sender: TObject);
 begin
   with MainForm.CEVersionInfo1 do
     Caption:=ProductName+' '+FileVersion;
-  MainForm.Xml10n1.Load;  
+
+  MainForm.Xml10n1.Load;
+  MainForm.Xml10n1.XmlToForm(ConfigForm);
+
   PageControl1.ActivePageIndex:=0;
   FloatEdit5.Color:=clBtnFace;
   IntEdit1.Color:=clWindow;
