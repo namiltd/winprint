@@ -124,15 +124,15 @@ DLL=0
 Locale=1045
 CodePage=1250
 [Version Info Keys]
-CompanyName=MGM Soft Sp. z o.o.
+CompanyName=GNU GPL Software
 FileDescription=WinPrint
-FileVersion=1.4.0.239
+FileVersion=1.5.0.5
 InternalName=WinPrint
-LegalCopyright=Przemys³aw Czerkas
+LegalCopyright=Przemys³aw Czerkas & Mieczyslaw Nalewaj
 LegalTrademarks=
 OriginalFilename=WinPrint.exe
 ProductName=WinPrint
-ProductVersion=1.4
+ProductVersion=1.5
 Comments=
 [HistoryLists\hlUnitAliases]
 Count=1

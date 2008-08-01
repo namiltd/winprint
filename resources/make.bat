@@ -5,6 +5,7 @@ rem {                                                                           
 rem {   WinPrint - Print Spooler for DOS Programs                                  }
 rem {                                                                              }
 rem {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+rem {                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 rem {   See GPL.TXT for copyright and license details.                             }
 rem {                                                                              }
 rem {******************************************************************************}
@@ -32,3 +33,4 @@ rem {***************************************************************************
 
 brcc32.exe icons16x16\icons.rc
 brcc32.exe icons32x32\icons.rc
+brcc32.exe WinPrint.rc

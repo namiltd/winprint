@@ -3,6 +3,7 @@
 {   WinPrint - Print Spooler for DOS Programs                                  }
 {                                                                              }
 {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+{                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 {   See GPL.TXT for copyright and license details.                             }
 {                                                                              }
 {******************************************************************************}
@@ -34,37 +35,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, StdCtrls, Buttons, Spin, ExtCtrls, NumEdit, Printers, ConversionUnit;
+  ComCtrls, StdCtrls, Buttons, Spin, ExtCtrls, NumEdit, Printers, ConversionUnit{, Xml10n};
 
 type
-  TCharCode = byte;
-  TCharCodes = set of TCharCode;
-
-  TConversionItem = class(TCollectionItem)
-  private
-    fInCode: TCharCode;
-    fOutCode: TCharCode;
-    fDescription: string;
-    function GetDisplayText: string;
-  public
-    property DisplayText: string read GetDisplayText;
-    procedure Assign(Source: TPersistent); override;
-  published
-    property InCode: TCharCode read fInCode write fInCode;
-    property OutCode: TCharCode read fOutCode write fOutCode;
-    property Description: string read fDescription write fDescription;
-  end;
-
-  TConversionItems = class(TCollection)
-  public
-    constructor Create;
-    function Add: TConversionItem;
-    function Insert(Index: Integer): TConversionItem;
-    function GetItem(Index: Integer): TConversionItem;
-    procedure SetItem(Index: Integer; Value: TConversionItem);
-    property Items[Index: Integer]: TConversionItem read GetItem write SetItem; default;
-  end;
-
   TConfigData = record
     InputFilesDir: string;
     InputFilesMask: string;
@@ -220,7 +193,7 @@ const
   DEFAULT_PRIORITY = 2; //real-time priority
   DEFAULT_AUTO_START = true;
   DEFAULT_FONT_NAME = 'Courier New';
-  DEFAULT_FONT_SIZE = 8;
+  DEFAULT_FONT_SIZE = 12;
   DEFAULT_FONT_CHARSET = 238; //Easter Europe
   DEFAULT_FONT_STYLES = [];
   DEFAULT_MARGIN_LEFT = 12.7;
@@ -252,61 +225,6 @@ const
          HIGH_PRIORITY_CLASS,
          REALTIME_PRIORITY_CLASS);
 
-{ TConversionItem }
-
-function TConversionItem.GetDisplayText: string;
-begin
-  result:=IntToStr(fInCode)+' => '+IntToStr(fOutCode)+' ('+fDescription+')';
-end;
-
-procedure TConversionItem.Assign(Source: TPersistent);
-begin
-  if Source is TConversionItem then
-  begin
-    if assigned(Collection) then Collection.BeginUpdate;
-    try
-      with TConversionItem(Source) do
-      begin
-        self.InCode:=InCode;
-        self.OutCode:=OutCode;
-        self.Description:=Description;
-      end;
-    finally
-      if assigned(Collection) then Collection.EndUpdate;
-    end;
-  end
-  else
-    inherited assign(Source);
-end;
-
-{ TConversionItems }
-
-constructor TConversionItems.Create;
-begin
-  inherited Create(TConversionItem);
-end;
-
-function TConversionItems.Add: TConversionItem;
-begin
-  result:=inherited Add as TConversionItem;
-end;
-
-function TConversionItems.Insert(Index: integer): TConversionItem;
-begin
-  result:=inherited Insert(Index) as TConversionItem;
-end;
-
-function TConversionItems.GetItem(Index: Integer): TConversionItem;
-begin
-  result:=inherited GetItem(Index) as TConversionItem;
-end;
-
-procedure TConversionItems.SetItem(Index: Integer; Value: TConversionItem);
-begin
-  inherited SetItem(Index,Value);
-end;
-
-{}
 
 procedure SaveCollectionToStream(Collection: TCollection; Stream: TStream);
 begin
@@ -336,8 +254,8 @@ begin
   with MainForm.CEVersionInfo1 do
     Caption:=ProductName+' '+FileVersion;
 
-  MainForm.Xml10n1.Load;
-  MainForm.Xml10n1.XmlToForm(ConfigForm);
+//  MainForm.Xml10n1.Load;
+//  MainForm.Xml10n1.XmlToForm(ConfigForm);
 
   PageControl1.ActivePageIndex:=0;
   FloatEdit5.Color:=clBtnFace;
@@ -390,7 +308,7 @@ begin
     try
       RootKey:=HKEY_LOCAL_MACHINE;
       try
-        if OpenKey('Software\MGM-Soft\WinPrint',false) then
+        if OpenKey('Software\GNU\WinPrint',false) then
         begin
           try
             InputFilesDir:=ReadString('InputFilesDir');
@@ -681,7 +599,7 @@ begin
   try
     RootKey:=HKEY_LOCAL_MACHINE;
     try
-      if OpenKey('Software\MGM-Soft\WinPrint',true) then
+      if OpenKey('Software\GNU\WinPrint',true) then
       begin
         WriteString('InputFilesDir',Edit1.Text);
         WriteString('InputFilesMask',Edit2.Text);

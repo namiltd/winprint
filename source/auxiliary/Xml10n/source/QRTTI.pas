@@ -34,7 +34,7 @@ TRTTIEnabler = class (TPersistent)
    fobj:TPersistent; PList:PPropList;
    props:tstringlist;
    objs:TStringlist;
-   fval,ftag,ftagclasstype:String;
+   {fval,} ftag,ftagclasstype:String;
    QCache:TRTTIEnabler;
    ffindTypes:TTypeKinds;
    //fregister:TStringList;
@@ -264,7 +264,7 @@ begin
 end;
 
 destructor TRTTIEnabler.destroy;
-var i:integer;
+//var i:integer;
 begin
 try
 if assigned(objs) then
@@ -347,7 +347,8 @@ var
   //vin:variant;
   tempq:TRTTIEnabler;
   ttinfo:TTypeinfo;
-  CT:TClass ;   max:integer;
+  CT:TClass ;
+//  max:integer;
 begin
 TagClassType:='nil';
 if assigned(o) then
@@ -439,7 +440,7 @@ end;
 
 
 function TRTTIEnabler.propertynames(index:integer):String;
-var ppos:integer;
+//var ppos:integer;
 begin
 result:='';
 if assigned(props) then result:=props[index];
@@ -448,6 +449,7 @@ end;
 
 function TRTTIEnabler.indexof(name:String):Integer;
 begin
+result:=0;
 if assigned(props) then result:=props.IndexOf (Uppercase(name));
 end;
 
@@ -466,6 +468,7 @@ end;
 function TRTTIEnabler.propertyTypes(index:integer):TTYpeKind;
 var Tinfo:TPropInfo;
 begin
+result:=tkUnknown;
 if assigned(props) then
 begin
   Tinfo:=TPropinfo(Pointer(props.objects[index])^);
@@ -531,8 +534,6 @@ begin
    end;
 end;
 
-end.
-
 {
 This file is released under an MIT style license as detailed at opensource.org.
 Just don't preteend you wrote it, and leave this comment in the text, and
@@ -564,3 +565,5 @@ care then..."
 Perhaps having the simple ability to convert TComponents to and from XML
 will open up a new world for delphi... now to work on RPC !..
 }
+
+end.

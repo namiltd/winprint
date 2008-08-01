@@ -3,6 +3,7 @@
 {   MyStrings.pas - string operations library                                  }
 {                                                                              }
 {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+{                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 {   See LGPL.TXT for copyright and license details.                            }
 {                                                                              }
 {******************************************************************************}
