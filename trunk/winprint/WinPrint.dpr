@@ -3,6 +3,7 @@
 {   WinPrint - Print Spooler for DOS Programs                                  }
 {                                                                              }
 {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+{                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 {   See GPL.TXT for copyright and license details.                             }
 {                                                                              }
 {******************************************************************************}
@@ -60,7 +61,7 @@ uses
   PrintStringsUnit in 'source\PrintStringsUnit.pas',
   ConversionUnit in 'source\ConversionUnit.pas';
 
-{$R *.RES}
+{$R 'resources\WinPrint.res' 'resources\WinPrint.rc'}
 
 begin
   Application.Initialize;

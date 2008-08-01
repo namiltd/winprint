@@ -38,7 +38,7 @@ TMiddleXNode = class(TPersistent)
     fchildren:TList; fshort,fbuild:boolean;
     fdata:TObject;
     fparent:TMiddleXNode;
-    Primatives:TList;
+{    Primatives:TList;}
     function  getXML:String;
     procedure setXML(sXML:String);
     function  GetSTored:String;
@@ -72,7 +72,7 @@ procedure TagProps (props:String; strings:TStrings);
 implementation
 
 procedure TagProps (props:String; strings:TStrings);
-var hold,seg,n,v,prop:String;spos,epos,qpos:integer;
+var hold,seg,{n,v,}prop:String;spos,epos{,qpos}:integer;
 begin
 hold:=trim(props)+' ';
 spos:=pos(' ',hold);
@@ -154,7 +154,7 @@ end;
 procedure BuildNodes (Root:TMiddleXNode;sXML:String);
 var Leaves:TList;
     i,max:integer; MN,Parent:TMIddlexNode; PP:TParsePrimative;
-    spos,starttag,endtag:integer; body:String;
+    spos{,starttag,endtag}:integer; body:String;
 begin
  Leaves:= BuildPrimativesList(sXML);
  {run thru the leaves.}
@@ -273,7 +273,7 @@ begin
 end;
 
 function  TMiddleXNode.getStored:String;
-var hold,n,v,holdtag,holdprop:String;i,max:integer;
+var hold{,n,v,holdtag,holdprop}:String;i,max:integer;
 begin
  max:=ChildNodeCount-1;
   if ( (max>-1) or (fbody<>'')) then
@@ -356,8 +356,8 @@ begin
 end;
 
 procedure TMiddleXNode.setXML(sXML:String);
-var Primatives:TList; inchild:boolean; i,j,max,starttag,endtag,nest,spos:integer;
-    holdbody,lookfor:String;  PP:TParsePrimative;  TP:TTagPrimative;
+{var Primatives:TList; inchild:boolean; i,j,max,starttag,endtag,nest,spos:integer;
+    holdbody,lookfor:String;  PP:TParsePrimative;  TP:TTagPrimative;}
 begin
 
 
