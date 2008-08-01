@@ -1,0 +1,32 @@
+MAINICON ICON "main.ico"
+
+
+1 VERSIONINFO
+FILEVERSION 1,5,0,5
+PRODUCTVERSION 1,5,0,5
+FILEOS 0x4
+FILETYPE 0x1
+{
+BLOCK "StringFileInfo"
+{
+	BLOCK "041504E2"
+	{
+		VALUE "CompanyName", "GNU GPL Software\0"
+		VALUE "FileDescription", "WinPrint\0"
+		VALUE "FileVersion", "1.5.0.5\0"
+		VALUE "InternalName", "WinPrint\0"
+		VALUE "LegalCopyright", "Przemys³aw Czerkas & Mieczyslaw Nalewaj\0"
+		VALUE "LegalTrademarks", "\0"
+		VALUE "OriginalFilename", "WinPrint.exe\0"
+		VALUE "ProductName", "WinPrint\0"
+		VALUE "ProductVersion", "1.5\0"
+		VALUE "Comments", "\0"
+	}
+}
+
+BLOCK "VarFileInfo"
+{
+	VALUE "Translation", 0x0415 0x04E2
+}
+}
+
