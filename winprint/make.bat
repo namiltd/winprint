@@ -5,6 +5,7 @@ rem {                                                                           
 rem {   WinPrint - Print Spooler for DOS Programs                                  }
 rem {                                                                              }
 rem {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+rem {                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 rem {   See GPL.TXT for copyright and license details.                             }
 rem {                                                                              }
 rem {******************************************************************************}
@@ -32,9 +33,11 @@ rem {***************************************************************************
 
 cd resources\
 call make.bat
-copy icons32x32\icons.res ..\icons.res
+rem copy icons32x32\icons.res ..\icons.res
+rem copy WinPrint.res ..\WinPrint.res
 cd ..\
 
 dcc32 -B WinPrint.dpr 
 
-del icons.res
+rem del icons.res
+rem del WinPrint.res

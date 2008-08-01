@@ -59,10 +59,11 @@ end;
 
 
 function TMiddleXQuickRTTI.outputXML :String;
-var i,j,k,max:integer; typname:ttypekind;  q,q2:TMiddleXQuickRTTI; holdstream:tmemorystream;
-  s:TStrings;L:TList; C:TCollection;holdtags,cname,thisprop,outhold,holdtag:String; ftags:TStringlist;
-  clname:String; compobj,compchild:TComponent;  cnode:TMIddlexnode;
+var i,{j,}k,max:integer; typname:ttypekind; { q,q2:TMiddleXQuickRTTI; holdstream:tmemorystream;}
+  s:TStrings;{L:TList;} C:TCollection;holdtags,{cname,}thisprop,outhold,holdtag:String; ftags:TStringlist;
+ { clname:String;} compobj{,compchild}:TComponent;{  cnode:TMIddlexnode;}
 begin
+ ftags:=nil;
  outhold:='';
  uniquestring(outhold);
  {Thanks to for catching to error. I added a property "TagClassType" if the item is unassigned}

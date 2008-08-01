@@ -3,6 +3,7 @@
 {   WinPrint - Print Spooler for DOS Programs                                  }
 {                                                                              }
 {   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+{                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
 {   See GPL.TXT for copyright and license details.                             }
 {                                                                              }
 {******************************************************************************}
@@ -317,7 +318,7 @@ begin
     StringList:=TStringList.Create;
     try
 
-      test(InputFileName,StringList); //XXX change
+      ReadANDConvert(ConfigForm.ConfigData.CodePage,InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
 
       TempFont:=TFont.Create;
       try
@@ -348,6 +349,7 @@ begin
                        TempConfigData.Orientation,
                        TempConfigData.LinesPerInch,
                        TempConfigData.LinesPerPage,
+                       TempConfigData.SkipEmptyPages,
                        TempFont,
                        false,
                        nil,nil);

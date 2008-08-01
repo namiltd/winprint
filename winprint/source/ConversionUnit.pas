@@ -44,19 +44,45 @@
      Classes;
 
 
-
 type
   TCodePage = (cpWIN, cpMAZ, cpLAT, cpISO);
+  TCharCode = byte;
+  TCharCodes = set of TCharCode;
+
+  TConversionItem = class(TCollectionItem)
+  private
+    fInCode: TCharCode;
+    fOutCode: TCharCode;
+    fDescription: string;
+    function GetDisplayText: string;
+  public
+    property DisplayText: string read GetDisplayText;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property InCode: TCharCode read fInCode write fInCode;
+    property OutCode: TCharCode read fOutCode write fOutCode;
+    property Description: string read fDescription write fDescription;
+  end;
+
+  TConversionItems = class(TCollection)
+  public
+    constructor Create;
+    function Add: TConversionItem;
+    function Insert(Index: Integer): TConversionItem;
+    function GetItem(Index: Integer): TConversionItem;
+    procedure SetItem(Index: Integer; Value: TConversionItem);
+    property Items[Index: Integer]: TConversionItem read GetItem write SetItem; default;
+  end;
 
 const
   CodePageLow = low(TCodePage);
   CodePageHigh = high(TCodePage);
 
   CodePageNames: array[CodePageLow..CodePageHigh] of string =
-        ('pozostaw bez zmian (WINDOWS)',
-         'konwertuj z MAZOVIA',
-         'konwertuj z LATIN',
-         'konwertuj z ISO');
+        ('WINDOWS (CP1250)',
+         'MAZOVIA (CP620)',
+         'LATIN2 (CP852)',
+         'ISO (CP8859-2)');
 
 
    Var
@@ -69,12 +95,17 @@ const
 
    Function TXlat(Var Source: String; Var Table: String):String;
 
-   procedure test(FileName: string; var SL: TStringList);
+   procedure ReadANDConvert(CodePage: TCodePage;
+                            FileName: string; 
+                              var SL: TStringList;
+            UseCustomConversionTable: boolean;  
+                     ConversionItems: TConversionItems);
 
    Implementation
 
    uses
      SysUtils;
+
 
 const
   PLConvTable : array [CodePageLow..CodePageHigh,1..18] of byte =
@@ -114,21 +145,87 @@ const
         @end: pop ds            {restore data segment}
    end;
 
-procedure test;
+
+{ TConversionItem }
+
+function TConversionItem.GetDisplayText: string;
+begin
+  result:=IntToStr(fInCode)+' => '+IntToStr(fOutCode)+' ('+fDescription+')';
+end;
+
+procedure TConversionItem.Assign(Source: TPersistent);
+begin
+  if Source is TConversionItem then
+  begin
+    if assigned(Collection) then Collection.BeginUpdate;
+    try
+      with TConversionItem(Source) do
+      begin
+        self.InCode:=InCode;
+        self.OutCode:=OutCode;
+        self.Description:=Description;
+      end;
+    finally
+      if assigned(Collection) then Collection.EndUpdate;
+    end;
+  end
+  else
+    inherited assign(Source);
+end;
+
+{ TConversionItems }
+
+constructor TConversionItems.Create;
+begin
+  inherited Create(TConversionItem);
+end;
+
+function TConversionItems.Add: TConversionItem;
+begin
+  result:=inherited Add as TConversionItem;
+end;
+
+function TConversionItems.Insert(Index: integer): TConversionItem;
+begin
+  result:=inherited Insert(Index) as TConversionItem;
+end;
+
+function TConversionItems.GetItem(Index: Integer): TConversionItem;
+begin
+  result:=inherited GetItem(Index) as TConversionItem;
+end;
+
+procedure TConversionItems.SetItem(Index: Integer; Value: TConversionItem);
+begin
+  inherited SetItem(Index,Value);
+end;
+
+
+procedure ReadANDConvert;
 var
   FS: TFileStream;
   Buffer: string;
   Count,Prev,i: integer;
   SS: TStringStream;
   XLATTable: array[char] of char;
+  ci: TConversionItem;
 begin
+  for i:=0 to 255 do XLATTable[char(i)]:=char(i);
+  if CodePage<>cpLAT then 
+        for i:=1 to 18 do XLATTable[char(PLConvTable[CodePage,i])]:=char(PLConvTable[cpLAT,i]);
+  if UseCustomConversionTable then begin
+    Count:=ConversionItems.Count;
+    if Count>0 then
+       for i:=0 to Count-1 do begin
+         ci:=ConversionItems.Items[i];
+         if ci<>nil then XLATTable[char(ci.Incode)]:=char(ci.Outcode);
+       end; 
+  end;
   FS:=TFileStream.Create(FileName,fmOpenRead or fmShareDenyNone);
   try
     SetLength(Buffer,1024);
     SS:=TStringStream.Create('');
     try
-      for i:=0 to 255 do XLATTable[char(i)]:=char(i);
-      //for i:=1 to 18 do XLATTable[char(PLConvTable[cpLAT,i])]:=char(PLConvTable[cpWIN,i]);
       while (FS.Position<FS.Size) do
       begin
         Count:=FS.Read(Buffer[1],1024);
@@ -154,62 +251,5 @@ begin
   end;
 end;
 
-var
-  LineCharNo: integer;
-  PageCharNo: integer;
-  TotalCharNo: integer;
-  PageLineNo: integer;
-  TotalLineNo: integer;
-  PageNo: integer;
-
-procedure test2;
-begin
-end;
-
 end.
 
-{
-   ---------------------------------------------------------------------
-}
-   Program TXLATE1;
-
-   {ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ?}
-   {3Program TXlate1.PAS by Jos‚ Campione, Feb.1993.3}
-   {3Test Program For Function TXlat in Unit TXlatU 3}
-   {3It shows how the same Function can be used For 3}
-   {3up-casing of low-casing a String.              3}
-   {AÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄU}
-
-   Uses TXLATU, HAX144U;
-
-   Var
-     UpSource, LowTable,          {These must be global Variables}
-     LowSource, UpTable : String; {created in the data segment   }
-     i : Byte;
-
-   begin
-
-     {ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ?}
-     {3Set Table For upper Case translation by XLAT3}
-     {AÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄU}
-     For i:= 0 to 255 do
-       if i in [$61..$7A] then UpTable[i]:= Char(i - $20)
-         else UpTable[i]:= Char(i);
-
-     {ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ?}
-     {3Set Table For lower Case translation by XLAT3}
-     {AÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄU}
-     For i:= 0 to 255 do
-       if i in [$41..$5A] then LowTable[i]:= Char(i + $20)
-         else LowTable[i]:= Char(i);
-
-     LowSource:= 'this is a low-Case String to be up-Cased';
-     UpSource:= 'THIS IS AN UP-Case String to BE LOW-CaseD';
-
-     Writeln(TXlat(LowSource,UpTable));
-     Writeln(TXlat(UpSource,LowTable));
-
-     ReadLn;
-
-   end.
-}

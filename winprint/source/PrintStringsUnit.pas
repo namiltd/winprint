@@ -1,3 +1,34 @@
+{******************************************************************************}
+{                                                                              }
+{   WinPrint - Print Spooler for DOS Programs                                  }
+{                                                                              }
+{   Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>     }
+{                 2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>      }
+{   See GPL.TXT for copyright and license details.                             }
+{                                                                              }
+{******************************************************************************}
+
+{******************************************************************************}
+{                                                                              }
+{   This file is part of WinPrint.                                             }
+{                                                                              }
+{   WinPrint is free software; you can redistribute it and/or modify           }
+{   it under the terms of the GNU General Public License as published by       }
+{   the Free Software Foundation; either version 2 of the License, or          }
+{   (at your option) any later version.                                        }
+{                                                                              }
+{   WinPrint is distributed in the hope that it will be useful,                }
+{   but WITHOUT ANY WARRANTY; without even the implied warranty of             }
+{   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              }
+{   GNU General Public License for more details.                               }
+{                                                                              }
+{   You should have received a copy of the GNU General Public License          }
+{   along with WinPrint; if not, write to the Free Software                    }
+{   Foundation, Inc., 59 Temple Place, Suite 330, Boston,                      }
+{   MA  02111-1307  USA                                                        }
+{                                                                              }
+{******************************************************************************}
+
 unit PrintStringsUnit;
 
 interface
@@ -84,6 +115,7 @@ function PrintStrings(Title: string;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
                       const LinesPerPage: integer;
+                      const SkipEmptyPages: boolean; 
                       aFont: TFont;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
@@ -100,6 +132,7 @@ function PrintStrings(Title: string;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
                       const LinesPerPage: integer;
+                      const SkipEmptyPages: boolean;
                       aFont: TFont;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
@@ -111,6 +144,10 @@ var
   footerrect   : TRect;       { area for footes, in canvas coordinates }
   lineheight   : Integer;     { line spacing in dots }
   charheight   : Integer;     { font height in dots  }
+  charheightco : Integer;     { font height coefficient }
+  charstyleco  : TFontStyles; { font style coefficient }
+  lineheightco : Integer;     { line spacing in dots coefficient }
+  doublewidthco: Boolean;     { double width coefficient }
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
 
@@ -203,6 +240,17 @@ var
 
   { Print a page with headers and footers. }
   procedure PrintPage;
+   var
+      y: Integer;
+      r: TRect;
+      do_break: boolean;
+      len: integer;
+      ws: WideString;
+      wstmp: WideString;
+      licz : integer; tw: integer; //text width
+      ks: boolean; //kod sterujacy
+      ig: integer; //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig) 
+      ep: boolean; //empty page
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -229,18 +277,11 @@ var
       FireHeaderFooterEvent( OnPrintFooter, footerrect );
     end;
 
-    procedure DoPage;
-    var
-      y: Integer;
-      r: TRect;
-      do_break: boolean;
-      len: integer;
-      ws: WideString;
 
-      function Filter: boolean;
-      var
+    function Filter: boolean;
+    var
         ind1,ind2,index: integer;
-      begin
+    begin
         result:=false;
         ind1:=pos(char(12),lines[textStart]);
         ind2:=pos(char(26),lines[textStart]);
@@ -262,14 +303,25 @@ var
               inc(textStart);
             result:=true;
           end;
-      end;
+    end;
 
     begin
+      ep:= true;
+      if not SkipEmptyPages then begin
+             ep:=false;
+             Inc(pagecount);
+      	     if pagecount>1 then Printer.NewPage;
+             DoHeader;
+             if not ContinuePrint then exit;
+      end;
+
+      SetLength(wstmp,1);
       y:=textrect.top;
       while (textStart<lines.count) and Filter do;
       while (textStart<lines.count) and (y<=(textrect.bottom-charheight)) do
       begin
         do_break:=false;
+        doublewidthco:=false;
 
         while (textStart<lines.count) and Filter do
           do_break:=true;
@@ -282,17 +334,85 @@ var
         r:=Rect(textrect.left,y,textrect.right,y+charheight);
 
         len:=MultiByteToWideChar(852,0,PChar(lines[textStart]),-1,nil,0);
-        if (len>0) then
+        if (len>01) then
         begin
           SetLength(ws,len-1);
           MultiByteToWideChar(852,0,PChar(lines[textStart]),-1,PWideChar(ws),len-1);
-          ExtTextOutW(Printer.Canvas.Handle,
-                      r.Left,r.Top,
+          tw:=0;
+          ks:=false;
+          ig:=0;
+          for licz:=1 to len do begin
+	     wstmp[1]:=ws[licz];
+             if (ig<>0) //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig)
+                and (integer(wstmp[1])>=ord('0')) 
+                and (integer(wstmp[1])<(ord('0')+ig))  
+                then begin
+                         ig:=0;
+                         continue;
+		     end; 
+             if ks then case integer(wstmp[1]) of             
+                15:  case charheightco of //ESC SI to samo co SI
+                       10: charheightco:=17;
+                       12: charheightco:=20;
+                     end; 
+                64: begin //ESC @ reset ustawieñ
+                      charheightco:=10;
+                      lineheightco:=6; 
+                      charstyleco:=[];
+                      doublewidthco:=false;
+                    end; 
+                14: doublewidthco:=true; //ESC SO to sam co SO
+                48: lineheightco:=8;  //ESC 0
+                50: lineheightco:=6;  //ESC 2
+                49: lineheightco:=10; //ESC 1
+                77: charheightco:=12; //ESC M
+                80: charheightco:=10; //ESC P
+               103: charheightco:=15; //ESC g
+	     71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
+             72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F 
+		52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
+                53: charstyleco:=charstyleco-[fsItalic]; //ESC 5
+	       120: ig:=2; //ESC x zignor.ustawianie NLQ (mozliwe wartosci '0''1')
+               116: ig:=4; //ESC t zignor.ustawianie chartable (mozliwe wartosci '0''1''2''3')
+                83: ig:=2; //ESC S zignor.ustawianie indeks gorny/dolny (mozliwe wartosci '0''1')
+             end 
+             else case integer(wstmp[1]) of
+                0..13,16,17,19,21..31: ; //puste by nic nie malowalo
+                20: doublewidthco:=true; //DC4
+                14: doublewidthco:=true; //SO to sam co ESC SO
+                15: case charheightco of //SI to samo co ESC SI
+                       10: charheightco:=17;
+                       12: charheightco:=20;
+                    end; 
+                18: case charheightco of //DC2
+                       17: charheightco:=10;
+                       20: charheightco:=12;
+                     end;
+                else begin
+                   if SkipEmptyPages and ep and (integer(wstmp[1])<>32) then begin
+                          ep:=false;
+                          Inc(pagecount);
+      	                  if pagecount>1 then Printer.NewPage;
+                          DoHeader;
+                          if not ContinuePrint then exit;
+                   end;
+	           if doublewidthco then Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco
+                                    else Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco;
+                   Printer.Canvas.Font.style:=aFont.style + charstyleco; 
+                   if integer(wstmp[1])<>32 then ExtTextOutW(Printer.Canvas.Handle,
+                      r.Left+tw,r.Top,
                       ETO_CLIPPED,
                       @r,
-                      PWideChar(ws),
-                      len-1,
+                      PWideChar(wstmp),
+                      1,
                       nil);
+                   tw:=tw+printer.canvas.TextWidth(wstmp);
+                end;
+             end;
+             if integer(wstmp[1])=27 then ks:=true
+                                     else ks:=false;
+                                             
+          end;
         end;
 
         //DrawTextW(Printer.Canvas.Handle,
@@ -300,28 +420,15 @@ var
         //         DT_SINGLELINE or DT_LEFT or DT_TOP or DT_EXPANDTABS or DT_NOPREFIX);
 
         inc(textStart);
-        inc(y,lineheight);
+        inc(y,(lineheight * 6) div lineheightco);
       end;
+      if not ep then DoFooter;
     end;
-
-  begin
-    DoHeader;
-    if ContinuePrint then
-    begin
-      DoPage;
-      DoFooter;
-      if (textStart<lines.count) and ContinuePrint then
-      begin
-        Inc(pagecount);
-        Printer.NewPage;
-      end;
-    end;
-  end;
 
 begin
   assert(Assigned(afont),'PrintString: requires a valid aFont parameter!');
   continuePrint := True;
-  pagecount     := 1;
+  pagecount     := 0;
   textstart     := 0;
   Printer.Refresh; //odœwie¿ zainstalowane drukarki
   Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
@@ -337,6 +444,9 @@ begin
     Printer.Canvas.Font := aFont;
     Printer.Canvas.Brush.Style:=bsClear; //przeŸroczyste t³o czcionek
     charheight:=printer.canvas.TextHeight('Äy');
+    charheightco:=10; //10/10=1
+    lineheightco:=6; //6/6=1
+    charstyleco:=[];
     while (textstart<lines.count) and continuePrint do
       PrintPage;
   finally
@@ -351,67 +461,5 @@ begin
   else
     result:=0;
 end;
-
-{
-procedure TForm1.Button1Click(Sender: TObject);
-begin
-  ShowMessage( Format( '%d pages printed',
-               [ PrintStrings(
-                   memo1.lines,
-                   0.75, 0.5, 0.75, 1,
-                   6,
-                   memo1.font,
-                   false,
-                   PrintHeader, PrintFooter )
-                ] ));
-end;
-
-procedure TForm1.PrintFooter(aCanvas: TCanvas; aPageCount: Integer;
-  aTextrect: TRect; var continue: Boolean);
-var
-  S: String;
-  res: Integer;
-begin
-  with aCanvas do begin
-    // Draw a gray line one point wide below the text
-    res := GetDeviceCaps( handle, LOGPIXELSY );
-    pen.Style := psSolid;
-    pen.Color := clGray;
-    pen.Width := Round( res / 72 );
-    MoveTo( aTextRect.Left, aTextRect.Top );
-    LineTo( aTextRect.Right, aTextRect.Top );
-    // Print the page number in Arial 8pt, gray, on right side of
-    //  footer rect.
-    S:= Format('Page %d', [aPageCount] );
-    font.name := 'Arial';
-    font.Size := 8;
-    font.Color := clGray;
-    TextOut( aTextRect.Right - TextWidth(S), aTextRect.Top + res div 18,
-             S );
-  end;
-end;
-
-procedure TForm1.PrintHeader(aCanvas: TCanvas; aPageCount: Integer;
-  aTextrect: TRect; var continue: Boolean);
-var
-  res: Integer;
-begin
-  with aCanvas do begin
-    // Draw a gray line one point wide 4 points above the text
-    res := GetDeviceCaps( handle, LOGPIXELSY );
-    pen.Style := psSolid;
-    pen.Color := clGray;
-    pen.Width := Round( res / 72 );
-    MoveTo( aTextRect.Left, aTextRect.Bottom - res div 18);
-    LineTo( aTextRect.Right, aTextRect.Bottom - res div 18 );
-    // Print the company name in Arial 8pt, gray, on left side of
-    //  footer rect.
-    font.name := 'Arial';
-    font.Size := 8;
-    font.Color := clGray;
-    TextOut( aTextRect.Left, aTextRect.Bottom - res div 10 - TextHeight('W'),
-             'W. W. Shyster & Cie.' );
-  end;
-end;}
 
 end.
