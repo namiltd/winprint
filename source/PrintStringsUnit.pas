@@ -396,7 +396,7 @@ var
                           DoHeader;
                           if not ContinuePrint then exit;
                    end;
-	           if doublewidthco then Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco
+	           if doublewidthco then Printer.Canvas.Font.size:=(aFont.Size * 16) div charheightco
                                     else Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco;
                    Printer.Canvas.Font.style:=aFont.style + charstyleco; 
                    if integer(wstmp[1])<>32 then ExtTextOutW(Printer.Canvas.Handle,
