@@ -35,11 +35,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Menus, Trayicon, ExtCtrls, ImgList, ConfigFormUnit, CEVersionInfo, Xml10n;
+  Menus, Trayicon, ExtCtrls, ImgList, ConfigFormUnit, CEVersionInfo;
 
 type
   TMainForm = class(TForm)
-    TrayIcon1: TTrayIcon;
+    TrayIcon1: TTrayIcon2;
     PopupMenu1: TPopupMenu;
     Konfiguracja1: TMenuItem;
     N1: TMenuItem;
@@ -50,7 +50,6 @@ type
     Timer2: TTimer;
     SaveDialog1: TSaveDialog;
     CEVersionInfo1: TCEVersionInfo;
-    Xml10n1: TXml10n;
     procedure Zakocz1Click(Sender: TObject);
     procedure TrayIcon1DblClick(Sender: TObject);
     procedure Konfiguracja1Click(Sender: TObject);
