@@ -35,7 +35,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, StdCtrls, Buttons, Spin, ExtCtrls, NumEdit, Printers, ConversionUnit{, Xml10n};
+  ComCtrls, StdCtrls, Buttons, Spin, ExtCtrls, NumEdit, Printers, ConversionUnit;
 
 type
   TConfigData = record
