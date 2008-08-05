@@ -11,7 +11,7 @@ interface
     WM_RESETTOOLTIP = WM_USER+2;
 
   type
-    TTrayIcon = class(TComponent)
+    TTrayIcon2 = class(TComponent)
     private
     // BDS
     { internal use }
@@ -44,9 +44,9 @@ interface
     protected
     public
       FMessageID: DWORD;
-      constructor create(aOwner : TComponent); override;
+      constructor Create(aOwner : TComponent); override;
       procedure Loaded; override;                             // A. Meeder
-      destructor destroy; override;
+      destructor Destroy; override;
       procedure GoToPreviousInstance;
     published
       property Active : boolean read fActive write SetActive;
@@ -71,12 +71,12 @@ implementation
 
   // {$R TrayIcon.res}
 
-  procedure TTrayIcon.GoToPreviousInstance;
+  procedure TTrayIcon2.GoToPreviousInstance;
   begin
     PostMessage(hwnd_Broadcast, fMessageID, 0, 0);
   end;
 
-  procedure TTrayIcon.SetActive(Value : boolean);
+  procedure TTrayIcon2.SetActive(Value : boolean);
   begin
      if value <> fActive then begin
        fActive := Value;
@@ -90,7 +90,7 @@ implementation
     end;
   end;
 
-  procedure TTrayIcon.SetShowApp(Value : boolean);      // A. Meeder
+  procedure TTrayIcon2.SetShowApp(Value : boolean);      // A. Meeder
   begin
 {    if value <> fShowApp then fShowApp := value;
     if not (csdesigning in ComponentState) then
@@ -106,7 +106,7 @@ implementation
     end;}
   end;
 
-  procedure TTrayIcon.SetShowDesigning(Value : boolean);
+  procedure TTrayIcon2.SetShowDesigning(Value : boolean);
   begin
     if csdesigning in ComponentState then begin
        if value <> fShowDesigning then begin
@@ -120,7 +120,7 @@ implementation
     end;
   end;
 
-  procedure TTrayIcon.SetIcon(Value : Ticon);
+  procedure TTrayIcon2.SetIcon(Value : Ticon);
   begin
     if Value <> fIcon then
       begin
@@ -129,7 +129,7 @@ implementation
       end;
   end;
 
-  procedure TTrayIcon.SetToolTip(Value : string);
+  procedure TTrayIcon2.SetToolTip(Value : string);
   begin
      // This routine ALWAYS re-sets the field value and re-loads the
      // icon.  This is so the ToolTip can be set blank when the component
@@ -141,7 +141,7 @@ implementation
      ModifyIcon;
   end;
 
-  constructor TTrayIcon.create(aOwner : Tcomponent);
+  constructor TTrayIcon2.create(aOwner : Tcomponent);
   begin
     inherited create(aOwner);
 {$WARN SYMBOL_DEPRECATED OFF}
@@ -151,7 +151,7 @@ implementation
     SetShowApp(False);
   end;
 
-  destructor TTrayIcon.destroy;
+  destructor TTrayIcon2.destroy;
   begin
     // BDS
     CloseHandle(hMapping);
@@ -166,7 +166,7 @@ implementation
     inherited destroy;
   end;
 
-  procedure TTrayIcon.Loaded;
+  procedure TTrayIcon2.Loaded;
   var
     // BDS
     // hMapping: HWND;
@@ -196,7 +196,7 @@ implementation
     SetShowApp(fShowApp);
   end;
 
-  procedure TTrayIcon.FillDataStructure;
+  procedure TTrayIcon2.FillDataStructure;
   begin
     with IconData do begin
        cbSize := sizeof(TNOTIFYICONDATA);
@@ -209,7 +209,7 @@ implementation
     end;
   end;
 
-  function TTrayIcon.AddIcon : boolean;
+  function TTrayIcon2.AddIcon : boolean;
   begin
      FillDataStructure;
      result := Shell_NotifyIcon(NIM_ADD,@IconData);
@@ -219,7 +219,7 @@ implementation
         PostMessage( fWindowHandle, WM_RESETTOOLTIP,0,0 );
   end;
 
-  function TTrayIcon.ModifyIcon : boolean;
+  function TTrayIcon2.ModifyIcon : boolean;
   begin
      FillDataStructure;
      if fActive then
@@ -228,7 +228,7 @@ implementation
         result := True;
   end;
 
-  procedure TTrayIcon.DoRightClick( Sender : TObject );
+  procedure TTrayIcon2.DoRightClick( Sender : TObject );
   var MouseCo: Tpoint;
   begin
      GetCursorPos(MouseCo);
@@ -243,12 +243,12 @@ implementation
         end;
   end;
 
-  function TTrayIcon.DeleteIcon : boolean;
+  function TTrayIcon2.DeleteIcon : boolean;
   begin
      result := Shell_NotifyIcon(NIM_DELETE,@IconData);
   end;
 
-  procedure TTrayIcon.WndProc(var msg : TMessage);
+  procedure TTrayIcon2.WndProc(var msg : TMessage);
   begin
      with msg do
        if (msg = WM_RESETTOOLTIP) then
@@ -266,7 +266,7 @@ implementation
 
   procedure Register;
   begin
-    RegisterComponents('MyComponents', [TTrayIcon]);
+    RegisterComponents('MyComponents', [TTrayIcon2]);
   end;
 
 end.
