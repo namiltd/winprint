@@ -16,7 +16,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object TrayIcon1: TTrayIcon
+  object TrayIcon1: TTrayIcon2
     Active = True
     ShowDesigning = False
     ShowApp = False
@@ -84,11 +84,5 @@ object MainForm: TMainForm
   object CEVersionInfo1: TCEVersionInfo
     Left = 32
     Top = 64
-  end
-  object Xml10n1: TXml10n
-    ResourceLinksFile = 'links.xml'
-    ResourceStringsFile = 'strings.xml'
-    Left = 192
-    Top = 116
   end
 end
