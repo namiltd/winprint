@@ -32,6 +32,7 @@
 program WinPrint;
 
 {$R 'resources\icons32x32\icons.res' 'resources\icons32x32\icons.rc'}
+{$R 'resources\WinPrint.res' 'resources\WinPrint.rc'}
 
 uses
   Forms,
@@ -49,8 +50,6 @@ uses
   ConfigFormUnit in 'source\ConfigFormUnit.pas' {ConfigForm},
   PrintStringsUnit in 'source\PrintStringsUnit.pas',
   ConversionUnit in 'source\ConversionUnit.pas';
-
-{$R 'resources\WinPrint.res' 'resources\WinPrint.rc'}
 
 begin
   Application.Initialize;
