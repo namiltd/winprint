@@ -321,6 +321,7 @@ var
   StringList: TStringList;
   TempFont: TFont;
   TempConfigData: TConfigData;
+  Bitmap : TBitmap;
 begin
   ZeroTrayIconIndex:=true;
 
@@ -350,6 +351,12 @@ begin
         TempFont.Size:=TempConfigData.FontSize;
         TempFont.Style:=TempConfigData.FontStyles;
 
+        Bitmap:=TBitmap.Create;
+        try
+         Bitmap.LoadFromFile(TempConfigData.Logo);
+        except
+        end;
+
         try
           //procedure drukujaca StringList
           PrintStrings('Dokument programu WinPrint - '+SearchRec.Name,
@@ -363,6 +370,10 @@ begin
                        TempConfigData.LinesPerPage,
                        TempConfigData.SkipEmptyPages,
                        TempFont,
+                       Bitmap,
+                       cMILTOINCH*TempConfigData.LogoLeft,
+                       cMILTOINCH*TempConfigData.LogoTop,
+                       TempConfigData.Logo1PageOnly,
                        false,
                        nil,nil);
         except
@@ -380,6 +391,8 @@ begin
           //re-raise inne wyj¹tki powstale przy wydruku
           raise;
         end;
+
+        Bitmap.free;
 
         //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
         if not DeleteFile(InputFileName) then
