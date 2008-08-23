@@ -115,8 +115,11 @@ function PrintStrings(Title: string;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
                       const LinesPerPage: integer;
-                      const SkipEmptyPages: boolean; 
-                      aFont: TFont;
+                      const SkipEmptyPages: boolean;
+                      const aFont: TFont;
+                      const Bitmap: TBitmap;
+                      const leftlogo,toplogo: single;
+                      const firstpageonlylogo: boolean;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 
@@ -133,7 +136,10 @@ function PrintStrings(Title: string;
                       const linesPerInch: single;
                       const LinesPerPage: integer;
                       const SkipEmptyPages: boolean;
-                      aFont: TFont;
+                      const aFont: TFont;
+                      const Bitmap: TBitmap;
+                      const leftlogo,toplogo: single;
+                      const firstpageonlylogo: boolean;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 var
@@ -150,6 +156,7 @@ var
   doublewidthco: Boolean;     { double width coefficient }
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
+  ll,tl        : integer;     {logo position}
 
   { Calculate text output and header/footer rectangles. }
   procedure CalcPrintRects;
@@ -236,6 +243,13 @@ var
       else
         raise EPrinter.Create(
           'PrintString: iloœæ linii na cal i iloœæ linii na stronê nie mog¹ byæ obie równe zero.');
+
+    ll:=round(leftlogo*X_resolution);
+    if (ll<printorigin.x) then
+          ll:=printorigin.x;
+    tl:=round(toplogo*Y_resolution);
+    if (tl<printorigin.y) then
+          tl:=printorigin.y;
   end;
 
   { Print a page with headers and footers. }
@@ -249,7 +263,7 @@ var
       wstmp: WideString;
       licz : integer; tw: integer; //text width
       ks: boolean; //kod sterujacy
-      ig: integer; //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig) 
+      ig: integer; //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig)
       ep: boolean; //empty page
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
@@ -277,6 +291,15 @@ var
       FireHeaderFooterEvent( OnPrintFooter, footerrect );
     end;
 
+    procedure DoLogo(const Bitmap: TBitMap; const ll,tl:integer);
+    begin
+      if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+       try
+          Printer.Canvas.Draw(ll, tl, Bitmap);
+       finally
+       end;
+      end;
+    end;
 
     function Filter: boolean;
     var
@@ -307,11 +330,17 @@ var
 
     begin
       ep:= true;
+             { Figure textrect in paper coordinates }
       if not SkipEmptyPages then begin
              ep:=false;
              Inc(pagecount);
       	     if pagecount>1 then Printer.NewPage;
              DoHeader;
+             if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+               if (pagecount<2) or
+                  ( (firstpageonlylogo=false) and (pagecount>1)) then
+                    DoLogo(Bitmap,ll,tl);
+             end;
              if not ContinuePrint then exit;
       end;
 
@@ -342,25 +371,25 @@ var
           ks:=false;
           ig:=0;
           for licz:=1 to len do begin
-	     wstmp[1]:=ws[licz];
+	           wstmp[1]:=ws[licz];
              if (ig<>0) //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig)
-                and (integer(wstmp[1])>=ord('0')) 
-                and (integer(wstmp[1])<(ord('0')+ig))  
+                and (integer(wstmp[1])>=ord('0'))
+                and (integer(wstmp[1])<(ord('0')+ig))
                 then begin
                          ig:=0;
                          continue;
-		     end; 
-             if ks then case integer(wstmp[1]) of             
+		                 end;
+             if ks then case integer(wstmp[1]) of
                 15:  case charheightco of //ESC SI to samo co SI
                        10: charheightco:=17;
                        12: charheightco:=20;
-                     end; 
+                     end;
                 64: begin //ESC @ reset ustawieñ
                       charheightco:=10;
-                      lineheightco:=6; 
+                      lineheightco:=6;
                       charstyleco:=[];
                       doublewidthco:=false;
-                    end; 
+                    end;
                 14: doublewidthco:=true; //ESC SO to sam co SO
                 48: lineheightco:=8;  //ESC 0
                 50: lineheightco:=6;  //ESC 2
@@ -369,13 +398,13 @@ var
                 80: charheightco:=10; //ESC P
                103: charheightco:=15; //ESC g
 	     71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
-             72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F 
+             72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
 		52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
                 53: charstyleco:=charstyleco-[fsItalic]; //ESC 5
 	       120: ig:=2; //ESC x zignor.ustawianie NLQ (mozliwe wartosci '0''1')
                116: ig:=4; //ESC t zignor.ustawianie chartable (mozliwe wartosci '0''1''2''3')
                 83: ig:=2; //ESC S zignor.ustawianie indeks gorny/dolny (mozliwe wartosci '0''1')
-             end 
+             end
              else case integer(wstmp[1]) of
                 0..13,16,17,19,21..31: ; //puste by nic nie malowalo
                 20: doublewidthco:=true; //DC4
@@ -383,7 +412,7 @@ var
                 15: case charheightco of //SI to samo co ESC SI
                        10: charheightco:=17;
                        12: charheightco:=20;
-                    end; 
+                    end;
                 18: case charheightco of //DC2
                        17: charheightco:=10;
                        20: charheightco:=12;
@@ -394,11 +423,16 @@ var
                           Inc(pagecount);
       	                  if pagecount>1 then Printer.NewPage;
                           DoHeader;
+                          if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+                            if (pagecount<2) or
+                               ( (firstpageonlylogo=false) and (pagecount>1)) then
+                                   DoLogo(Bitmap,ll,tl);
+                          end;
                           if not ContinuePrint then exit;
                    end;
 	           if doublewidthco then Printer.Canvas.Font.size:=(aFont.Size * 16) div charheightco
                                     else Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco;
-                   Printer.Canvas.Font.style:=aFont.style + charstyleco; 
+                   Printer.Canvas.Font.style:=aFont.style + charstyleco;
                    if integer(wstmp[1])<>32 then ExtTextOutW(Printer.Canvas.Handle,
                       r.Left+tw,r.Top,
                       ETO_CLIPPED,
@@ -411,7 +445,7 @@ var
              end;
              if integer(wstmp[1])=27 then ks:=true
                                      else ks:=false;
-                                             
+
           end;
         end;
 

@@ -65,13 +65,17 @@ object ConfigForm: TConfigForm
     Top = 0
     Width = 314
     Height = 326
-    ActivePage = TabSheet3
+    ActivePage = TabSheet4
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 3
     object TabSheet2: TTabSheet
       BorderWidth = 8
       Caption = 'Ustawienia strony'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -215,6 +219,10 @@ object ConfigForm: TConfigForm
     object TabSheet1: TTabSheet
       BorderWidth = 8
       Caption = 'Opcje u'#380'ytkowe'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -275,6 +283,8 @@ object ConfigForm: TConfigForm
           Height = 21
           Hint = #346'cie'#380'ka do katalogu z plikami, kt'#243're b'#281'd'#261' przetwarzane.'
           Anchors = [akLeft, akTop, akRight]
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           OnChange = ConfigChanged
         end
@@ -294,7 +304,10 @@ object ConfigForm: TConfigForm
           Top = 76
           Width = 88
           Height = 21
+          Hint = 'Rozszerzenie plik'#243'w formatuj'#261'cych'
           Anchors = [akLeft, akTop, akRight]
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 2
           OnChange = ConfigChanged
         end
@@ -310,7 +323,7 @@ object ConfigForm: TConfigForm
         end
       end
       object GroupBox2: TGroupBox
-        Left = 5
+        Left = 0
         Top = 117
         Width = 290
         Height = 134
@@ -389,6 +402,7 @@ object ConfigForm: TConfigForm
           Position = 100
           TabOrder = 4
           Thousands = False
+          OnChanging = ConfigChanging
         end
         object UpDown2: TUpDown
           Left = 260
@@ -402,6 +416,7 @@ object ConfigForm: TConfigForm
           Position = 100
           TabOrder = 5
           Thousands = False
+          OnChanging = ConfigChanging
         end
         object CheckBox1: TCheckBox
           Left = 12
@@ -443,6 +458,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'Format danych'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 0
@@ -570,7 +589,7 @@ object ConfigForm: TConfigForm
           Width = 185
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 0
           OnChange = ConfigChanged
           Items.Strings = (
@@ -583,8 +602,6 @@ object ConfigForm: TConfigForm
           Height = 82
           IntegralHeight = True
           ItemHeight = 13
-          ParentShowHint = False
-          ShowHint = True
           TabOrder = 1
           OnMouseMove = ListBox1MouseMove
         end
@@ -631,6 +648,105 @@ object ConfigForm: TConfigForm
         Caption = 'Domy'#347'lne'
         TabOrder = 2
         OnClick = Button7Click
+      end
+    end
+    object TabSheet4: TTabSheet
+      BorderWidth = 8
+      Caption = 'Inne'
+      ImageIndex = 3
+      DesignSize = (
+        290
+        282)
+      object GroupBox8: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 290
+        Height = 113
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'Logo'
+        TabOrder = 0
+        DesignSize = (
+          290
+          113)
+        object SpeedButton4: TSpeedButton
+          Left = 254
+          Top = 36
+          Width = 23
+          Height = 22
+          Anchors = [akTop, akRight]
+          Glyph.Data = {
+            76010000424D7601000000000000760000002800000020000000100000000100
+            04000000000000010000120B0000120B00001000000000000000000000000000
+            800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00555555555555
+            5555555555555555555555555555555555555555555555555555555555555555
+            555555555555555555555555555555555555555FFFFFFFFFF555550000000000
+            55555577777777775F55500B8B8B8B8B05555775F555555575F550F0B8B8B8B8
+            B05557F75F555555575F50BF0B8B8B8B8B0557F575FFFFFFFF7F50FBF0000000
+            000557F557777777777550BFBFBFBFB0555557F555555557F55550FBFBFBFBF0
+            555557F555555FF7555550BFBFBF00055555575F555577755555550BFBF05555
+            55555575FFF75555555555700007555555555557777555555555555555555555
+            5555555555555555555555555555555555555555555555555555}
+          NumGlyphs = 2
+          OnClick = SpeedButton4Click
+        end
+        object Label19: TLabel
+          Left = 12
+          Top = 20
+          Width = 87
+          Height = 13
+          Caption = 'Plik bitmapy z logo'
+        end
+        object Label20: TLabel
+          Left = 12
+          Top = 63
+          Width = 66
+          Height = 13
+          Caption = 'Od lewej (mm)'
+        end
+        object Label21: TLabel
+          Left = 88
+          Top = 63
+          Width = 62
+          Height = 13
+          Caption = 'Od g'#243'ry (mm)'
+        end
+        object Edit8: TEdit
+          Left = 12
+          Top = 36
+          Width = 243
+          Height = 21
+          Hint = 
+            #346'cie'#380'ka do pliku w formacie BMP z logo drukowanym na ka'#380'dej kart' +
+            'ce.'
+          Anchors = [akLeft, akTop, akRight]
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          OnChange = ConfigChanged
+        end
+        object CheckBox6: TCheckBox
+          Left = 156
+          Top = 82
+          Width = 121
+          Height = 17
+          Hint = 'Drukuj Logo tylko na pierwszej stronie'
+          Anchors = [akTop, akRight]
+          Caption = 'tylko na 1-szej stronie'
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 1
+          OnClick = CheckBox2Click
+        end
+      end
+      object Button10: TButton
+        Left = 215
+        Top = 257
+        Width = 75
+        Height = 25
+        Caption = 'Domy'#347'lne'
+        TabOrder = 1
+        OnClick = Button10Click
       end
     end
   end

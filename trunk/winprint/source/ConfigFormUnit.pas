@@ -61,6 +61,10 @@ type
     CodePage: TCodePage;
     UseCustomConversionTable: boolean;
     ConversionItems: TConversionItems;
+    Logo: string;
+    LogoLeft: double;
+    LogoTop: double;
+    Logo1PageOnly: boolean;
   end;
 
   TConfigForm = class(TForm)
@@ -132,6 +136,15 @@ type
     Edit7: TEdit;
     UpDown1: TUpDown;
     UpDown2: TUpDown;
+    TabSheet4: TTabSheet;
+    GroupBox8: TGroupBox;
+    SpeedButton4: TSpeedButton;
+    Label19: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Edit8: TEdit;
+    Button10: TButton;
+    CheckBox6: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -154,6 +167,8 @@ type
       Y: Integer);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
   private
     { Private declarations }
     ListBox1HintIndex: integer;
@@ -167,6 +182,8 @@ type
     FloatEdit3: TFloatEdit;
     FloatEdit4: TFloatEdit;
     FloatEdit5: TFloatEdit;
+    FloatEdit6: TFloatEdit;
+    FloatEdit7: TFloatEdit;
     procedure ReadConfig;
     procedure WriteConfig;
   public
@@ -174,6 +191,7 @@ type
     ConfigData: TConfigData;
   published
     procedure ConfigChanged(Sender: TObject);
+    procedure ConfigChanging(Sender: TObject; var AllowChange: Boolean);
     procedure ResolveEditValues1(Sender: TObject);
   end;
 
@@ -217,7 +235,10 @@ const
   DEFAULT_CLIPPER_COMPATIBLE = TRUE;
   DEFAULT_CODE_PAGE = cpLAT;
   DEFAULT_USE_CUSTOM_CONVERSION_TABLE = false;
-
+  DEFAULT_LOGO = '';
+  DEFAULT_LOGO_LEFT = 12.7;
+  DEFAULT_LOGO_TOP = 12.7;
+  DEFAULT_LOGO_1PAGE_ONLY = false;
 const
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
@@ -267,7 +288,7 @@ begin
           Top := 22;
           Width := 50;
           Height := 21;
-          TabOrder := 1;
+//          TabOrder := 1;
           Text := '0';
           OnChange := IntEdit1Change;
           OnExit := ResolveEditValues1;
@@ -280,7 +301,7 @@ begin
           Top := 90;
           Width := 48;
           Height := 21;
-          TabOrder := 2;
+//          TabOrder := 2;
           Text := '0';
           Parent := GroupBox7;
           Visible := true;
@@ -294,7 +315,7 @@ begin
           Hint := 'pozostaw 0 by usun znak';
           ParentShowHint := False;
           ShowHint := True;
-          TabOrder := 3;
+//          TabOrder := 3;
           Text := '0';
           Parent := GroupBox7;
           Visible := true;
@@ -305,7 +326,7 @@ begin
           Top := 24;
           Width := 50;
           Height := 21;
-          TabOrder := 0;
+//          TabOrder := 0;
           Text := '0';
           OnChange := ConfigChanged;
           Parent := GroupBox4;
@@ -317,7 +338,7 @@ begin
           Top := 24;
           Width := 50;
           Height := 21;
-          TabOrder := 1;
+//          TabOrder := 1;
           Text := '0';
           OnChange := ConfigChanged;
           Parent := GroupBox4;
@@ -329,7 +350,7 @@ begin
           Top := 56;
           Width := 50;
           Height := 21;
-          TabOrder := 2;
+//          TabOrder := 2;
           Text := '0';
           OnChange := ConfigChanged;
           Parent := GroupBox4;
@@ -341,7 +362,7 @@ begin
           Top := 56;
           Width := 50;
           Height := 21;
-          TabOrder := 3;
+//          TabOrder := 3;
           Text := '0';
           OnChange := ConfigChanged;
           Parent := GroupBox4;
@@ -353,11 +374,36 @@ begin
           Top := 22;
           Width := 50;
           Height := 21;
-          TabOrder := 0;
+//          TabOrder := 5;
           Text := '0';
           OnChange := FloatEdit5Change;
           OnExit := ResolveEditValues1;
           Parent := GroupBox5;
+          Visible := true;
+  end;
+  FloatEdit6:=TFloatEdit.Create(Self);
+  with FloatEdit6 do begin
+          Left := 12;
+          Top := 80;
+          Width := 50;
+          Height := 21;
+//          TabOrder := 3;
+          Text := '0';
+          OnChange := ConfigChanged;
+          Parent := GroupBox8;
+          Visible := true;
+  end;
+  FloatEdit7:=TFloatEdit.Create(Self);
+  with FloatEdit7 do begin
+          Left := 88;
+          Top := 80;
+          Width := 50;
+          Height := 21;
+//          TabOrder := 0;
+          Text := '0';
+          OnChange := FloatEdit5Change;
+          OnExit := ResolveEditValues1;
+          Parent := GroupBox8;
           Visible := true;
   end;
 
@@ -394,6 +440,7 @@ begin
   if SelectDirectory('Wska¿ folder plików.','\',TempDir) then
   begin
     TempDir:=IncludeTrailingBackslash(TempDir);
+    If LowerCase(TempDir) = LowerCase(ExtractFilePath(ParamStr(0))) then TempDir := '';
     Edit1.Text:=TempDir;
   end;
 end;
@@ -542,7 +589,7 @@ begin
           end;
           try
             CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString('CodePage')));
-            if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE; 
+            if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
           except
             CodePage:=DEFAULT_CODE_PAGE;
           end;
@@ -561,6 +608,26 @@ begin
               MemStream.Free;
             end;
           except
+          end;
+          try
+            Logo:=ReadString('Logo');
+          except
+            Logo:=DEFAULT_LOGO;
+          end;
+          try
+            LogoLeft:=ReadFloat('LogoLeft');
+          except
+            LogoLeft:=DEFAULT_LOGO_LEFT;
+          end;
+          try
+            LogoTop:=ReadFloat('LogoTop');
+          except
+            LogoTop:=DEFAULT_LOGO_TOP;
+          end;
+          try
+            Logo1PageOnly:=ReadBool('Logo1PageOnly');
+          except
+            Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
           end;
         end
         else
@@ -589,6 +656,10 @@ begin
           ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
           CodePage:=DEFAULT_CODE_PAGE;
           UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
+          Logo:=DEFAULT_LOGO;
+          LogoLeft:=DEFAULT_LOGO_LEFT;
+          LogoTop:=DEFAULT_LOGO_TOP;
+          Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
         end;
       finally
         CloseKey;
@@ -602,6 +673,11 @@ begin
     Edit2.Text:=InputFilesMask;
     Edit3.Text:=FormatFileExtension;
     CheckBox2.Checked:=EnableFormatting;
+    Edit8.Text:=Logo;
+    FloatEdit6.Value:=LogoLeft;
+    FloatEdit7.Value:=LogoTop;
+    CheckBox6.Checked:=Logo1PageOnly;
+
     if EnableFormatting then
     begin
       Edit3.Enabled:=true;
@@ -735,6 +811,10 @@ begin
         WriteBool('ClipperCompatible',CheckBox5.Checked);
         WriteString('CodePage',OrdToString(TypeInfo(TCodePage),ComboBox1.ItemIndex));
         WriteBool('UseCustomConversionTable',CheckBox4.Checked);
+        WriteString('Logo',Edit8.Text);
+        WriteFloat('LogoLeft',FloatEdit6.Value);
+        WriteFloat('LogoTop',FloatEdit7.Value);
+        WriteBool('Logo1PageOnly',CheckBox6.Checked);
         ConfigData.ConversionItems.Assign(TempConversionItems);
         MemStream:=TMemoryStream.Create;
         try
@@ -764,12 +844,24 @@ begin
   Button3.Enabled:=true;
 end;
 
+procedure TConfigForm.ConfigChanging(Sender: TObject; var AllowChange: Boolean);
+begin
+  ConfigChanged(Sender);
+end;
 
 procedure TConfigForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   ReadConfig;
 end;
 
+procedure TConfigForm.Button10Click(Sender: TObject);
+begin
+  Edit8.Text:=DEFAULT_LOGO;
+  FloatEdit6.Value:=DEFAULT_LOGO_LEFT;
+  FloatEdit7.Value:=DEFAULT_LOGO_TOP;
+  CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
+  ConfigChanged(Sender);
+end;
 
 //Klawisz OK
 procedure TConfigForm.Button1Click(Sender: TObject);
@@ -992,6 +1084,33 @@ begin
   end;
 end;
 
+
+procedure TConfigForm.SpeedButton4Click(Sender: TObject);
+var
+  openDialog : TOpenDialog;    // Open dialog variable
+begin
+  openDialog := TOpenDialog.Create(self);
+
+  if Edit8.Text = '' then openDialog.InitialDir := ExtractFilePath(paramstr(0))
+                     else openDialog.InitialDir := ExtractFilePath(Edit8.Text);
+  openDialog.Options := [ofFileMustExist];
+{openDialog.Filter :=
+    'Delphi project files|*.dpr|Delphi pascal files|*.pas';}
+  openDialog.Filter := 'Logo files (*.bmp)|*.BMP';
+  openDialog.FilterIndex := 1;
+  if openDialog.Execute then
+      Edit8.Text := openDialog.FileName;
+  openDialog.Free;
+
+{  TempDir: string;
+begin
+  if SelectFile('Wska¿ plików BMP z logo.','\',TempDir) then
+  begin
+    TempDir:=IncludeTrailingBackslash(TempDir);
+    Edit8.Text:=TempDir;
+  end;
+}
+end;
 
 //Show ListBox1 hint
 procedure TConfigForm.ListBox1MouseMove(Sender: TObject;
