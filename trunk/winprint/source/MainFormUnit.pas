@@ -357,7 +357,7 @@ begin
           Bitmap.LoadFromFile(TempConfigData.Logo);
          except
          end;
-        end
+        end;
         try
           //procedure drukujaca StringList
           PrintStrings('Dokument programu WinPrint - '+SearchRec.Name,
