@@ -352,11 +352,12 @@ begin
         TempFont.Style:=TempConfigData.FontStyles;
 
         Bitmap:=TBitmap.Create;
-        try
-         Bitmap.LoadFromFile(TempConfigData.Logo);
-        except
-        end;
-
+        if TempConfigData.Logo<>'' then begin 
+         try
+          Bitmap.LoadFromFile(TempConfigData.Logo);
+         except
+         end;
+        end
         try
           //procedure drukujaca StringList
           PrintStrings('Dokument programu WinPrint - '+SearchRec.Name,
