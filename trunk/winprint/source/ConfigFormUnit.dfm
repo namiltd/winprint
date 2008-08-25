@@ -589,7 +589,7 @@ object ConfigForm: TConfigForm
           Width = 185
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 0
           OnChange = ConfigChanged
           Items.Strings = (
@@ -654,6 +654,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'Inne'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)

@@ -439,7 +439,7 @@ var
 begin
   if SelectDirectory('Wska¿ folder plików.','\',TempDir) then
   begin
-    TempDir:=IncludeTrailingBackslash(TempDir);
+    if TempDir<>'' then TempDir:=IncludeTrailingBackslash(TempDir);
     If LowerCase(TempDir) = LowerCase(ExtractFilePath(ParamStr(0))) then TempDir := '';
     Edit1.Text:=TempDir;
   end;

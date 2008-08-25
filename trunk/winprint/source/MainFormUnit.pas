@@ -79,7 +79,7 @@ var
 implementation
 
 uses
-  FileCtrl, ShellAPI, Math, PrintStringsUnit, Printers, MyStrings, ConversionUnit;
+  ShellAPI, Math, PrintStringsUnit, Printers, MyStrings, ConversionUnit;
 
 {$R *.DFM}
 
