@@ -201,17 +201,110 @@ begin
 end;
 
 
+Function GetNextLineMy(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
+
+Var
+  PS : PChar;
+  IP,L : Integer;
+
+begin
+  L:=Length(Value);
+  S:='';
+  Result:=False;
+  If ((L-P)<0) then
+    exit;
+  if ((L-P)=0) and (not (value[P] in [#10,#13])) Then
+    Begin
+      s:=value[P];
+      inc(P);
+      Result:=True;
+      Exit;
+//      Exit(True);
+    End;
+  PS:=PChar(Value)+P-1;
+  IP:=P;
+  While ((L-P)>=0) and (not (PS^ in [#10,#13])) do
+    begin
+    P:=P+1;
+    Inc(PS);
+    end;
+  SetLength (S,P-IP);
+  System.Move (Value[IP],Pointer(S)^,P-IP);
+  If (P<=L) and (Value[P]=#13) then
+    Inc(P);
+  If (P<=L) and (Value[P]=#10) then
+    Inc(P); // Point to character after #10(#13)
+  Result:=True;
+end;
+
+Procedure SetTextStrMy(SL: Tstrings; const Value: string);
+
+Var
+  S : String;
+  P : Integer;
+
+begin
+  Try
+    SL.beginUpdate;
+    SL.Clear;
+    P:=1;
+    While GetNextLineMy(SL, Value,S,P) do
+      SL.Add(S);
+  finally
+    SL.EndUpdate;
+  end;
+end;
+
+Procedure LoadFromStreamMy(SL: TStrings; Stream: TStream);
+{
+   Borlands method is no good, since a pipe for
+   instance doesn't have a size.
+   So we must do it the hard way.
+}
+Const
+  BufSize = 1024;
+  MaxGrow = 1 shl 29;
+
+Var
+  Buffer     : AnsiString;
+  BytesRead,
+  BufLen,
+  I,BufDelta     : Longint;
+begin
+  // reread into a buffer
+  try
+    SL.beginupdate;
+    Buffer:='';
+    BufLen:=0;
+    I:=1;
+    Repeat
+      BufDelta:=BufSize*I;
+      SetLength(Buffer,BufLen+BufDelta);
+      BytesRead:=Stream.Read(Buffer[BufLen+1],BufDelta);
+      inc(BufLen,BufDelta);
+      If I<MaxGrow then
+        I:=I shl 1;
+    Until BytesRead<>BufDelta;
+    SetLength(Buffer, BufLen-BufDelta+BytesRead);
+    SetTextStrMy(SL, Buffer);
+    SetLength(Buffer,0);
+  finally
+    SL.EndUpdate;
+  end;
+end;
+
+
 procedure ReadANDConvert;
 var
   FS: TFileStream;
   Buffer: string;
-  Count,Prev,i: integer;
+  Count,{Prev,}i: integer;
   SS: TStringStream;
   XLATTable: array[char] of char;
   ci: TConversionItem;
 begin
   for i:=0 to 255 do XLATTable[char(i)]:=char(i);
-  if CodePage<>cpLAT then 
+  if CodePage<>cpLAT then
         for i:=1 to 18 do XLATTable[char(PLConvTable[CodePage,i])]:=char(PLConvTable[cpLAT,i]);
   if UseCustomConversionTable then begin
     Count:=ConversionItems.Count;
@@ -219,7 +312,7 @@ begin
        for i:=0 to Count-1 do begin
          ci:=ConversionItems.Items[i];
          if ci<>nil then XLATTable[char(ci.Incode)]:=char(ci.Outcode);
-       end; 
+       end;
   end;
   FS:=TFileStream.Create(FileName,fmOpenRead or fmShareDenyNone);
   try
@@ -229,22 +322,25 @@ begin
       while (FS.Position<FS.Size) do
       begin
         Count:=FS.Read(Buffer[1],1024);
-        Prev:=0;
+{        Prev:=0;}
         for i:=1 to Count do
         begin
           Buffer[i]:=XLATTable[Buffer[i]];
-          if (Buffer[i]=#0) then
+{          if (Buffer[i]=#0) then
           begin
             inc(Prev);
             if (i>Prev) then SS.WriteString(copy(Buffer,Prev,i-Prev));
             Prev:=i;
-          end;
+          end; }
         end;
-        if (Prev<Count) then SS.WriteString(copy(Buffer,Prev+1,Count-Prev));
+{        if (Prev<Count) then SS.WriteString(copy(Buffer,Prev+1,Count-Prev));}
+        SS.WriteString(copy(Buffer,1,Count));
+
       end;
     finally
       SS.Seek(0,soFromBeginning);
-      SL.LoadFromStream(SS);
+//      SL.LoadFromStream(SS);
+      LoadFromStreamMy(SL,SS);
     end;
   finally
     FS.Free;

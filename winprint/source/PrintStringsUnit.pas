@@ -263,7 +263,7 @@ var
       wstmp: WideString;
       licz : integer; tw: integer; //text width
       ks: boolean; //kod sterujacy
-      ig: integer; //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig)
+      ig: integer; //ignore next znakow
       ep: boolean; //empty page
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
@@ -361,24 +361,20 @@ var
         //printer.canvas.TextOut( textrect.left, y, lines[textStart]);
 
         r:=Rect(textrect.left,y,textrect.right,y+charheight);
-
-        len:=MultiByteToWideChar(852,0,PChar(lines[textStart]),-1,nil,0);
-        if (len>01) then
+        len:=MultiByteToWideChar(852,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
+        if (len>0) then
         begin
-          SetLength(ws,len-1);
-          MultiByteToWideChar(852,0,PChar(lines[textStart]),-1,PWideChar(ws),len-1);
+          SetLength(ws,len);
+          MultiByteToWideChar(852,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
           tw:=0;
           ks:=false;
           ig:=0;
           for licz:=1 to len do begin
 	           wstmp[1]:=ws[licz];
-             if (ig<>0) //ignore next; 0 nie, <>0 tak gdy znak>='0' i znak<chr(ord('0')+ig)
-                and (integer(wstmp[1])>=ord('0'))
-                and (integer(wstmp[1])<(ord('0')+ig))
-                then begin
-                         ig:=0;
-                         continue;
-		                 end;
+             if ig>0 then begin //ignore next znakow
+                            dec(ig);
+                            continue;
+                          end;
              if ks then case integer(wstmp[1]) of
                 15:  case charheightco of //ESC SI to samo co SI
                        10: charheightco:=17;
@@ -397,13 +393,13 @@ var
                 77: charheightco:=12; //ESC M
                 80: charheightco:=10; //ESC P
                103: charheightco:=15; //ESC g
-	     71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
+	           71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
              72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
-		52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
+		            52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
                 53: charstyleco:=charstyleco-[fsItalic]; //ESC 5
-	       120: ig:=2; //ESC x zignor.ustawianie NLQ (mozliwe wartosci '0''1')
-               116: ig:=4; //ESC t zignor.ustawianie chartable (mozliwe wartosci '0''1''2''3')
-                83: ig:=2; //ESC S zignor.ustawianie indeks gorny/dolny (mozliwe wartosci '0''1')
+	             120: ig:=1; //ESC x zignor.ustawianie NLQ
+               116: ig:=1; //ESC t zignor.ustawianie chartable
+                83: ig:=1; //ESC S zignor.ustawianie indeks gorny/dolny
              end
              else case integer(wstmp[1]) of
                 0..13,16,17,19,21..31: ; //puste by nic nie malowalo
