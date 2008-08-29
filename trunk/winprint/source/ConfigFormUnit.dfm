@@ -60,6 +60,16 @@ object ConfigForm: TConfigForm
     TabOrder = 0
     OnClick = Button1Click
   end
+  object Button11: TButton
+    Left = 6
+    Top = 334
+    Width = 25
+    Height = 25
+    TabOrder = 4
+    Anchors = [akRight, akBottom]
+    Caption = 'Button11'
+    OnClick = Button11Click
+  end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
@@ -733,24 +743,5 @@ object ConfigForm: TConfigForm
         OnClick = Button10Click
       end
     end
-  end
-  object Button11: TButton
-    Left = 6
-    Top = 334
-    Width = 25
-    Height = 25
-    Margins.Left = 1
-    Margins.Top = 1
-    Margins.Right = 1
-    Margins.Bottom = 1
-    Caption = 'Button11'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 4
-    OnClick = Button11Click
   end
 end
