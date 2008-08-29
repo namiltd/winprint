@@ -145,6 +145,7 @@ type
     Edit8: TEdit;
     Button10: TButton;
     CheckBox6: TCheckBox;
+    Button11: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -169,6 +170,7 @@ type
     procedure Button9Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
   private
     { Private declarations }
     ListBox1HintIndex: integer;
@@ -189,18 +191,22 @@ type
   public
     { Public declarations }
     ConfigData: TConfigData;
+    procedure LoadLang;
   published
     procedure ConfigChanged(Sender: TObject);
     procedure ConfigChanging(Sender: TObject; var AllowChange: Boolean);
     procedure ResolveEditValues1(Sender: TObject);
   end;
 
-const
-  CharCodeLow = low(TCharCode);
-  CharCodeHigh = high(TCharCode);
+ function RString(ID: WORD):string;
+
+//const
+//  CharCodeLow = low(TCharCode);
+//  CharCodeHigh = high(TCharCode);
 
 var
   ConfigForm: TConfigForm;
+  LANG: word = 61000;
 
 implementation
 
@@ -243,18 +249,27 @@ const
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
 
+  PriorityClassValues: array[MinPriorityClass..MaxPriorityClass] of cardinal =
+        (IDLE_PRIORITY_CLASS,
+         NORMAL_PRIORITY_CLASS,
+         HIGH_PRIORITY_CLASS,
+         REALTIME_PRIORITY_CLASS);
+var
   PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string =
         ('bezczynny',
          'normalny',
          'wysoki',
          'czasu rzeczywistego');
 
-  PriorityClassValues: array[MinPriorityClass..MaxPriorityClass] of cardinal =
-        (IDLE_PRIORITY_CLASS,
-         NORMAL_PRIORITY_CLASS,
-         HIGH_PRIORITY_CLASS,
-         REALTIME_PRIORITY_CLASS);
 
+function RString(ID: WORD):string;
+var
+  a : array[0..255] of char;
+begin
+ result:='';
+ if (LoadString(hInstance,LANG+ID,@a,sizeof(a)) <> 0)
+   then result:=StrPas(a);
+end;
 
 procedure SaveCollectionToStream(Collection: TCollection; Stream: TStream);
 begin
@@ -281,6 +296,7 @@ end;
 
 procedure TConfigForm.FormCreate(Sender: TObject);
 begin
+ Label8.Caption:=RString(111);
 {komponenty dynamiczne}
   IntEdit1:=TIntEdit.Create(Self);
   with IntEdit1 do begin
@@ -312,7 +328,7 @@ begin
           Top := 90;
           Width := 48;
           Height := 21;
-          Hint := 'pozostaw 0 by usun znak';
+          Hint := 'IntEdit3';
           ParentShowHint := False;
           ShowHint := True;
 //          TabOrder := 3;
@@ -437,7 +453,7 @@ procedure TConfigForm.SpeedButton1Click(Sender: TObject);
 var
   TempDir: string;
 begin
-  if SelectDirectory('Wska¿ folder plików.','\',TempDir) then
+  if SelectDirectory(RString(300),'\',TempDir) then
   begin
     if TempDir<>'' then TempDir:=IncludeTrailingBackslash(TempDir);
     If LowerCase(TempDir) = LowerCase(ExtractFilePath(ParamStr(0))) then TempDir := '';
@@ -697,7 +713,7 @@ begin
     Memo1.Font.Size:=FontSize;
     Memo1.Font.Charset:=FontCharset;
     Memo1.Font.Style:=FontStyles;
-    Label5.Caption:=Format('%s, rozmiar: %d',[FontName,FontSize]);
+    Label5.Caption:=Format('%s, '+RString(301)+': %d',[FontName,FontSize]);
     FloatEdit1.Value:=MarginLeft;
     FloatEdit2.Value:=MarginRight;
     FloatEdit3.Value:=MarginTop;
@@ -864,6 +880,14 @@ begin
 end;
 
 //Klawisz OK
+procedure TConfigForm.Button11Click(Sender: TObject);
+begin
+  if LANG=61000 then LANG:=60000
+                else LANG:=61000;
+  LoadLang;
+  MainForm.Loadlang;
+end;
+
 procedure TConfigForm.Button1Click(Sender: TObject);
 begin
   WriteConfig;
@@ -892,7 +916,7 @@ begin
     if FontDialog1.Execute then
     begin
       Memo1.Font:=FontDialog1.Font;
-      Label5.Caption:=Format('%s, rozmiar: %d',[Memo1.Font.Name,Memo1.Font.Size]);
+      Label5.Caption:=Format('%s, '+RString(301)+': %d',[Memo1.Font.Name,Memo1.Font.Size]);
       ConfigChanged(Sender);
     end;
   end;
@@ -919,7 +943,7 @@ begin
   Memo1.Font.Size:=DEFAULT_FONT_SIZE;
   Memo1.Font.Charset:=DEFAULT_FONT_CHARSET;
   Memo1.Font.Style:=DEFAULT_FONT_STYLES;
-  Label5.Caption:=Format('%s, rozmiar: %d',[DEFAULT_FONT_NAME,DEFAULT_FONT_SIZE]);
+  Label5.Caption:=Format('%s, '+RString(301)+': %d',[DEFAULT_FONT_NAME,DEFAULT_FONT_SIZE]);
   FloatEdit1.Value:=DEFAULT_MARGIN_LEFT;
   FloatEdit2.Value:=DEFAULT_MARGIN_RIGHT;
   FloatEdit3.Value:=DEFAULT_MARGIN_TOP;
@@ -1094,22 +1118,12 @@ begin
   if Edit8.Text = '' then openDialog.InitialDir := ExtractFilePath(paramstr(0))
                      else openDialog.InitialDir := ExtractFilePath(Edit8.Text);
   openDialog.Options := [ofFileMustExist];
-{openDialog.Filter :=
-    'Delphi project files|*.dpr|Delphi pascal files|*.pas';}
-  openDialog.Filter := 'Logo files (*.bmp)|*.BMP';
+
+  openDialog.Filter := RString(405);
   openDialog.FilterIndex := 1;
   if openDialog.Execute then
       Edit8.Text := openDialog.FileName;
   openDialog.Free;
-
-{  TempDir: string;
-begin
-  if SelectFile('Wska¿ plików BMP z logo.','\',TempDir) then
-  begin
-    TempDir:=IncludeTrailingBackslash(TempDir);
-    Edit8.Text:=TempDir;
-  end;
-}
 end;
 
 //Show ListBox1 hint
@@ -1176,6 +1190,92 @@ begin
   end;
 end;
 
+procedure TConfigForm.LoadLang;
+var i,j: integer;
+    s: string;
+begin
+  Button3.Hint := RString(100);
+  Button3.Caption := RString(101);
+  Button2.Hint := RString(102);
+  Button2.Caption := RString(103);
+  Button1.Caption := RString(104);
+  TabSheet2.Caption  := RString(105);
+  GroupBox3.Caption := RString(106);
+  Button4.Caption := RString(107);
+  GroupBox4.Caption := RString(108);
+  Label6.Caption := RString(109);
+  Label7.Caption := RString(110);
+  Label8.Caption := RString(111);
+  Label9.Caption := RString(112);
+  RadioGroup1.Caption := RString(113);
+  RadioGroup1.Items.strings[0] := RString(114);
+  RadioGroup1.Items.strings[1] := RString(115);
+  Button6.Caption := RString(116);
+  GroupBox5.Caption := RString(117);
+  Label10.Caption := RString(118);
+  Label14.Caption := RString(119);
+  TabSheet1.Caption := RString(120);
+  GroupBox1.Caption := RString(121);
+  Label1.Caption := RString(122);
+  Label2.Caption := RString(123);
+  Label11.Caption := RString(124);
+  Edit1.Hint := RString(125);
+  Edit2.Hint := RString(126);
+  Edit3.Hint := RString(127);
+  CheckBox2.Caption := RString(128);
+  GroupBox2.Caption := RString(129);
+  Label3.Caption := RString(130);
+  Label4.Caption := RString(131);
+  Label12.Caption := RString(132);
+  Edit6.Hint := RString(133);
+  Edit7.Hint := RString(134);
+  CheckBox1.Hint := RString(135);
+  CheckBox1.Caption := RString(136);
+  Button5.Caption := RString(116);
+  TabSheet3.Caption := RString(138);
+  GroupBox6.Caption := RString(139);
+  Label15.Caption := RString(140);
+  CheckBox3.Caption := RString(141);
+  CheckBox5.Hint := RString(142);
+  CheckBox5.Caption := RString(143);
+  GroupBox7.Caption := RString(144);
+  Label16.Caption := RString(145);
+  SpeedButton2.Hint := RString(146);
+  SpeedButton3.Hint := RString(147);
+  Label17.Caption := RString(148);
+  Label18.Caption := RString(149);
+  CheckBox4.Caption := RString(150);
+  Button8.Caption := RString(151);
+  Button9.Caption := RString(152);
+  Button7.Caption := RString(116);
+  TabSheet4.Caption := RString(153);
+  GroupBox8.Caption := RString(154);
+  Label19.Caption := RString(155);
+  Label20.Caption := RString(156);
+  Label21.Caption := RString(157);
+  Edit8.Hint := RString(158);
+  CheckBox6.Hint := RString(159);
+  CheckBox6.Caption := RString(160);
+  Button10.Caption := RString(116);
+  IntEdit3.Hint :=  RString(161);
+  Button11.Caption := RString(000);
+
+  PriorityClassNames[MinPriorityClass+0] := RString(200);
+  PriorityClassNames[MinPriorityClass+1] := RString(201);
+  PriorityClassNames[MinPriorityClass+2] := RString(202);
+  PriorityClassNames[MinPriorityClass+3] := RString(203);
+  Label13.Caption:=PriorityClassNames[ConfigData.Priority];
+
+  s := Label5.Caption;
+  i := Pos(',',s);
+  j := Pos(':',s);
+  if (i>0) and (j>0) and (j>(i+1)) then begin
+     Delete(s, i+2, j-i-2);
+     Insert(RString(301),s ,i+2);
+     Label5.Caption:= s;
+  end;
+
+end;
 
 end.
 

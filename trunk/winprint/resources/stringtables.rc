@@ -1,0 +1,247 @@
+#pragma code_page(1250)
+STRINGTABLE
+BEGIN
+ 60000 "PL"
+ 61000 "EN"
+
+//------------------------ConfigForm------------------------------
+ 60100 "Stosuje zmiany dokonane w konfiguracji programu."
+ 61100 "Apply configuration changes"
+
+ 60101 "Zastosuj"
+ 61101 "Apply"
+
+ 60102 "Anuluje zmiany dokonane w konfiguracji programu."
+ 61102 "Cancel configuration changes."
+
+ 60103 "Anuluj"
+ 61103 "Cancel"
+
+ 60104 "OK"
+ 61104 "OK"
+
+ 60105 "Ustawienia strony"
+ 61105 "Page settings"
+
+ 60106 " Czcionka "
+ 61106 " Font "
+
+ 60107 "Wybierz"
+ 61107 "Select"
+
+ 60108 " Marginesy (mm) "
+ 61108 " Margins (mm) "
+
+ 60109 "Lewy"
+ 61109 "Left"
+
+ 60110 "Prawy"
+ 61110 "Right"
+
+ 60111 "Górny"
+ 61111 "Top"
+
+ 60112 "Dolny"
+ 61112 "Bottom"
+
+ 60113 " Orientacja "
+ 61113 " Orientation "
+
+ 60114 "Pionowa"
+ 61114 "Vertical"
+
+ 60115 "Pozioma"
+ 61115 "Horizontal"
+
+ 60116 "Domyœlne"
+ 61116 "Default"
+
+ 60117 " Gêstoœæ "
+ 61117 " Density "
+
+ 60118 "Iloœæ linii na cal"
+ 61118 "Lines per inch"
+
+ 60119 "na stronê"
+ 61119 "per page"
+
+ 60120 "Opcje u¿ytkowe"
+ 61120 "Utility options"
+
+ 60121 " Lokalizacja dokumentów "
+ 61121 " Documents location "
+
+ 60122 "Folder plików"
+ 61122 "Files folder"
+
+ 60123 "Maska plików"
+ 61123 "Files mask"
+
+ 60124 "Rozszerzenie plików formatuj¹cych"
+ 61124 "Formatting files extension"
+
+ 60125 "Œcie¿ka do katalogu z plikami, które bêd¹ przetwarzane."
+ 61125 "Path to processing files folder"
+
+ 60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt)."
+ 61126 "Mask of processing files (e.g. *.txt)"
+
+ 60127 "Rozszerzenie plików formatuj¹cych"
+ 61127 "Formatting files extension"
+
+ 60128 "w³¹czone"
+ 61128 "enabled"
+
+ 60129 " Aplikacja "
+ 61129 " Application "
+
+ 60130 "Przetwarzaj pliki co (ms)"
+ 61130 "Files processing period (ms)"
+
+ 60131 "Oczekiwanie na zakoñczenie zapisu (ms)"
+ 61131 "Wait time from write ending (ms)"
+
+ 60132 "Piorytet"
+ 61132 "Priority"
+
+ 60133 "Okreœla czas, co jaki nale¿y przetwarzaæ kolejny plik."
+ 61133 "Time period of processing the next file."
+
+ 60134 "Okreœla po jakim czasie od ostatniego zapisu do pliku mo¿na go przetwarzaæ."
+ 61134 "Waiting time from last file writig to processing."
+
+ 60135 "Uruchamianie programu przy starcie Windows."
+ 61135 "Run program on windows start"
+
+ 60136 "Uruchom przy starcie systemu"
+ 61136 "Run on Windows start"
+
+ 60138 "Format danych"
+ 61138 "Format of data"
+
+ 60139 " Znaki steruj¹ce "
+ 61139 " Control characters "
+
+ 60140 "Kody znaków koñca strony"
+ 61140 "Codes of page end"
+
+ 60141 "odrzuæ puste strony"
+ 61141 "Skip empty pages"
+
+ 60142 "Pomija pierwszy wiersz wydruku (je¿eli pusty)"
+ 61142 "Skip first line (if empty)"
+
+ 60143 "zgodnoœæ z Clipper'em"
+ 61143 "Clipper compatibility"
+
+ 60144 " Konwersja znaków "
+ 61144 " Characters conversion "
+
+ 60145 "Strona kodowa"
+ 61145 "Code page"
+
+ 60146 "dodaj"
+ 61146 "add"
+
+ 60147 "usuñ"
+ 61147 "remove"
+
+ 60148 "stary kod na nowy kod"
+ 61148 "old code to new code"
+
+ 60149 "Opis"
+ 61149 "Info"
+
+ 60150 "dodatkowo przekoduj"
+ 61150 "additionally transcode"
+
+ 60151 "Zapisz"
+ 61151 "Save"
+
+ 60152 "Wczytaj"
+ 61152 "Load"
+
+ 60153 "Inne"
+ 61153 "Misc"
+
+ 60154 " Logo "
+ 61154 " Logo "
+
+ 60155 "Plik bitmapy z logo"
+ 61155 "Bitmap logo file"
+
+ 60156 "Od lewej (mm)"
+ 61156 "From left (mm)"
+
+ 60157 "Od góry (mm)"
+ 61157 "From top (mm)"
+
+ 60158 "Œcie¿ka do pliku w formacie BMP z logo."
+ 61158 "Path to BMP logo file."
+
+ 60159 "Drukuj logo tylko na pierwszej stronie"
+ 61159 "Pring logo on first page only"
+
+ 60160 "tylko na 1-szej stronie"
+ 61160 "on 1-st page only"
+
+//------------------------CFU-ConfigForm-dynamic------------------
+ 60161 "pozostaw 0 by usun¹æ znak"
+ 61161 "set 0 to remove"
+
+//------------------------CFU-PriorityClassNames------------------
+ 60200 "bezczynny"
+ 61200 "idle"
+
+ 60201 "normalny"
+ 61201 "normal"
+
+ 60202 "wysoki"
+ 61202 "hight"
+
+ 60203 "czasu rzeczywistego"
+ 61203 "realtime"
+
+//------------------------CFU-------------------------------------
+ 60300 "Wska¿ folder plików."
+ 61300 "Select files folder."
+
+ 60301 "rozmiar"
+ 61301 "size"
+
+//------------------------MainForm--------------------------------
+ 60400 "Konfiguracja"
+ 61400 "Configuration"
+
+ 60401 "Ustawienia programu."
+ 61401 "Program settings."
+
+ 60402 "Zakoñcz"
+ 61402 "Exit"
+
+ 60403 "Zakoñczenie pracy programu."
+ 61403 "Program exit."
+
+ 60404 "Tabele konwersji (*.tk)|*.TK"
+ 61404 "Conversion tables (*.tk)|*.TK"
+
+ 60405 "Pliki logo (*.bmp)|*.BMP"
+ 61405 "Logo files (*.bmp)|*.BMP"
+
+//------------------------MFU-------------------------------------
+ 60500 "jest ju¿ uruchomiony.\nPowtórne uruchomienie programu mo¿e spowodowaæ b³êdy w jego dzia³aniu.\n\nCzy chcesz uruchomiæ ten program ponownie?"
+ 61500 "already running.\nSecond run may couse errors in his action.\n\nRun program again?"
+
+ 60501 "Ostrze¿enie"
+ 61501 "Warning"
+
+ 60502 "Wyst¹pi³ krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku\nProgram WinPrint zostanie zakoñczony"
+ 61502 "Critical error during bad print file archiving\nProgram WinPrint will exit"
+
+ 60503 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku wydruku z kolejki\nProgram WinPrint zostanie zakoñczony"
+ 61503 "Critical error during print removing file from queue\nProgram WinPrint will exit"
+
+ 60504 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki\nProgram WinPrint zostanie zakoñczony"
+ 61504  "Critical error during removing format file from queue\nProgram WinPrint will exit"
+
+END

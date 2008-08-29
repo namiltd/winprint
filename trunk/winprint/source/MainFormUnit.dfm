@@ -20,17 +20,17 @@ object MainForm: TMainForm
     Left = 112
     Top = 16
     object Konfiguracja1: TMenuItem
-      Caption = 'Konfiguracja'
+      Caption = 'PopupMenu1'
       Default = True
-      Hint = 'Ustawienia harmonogramu.'
+      Hint = 'PopupMenu1'
       OnClick = Konfiguracja1Click
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object Zakocz1: TMenuItem
-      Caption = 'Zako'#324'cz'
-      Hint = 'Zako'#324'czenie pracy harmonogramu.'
+      Caption = 'Zakocz1'
+      Hint = 'Zakocz1'
       OnClick = Zakocz1Click
     end
   end
@@ -42,7 +42,7 @@ object MainForm: TMainForm
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = 'tk'
-    Filter = 'Tabele konwersji|*.tk'
+    Filter = 'OpenDialog1'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Left = 112
     Top = 64
@@ -67,7 +67,7 @@ object MainForm: TMainForm
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'tk'
-    Filter = 'Tabele konwersji|*.tk'
+    Filter = 'SaveDialog1'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 112
     Top = 112

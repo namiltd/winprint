@@ -28,9 +28,9 @@ object ConfigForm: TConfigForm
     Top = 334
     Width = 75
     Height = 25
-    Hint = 'Stosuje zmiany dokonane w konfiguracji programu.'
+    Hint = 'Button3'
     Anchors = [akRight, akBottom]
-    Caption = 'Zastosuj'
+    Caption = 'Button3'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 2
@@ -41,21 +41,21 @@ object ConfigForm: TConfigForm
     Top = 334
     Width = 75
     Height = 25
-    Hint = 'Anuluje zmiany dokonane w konfiguracji programu.'
+    Hint = 'Button2'
     Anchors = [akRight, akBottom]
-    Caption = 'Anuluj'
+    Caption = 'Button2'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
     OnClick = Button2Click
   end
   object Button1: TButton
-    Left = 79
+    Left = 78
     Top = 334
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
-    Caption = 'OK'
+    Caption = 'Button1'
     Default = True
     TabOrder = 0
     OnClick = Button1Click
@@ -65,17 +65,13 @@ object ConfigForm: TConfigForm
     Top = 0
     Width = 314
     Height = 326
-    ActivePage = TabSheet4
+    ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 3
     object TabSheet2: TTabSheet
       BorderWidth = 8
-      Caption = 'Ustawienia strony'
+      Caption = 'PageControl1'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -85,7 +81,7 @@ object ConfigForm: TConfigForm
         Width = 290
         Height = 92
         Anchors = [akLeft, akTop, akRight]
-        Caption = ' Czcionka '
+        Caption = 'GroupBox3'
         TabOrder = 0
         DesignSize = (
           290
@@ -122,7 +118,7 @@ object ConfigForm: TConfigForm
           Width = 75
           Height = 25
           Anchors = [akTop, akRight]
-          Caption = 'Wybierz'
+          Caption = 'Button4'
           TabOrder = 1
           OnClick = Button4Click
         end
@@ -132,39 +128,39 @@ object ConfigForm: TConfigForm
         Top = 94
         Width = 198
         Height = 93
-        Caption = ' Marginesy (mm) '
+        Caption = 'GroupBox4'
         TabOrder = 1
         object Label6: TLabel
-          Left = 13
+          Left = 6
           Top = 28
-          Width = 25
+          Width = 32
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Lewy'
+          Caption = 'Label6'
         end
         object Label7: TLabel
-          Left = 101
+          Left = 98
           Top = 28
-          Width = 29
+          Width = 32
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Prawy'
+          Caption = 'Label7'
         end
         object Label8: TLabel
-          Left = 10
+          Left = 6
           Top = 60
-          Width = 28
+          Width = 32
           Height = 13
           Alignment = taRightJustify
-          Caption = 'G'#243'rny'
+          Caption = 'Label8'
         end
         object Label9: TLabel
-          Left = 102
+          Left = 96
           Top = 60
-          Width = 27
+          Width = 33
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Dolny'
+          Caption = 'LAbel9'
         end
       end
       object RadioGroup1: TRadioGroup
@@ -173,10 +169,10 @@ object ConfigForm: TConfigForm
         Width = 86
         Height = 93
         Anchors = [akLeft, akTop, akRight]
-        Caption = ' Orientacja '
+        Caption = 'RadioGroup1'
         Items.Strings = (
-          'Pionowa'
-          'Pozioma')
+          'RadioGroup1_0'
+          'RadioGroup1_1')
         TabOrder = 2
         OnClick = ConfigChanged
       end
@@ -186,7 +182,7 @@ object ConfigForm: TConfigForm
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
-        Caption = 'Domy'#347'lne'
+        Caption = 'Button6'
         TabOrder = 4
         OnClick = Button6Click
       end
@@ -196,39 +192,35 @@ object ConfigForm: TConfigForm
         Width = 290
         Height = 60
         Anchors = [akLeft, akTop, akRight]
-        Caption = ' G'#281'sto'#347#263' '
+        Caption = 'GroupBox5'
         TabOrder = 3
         object Label10: TLabel
-          Left = 14
+          Left = 47
           Top = 26
-          Width = 71
+          Width = 38
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Ilo'#347#263' linii na cal'
+          Caption = 'Label10'
         end
         object Label14: TLabel
-          Left = 162
+          Left = 168
           Top = 26
-          Width = 44
+          Width = 38
           Height = 13
           Alignment = taRightJustify
-          Caption = 'na stron'#281
+          Caption = 'Label14'
         end
       end
     end
     object TabSheet1: TTabSheet
       BorderWidth = 8
-      Caption = 'Opcje u'#380'ytkowe'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      Caption = 'TabSheet1'
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
         Width = 290
         Height = 114
-        Caption = ' Lokalizacja dokument'#243'w '
+        Caption = 'GroupBox1'
         TabOrder = 0
         DesignSize = (
           290
@@ -258,30 +250,30 @@ object ConfigForm: TConfigForm
         object Label1: TLabel
           Left = 12
           Top = 20
-          Width = 62
+          Width = 32
           Height = 13
-          Caption = 'Folder plik'#243'w'
+          Caption = 'Label1'
         end
         object Label2: TLabel
           Left = 12
           Top = 60
-          Width = 65
+          Width = 32
           Height = 13
-          Caption = 'Maska plik'#243'w'
+          Caption = 'Label2'
         end
         object Label11: TLabel
           Left = 116
           Top = 60
-          Width = 165
+          Width = 38
           Height = 13
-          Caption = 'Rozszerzenie plik'#243'w formatuj'#261'cych'
+          Caption = 'Label11'
         end
         object Edit1: TEdit
           Left = 12
           Top = 36
           Width = 243
           Height = 21
-          Hint = #346'cie'#380'ka do katalogu z plikami, kt'#243're b'#281'd'#261' przetwarzane.'
+          Hint = 'Edit1'
           Anchors = [akLeft, akTop, akRight]
           ParentShowHint = False
           ShowHint = True
@@ -293,7 +285,7 @@ object ConfigForm: TConfigForm
           Top = 76
           Width = 88
           Height = 21
-          Hint = 'Maska plik'#243'w, kt'#243're b'#281'd'#261' przetwarzane (np. *.txt).'
+          Hint = 'Edit2'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
@@ -304,7 +296,7 @@ object ConfigForm: TConfigForm
           Top = 76
           Width = 88
           Height = 21
-          Hint = 'Rozszerzenie plik'#243'w formatuj'#261'cych'
+          Hint = 'Edit3'
           Anchors = [akLeft, akTop, akRight]
           ParentShowHint = False
           ShowHint = True
@@ -317,7 +309,7 @@ object ConfigForm: TConfigForm
           Width = 69
           Height = 17
           Anchors = [akTop, akRight]
-          Caption = 'w'#322#261'czone'
+          Caption = 'CheckBox2'
           TabOrder = 3
           OnClick = CheckBox2Click
         end
@@ -327,33 +319,33 @@ object ConfigForm: TConfigForm
         Top = 117
         Width = 290
         Height = 134
-        Caption = ' Aplikacja '
+        Caption = 'GroupBox2'
         TabOrder = 1
         DesignSize = (
           290
           134)
         object Label3: TLabel
-          Left = 12
+          Left = 174
           Top = 20
-          Width = 112
+          Width = 32
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Przetwarzaj pliki co (ms)'
+          Caption = 'Label3'
         end
         object Label4: TLabel
-          Left = 12
+          Left = 174
           Top = 48
-          Width = 194
+          Width = 32
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Oczekiwanie na zako'#324'czenie zapisu (ms)'
+          Caption = 'Label4'
         end
         object Label12: TLabel
           Left = 12
           Top = 78
-          Width = 35
+          Width = 38
           Height = 13
-          Caption = 'Piorytet'
+          Caption = 'Label12'
         end
         object Label13: TLabel
           Left = 168
@@ -367,7 +359,7 @@ object ConfigForm: TConfigForm
           Top = 16
           Width = 40
           Height = 21
-          Hint = 'Okre'#347'la czas, co jaki nale'#380'y przetwarza'#263' kolejny plik.'
+          Hint = 'Edit6'
           Anchors = [akLeft, akTop, akRight]
           ParentShowHint = False
           ReadOnly = True
@@ -380,9 +372,7 @@ object ConfigForm: TConfigForm
           Top = 44
           Width = 40
           Height = 21
-          Hint = 
-            'Okre'#347'la po jakim czasie od ostatniego zapisu do pliku mo'#380'na go p' +
-            'rzetwarza'#263'.'
+          Hint = 'Edit7'
           Anchors = [akLeft, akTop, akRight]
           ParentShowHint = False
           ReadOnly = True
@@ -423,8 +413,8 @@ object ConfigForm: TConfigForm
           Top = 106
           Width = 165
           Height = 17
-          Hint = 'Uruchamianie harmonogramu przy starcie Windows.'
-          Caption = 'Uruchom przy starcie systemu'
+          Hint = 'CheckBox1'
+          Caption = 'CheckBox1'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 3
@@ -449,32 +439,28 @@ object ConfigForm: TConfigForm
         Top = 257
         Width = 75
         Height = 25
-        Caption = 'Domy'#347'lne'
+        Caption = 'Button5'
         TabOrder = 2
         OnClick = Button5Click
       end
     end
     object TabSheet3: TTabSheet
       BorderWidth = 8
-      Caption = 'Format danych'
+      Caption = 'TabSheet3'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 0
         Width = 290
         Height = 76
-        Caption = ' Znaki steruj'#261'ce '
+        Caption = 'GroupBox6'
         TabOrder = 0
         object Label15: TLabel
           Left = 12
           Top = 20
-          Width = 128
+          Width = 38
           Height = 13
-          Caption = 'Kody znak'#243'w ko'#324'ca strony'
+          Caption = 'Label15'
           Transparent = True
         end
         object Edit4: TEdit
@@ -490,7 +476,7 @@ object ConfigForm: TConfigForm
           Top = 46
           Width = 117
           Height = 17
-          Caption = 'odrzu'#263' puste strony'
+          Caption = 'CheckBox3'
           TabOrder = 1
           OnClick = ConfigChanged
         end
@@ -499,8 +485,8 @@ object ConfigForm: TConfigForm
           Top = 46
           Width = 129
           Height = 17
-          Hint = 'pomija pierwszy wiersz wydruku (je'#380'eli pusty)'
-          Caption = 'zgodno'#347#263' z Clipper'#39'em'
+          Hint = 'CheckBox5'
+          Caption = 'CheckBox5'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 2
@@ -512,21 +498,21 @@ object ConfigForm: TConfigForm
         Top = 78
         Width = 290
         Height = 172
-        Caption = ' Konwersja znak'#243'w '
+        Caption = 'GroupBox7'
         TabOrder = 1
         object Label16: TLabel
           Left = 12
           Top = 22
-          Width = 72
+          Width = 38
           Height = 13
-          Caption = 'Strona kodowa'
+          Caption = 'Label16'
         end
         object SpeedButton2: TSpeedButton
           Left = 124
           Top = 76
           Width = 23
           Height = 22
-          Hint = 'dodaj'
+          Hint = 'SpeedButton2'
           Glyph.Data = {
             76010000424D7601000000000000760000002800000020000000100000000100
             04000000000000010000120B0000120B00001000000000000000000000000000
@@ -550,7 +536,7 @@ object ConfigForm: TConfigForm
           Top = 104
           Width = 23
           Height = 22
-          Hint = 'usu'#324
+          Hint = 'SpeedButton3'
           Glyph.Data = {
             76010000424D7601000000000000760000002800000020000000100000000100
             04000000000000010000120B0000120B00001000000000000000000000000000
@@ -572,16 +558,16 @@ object ConfigForm: TConfigForm
         object Label17: TLabel
           Left = 12
           Top = 74
-          Width = 107
+          Width = 38
           Height = 13
-          Caption = 'stary kod na nowy kod'
+          Caption = 'Label17'
         end
         object Label18: TLabel
           Left = 12
           Top = 116
-          Width = 21
+          Width = 38
           Height = 13
-          Caption = 'Opis'
+          Caption = 'Label18'
         end
         object ComboBox1: TComboBox
           Left = 90
@@ -617,7 +603,7 @@ object ConfigForm: TConfigForm
           Top = 51
           Width = 133
           Height = 17
-          Caption = 'dodatkowo przekoduj'
+          Caption = 'CheckBox4'
           TabOrder = 5
           OnClick = CheckBox4Click
         end
@@ -626,7 +612,7 @@ object ConfigForm: TConfigForm
           Top = 138
           Width = 64
           Height = 25
-          Caption = 'Zapisz'
+          Caption = 'Button8'
           TabOrder = 2
           OnClick = Button8Click
         end
@@ -635,7 +621,7 @@ object ConfigForm: TConfigForm
           Top = 138
           Width = 64
           Height = 25
-          Caption = 'Wczytaj'
+          Caption = 'Button9'
           TabOrder = 4
           OnClick = Button9Click
         end
@@ -645,19 +631,15 @@ object ConfigForm: TConfigForm
         Top = 257
         Width = 75
         Height = 25
-        Caption = 'Domy'#347'lne'
+        Caption = 'Button7'
         TabOrder = 2
         OnClick = Button7Click
       end
     end
     object TabSheet4: TTabSheet
       BorderWidth = 8
-      Caption = 'Inne'
+      Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -667,7 +649,7 @@ object ConfigForm: TConfigForm
         Width = 290
         Height = 113
         Anchors = [akLeft, akTop, akRight]
-        Caption = 'Logo'
+        Caption = 'GroupBox8'
         TabOrder = 0
         DesignSize = (
           290
@@ -697,32 +679,30 @@ object ConfigForm: TConfigForm
         object Label19: TLabel
           Left = 12
           Top = 20
-          Width = 87
+          Width = 38
           Height = 13
-          Caption = 'Plik bitmapy z logo'
+          Caption = 'Label19'
         end
         object Label20: TLabel
           Left = 12
           Top = 63
-          Width = 66
+          Width = 38
           Height = 13
-          Caption = 'Od lewej (mm)'
+          Caption = 'Label20'
         end
         object Label21: TLabel
           Left = 88
           Top = 63
-          Width = 62
+          Width = 38
           Height = 13
-          Caption = 'Od g'#243'ry (mm)'
+          Caption = 'Label21'
         end
         object Edit8: TEdit
           Left = 12
           Top = 36
           Width = 243
           Height = 21
-          Hint = 
-            #346'cie'#380'ka do pliku w formacie BMP z logo drukowanym na ka'#380'dej kart' +
-            'ce.'
+          Hint = 'Edit8'
           Anchors = [akLeft, akTop, akRight]
           ParentShowHint = False
           ShowHint = True
@@ -734,9 +714,9 @@ object ConfigForm: TConfigForm
           Top = 82
           Width = 121
           Height = 17
-          Hint = 'Drukuj Logo tylko na pierwszej stronie'
+          Hint = 'CheckBox6'
           Anchors = [akTop, akRight]
-          Caption = 'tylko na 1-szej stronie'
+          Caption = 'CheckBox6'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
@@ -748,10 +728,29 @@ object ConfigForm: TConfigForm
         Top = 257
         Width = 75
         Height = 25
-        Caption = 'Domy'#347'lne'
+        Caption = 'Button10'
         TabOrder = 1
         OnClick = Button10Click
       end
     end
+  end
+  object Button11: TButton
+    Left = 6
+    Top = 334
+    Width = 25
+    Height = 25
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
+    Caption = 'Button11'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    OnClick = Button11Click
   end
 end

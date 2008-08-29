@@ -33,4 +33,5 @@ rem {***************************************************************************
 
 rem brcc32.exe icons16x16\icons.rc
 brcc32.exe icons32x32\icons.rc
+brcc32.exe stringtables.rc
 rem brcc32.exe WinPrint.rc
