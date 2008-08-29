@@ -71,6 +71,7 @@ type
     StopTrayIconTimer: boolean;
     ZeroTrayIconIndex: boolean;
     CEVersionInfo1: TCEVersionInfo;
+    procedure LoadLang;
   end;
 
 var
@@ -90,6 +91,9 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Icon: TIcon;
 begin
+ if (GetUserDefaultLangID and $3ff)=LANG_POLISH then LANG := 60000
+                                                else LANG := 61000;
+
 {komponenty dynamiczne}
   CEVersionInfo1:=TCEVersionInfo.Create(self);
   TrayIcon1:=TTrayIcon2.Create(self);
@@ -117,11 +121,8 @@ begin
     TrayIcon1.ToolTip:=Application.Title;
     if (GlobalFindAtom(PChar(CompanyName+' '+ProductName))<>0) then
     if (Application.MessageBox(PChar(
-      'Program '+ProductName+' jest ju¿ uruchomiony.'+#13#10+
-      'Powtórne uruchomienie programu mo¿e spowodowaæ b³êdy w jego dzia³aniu.'+#13#10+
-      #13#10+
-      'Czy chcesz uruchomiæ ten program ponownie?'),
-      'Ostrze¿enie',
+      'Program '+ProductName+' '+RString(500)),
+      PChar(RString(501)),
       MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_SYSTEMMODAL)=IDNO) then
         Halt; //zakoñcz program
     Atom1:=GlobalAddAtom(PChar(CompanyName+' '+ProductName));
@@ -387,7 +388,7 @@ begin
           begin
             //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
             MustExit:=true;
-            raise EInOutError.Create('Wyst¹pi³ krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku'+#10#13+'program WinPrint zostanie zakoñczony');
+            raise EInOutError.Create(RString(502));
           end;
           //re-raise inne wyj¹tki powstale przy wydruku
           raise;
@@ -400,7 +401,7 @@ begin
         begin
           //krytyczny b³¹d podczas usuwania pliku z kolejki - zakoñcz aplikacje
           MustExit:=true;
-          raise EInOutError.Create('Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku wydruku z kolejki'+#10#13+'program WinPrint zostanie zakoñczony');
+          raise EInOutError.Create(RString(503));
         end;
 
         //jezelio w³¹czono formatowanie prÓbuj usun¹æ równie¿ plik formatuj¹cy
@@ -410,7 +411,7 @@ begin
         begin
           //krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki - zakoñcz aplikacje
           MustExit:=true;
-          raise EInOutError.Create('Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki'+#10#13+'program WinPrint zostanie zakoñczony');
+          raise EInOutError.Create(RString(504));
         end;
 
       finally
@@ -495,6 +496,18 @@ begin
         StopTrayIconTimer:=false;
     end;
   end;
+end;
+
+procedure TMainForm.LoadLang;
+begin
+  Konfiguracja1.Caption := RString(400);
+  Konfiguracja1.Hint := RString(401);
+
+  Zakocz1.Caption := RString(402);
+  Zakocz1.Hint := RString(403);
+
+  OpenDialog1.Filter := RString(404);
+  SaveDialog1.Filter := RString(404);
 end;
 
 end.

@@ -32,6 +32,7 @@
 program WinPrint;
 
 {$R 'resources\icons32x32\icons.res' 'resources\icons32x32\icons.rc'}
+{$R 'resources\stringtables.res' 'resources\stringtables.rc'}
 
 uses
   Forms,
@@ -59,5 +60,7 @@ begin
   Application.Title := 'WinPrint';
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TConfigForm, ConfigForm);
+  MainForm.LoadLang;
+  ConfigForm.LoadLang;
   Application.Run;
 end.
