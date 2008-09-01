@@ -332,8 +332,7 @@ begin
     StringList:=TStringList.Create;
     try
 
-      ReadANDConvert(ConfigForm.ConfigData.CodePage,InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
-
+      ReadANDConvert(ConfigForm.ConfigData.CodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
       TempFont:=TFont.Create;
       try
         TempConfigData:=ConfigForm.ConfigData;
@@ -363,6 +362,7 @@ begin
           //procedure drukujaca StringList
           PrintStrings('Dokument programu WinPrint - '+SearchRec.Name,
                        StringList,
+                       CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,
                        cMILTOINCH*TempConfigData.MarginLeft,
                        cMILTOINCH*TempConfigData.MarginRight,
                        cMILTOINCH*TempConfigData.MarginTop,

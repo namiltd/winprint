@@ -111,6 +111,7 @@ type
  +------------------------------------------------------------}
 function PrintStrings(Title: string;
                       lines: TStrings;
+                      const CpNr: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -131,6 +132,7 @@ uses
 
 function PrintStrings(Title: string;
                       lines: TStrings;
+                      const CpNr: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -361,11 +363,11 @@ var
         //printer.canvas.TextOut( textrect.left, y, lines[textStart]);
 
         r:=Rect(textrect.left,y,textrect.right,y+charheight);
-        len:=MultiByteToWideChar(852,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
+        len:=MultiByteToWideChar(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
         if (len>0) then
         begin
           SetLength(ws,len);
-          MultiByteToWideChar(852,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
+          MultiByteToWideChar(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
           tw:=0;
           ks:=false;
           ig:=0;

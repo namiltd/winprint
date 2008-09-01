@@ -200,10 +200,6 @@ type
 
  function RString(ID: WORD):string;
 
-//const
-//  CharCodeLow = low(TCharCode);
-//  CharCodeHigh = high(TCharCode);
-
 var
   ConfigForm: TConfigForm;
   LANG: word = 61000;
@@ -239,7 +235,7 @@ const
   DEFAULT_EOP_CODES = [12,26];
   DEFAULT_SKIP_EMPTY_PAGES = true;
   DEFAULT_CLIPPER_COMPATIBLE = TRUE;
-  DEFAULT_CODE_PAGE = cpLAT;
+  DEFAULT_CODE_PAGE = cp852;
   DEFAULT_USE_CUSTOM_CONVERSION_TABLE = false;
   DEFAULT_LOGO = '';
   DEFAULT_LOGO_LEFT = 12.7;
@@ -267,7 +263,8 @@ var
   a : array[0..255] of char;
 begin
  result:='';
- if (LoadString(hInstance,LANG+ID,@a,sizeof(a)) <> 0)
+ if ID<1000 then ID:=ID+LANG; //multilingual respurces
+ if (LoadString(hInstance,ID,@a,sizeof(a)) <> 0)
    then result:=StrPas(a);
 end;
 
@@ -712,6 +709,14 @@ begin
     Memo1.Font.Name:=FontName;
     Memo1.Font.Size:=FontSize;
     Memo1.Font.Charset:=FontCharset;
+    if Memo1.Font.Charset=238 then begin //East Europe
+                                     Memo1.Lines.Strings[0]:=RString(50000);
+                                     Memo1.Lines.Strings[1]:=RString(50001);
+                                   end
+                              else begin
+                                     Memo1.Lines.Strings[0]:=RString(51000);
+                                     Memo1.Lines.Strings[1]:=RString(51001);
+                                   end;
     Memo1.Font.Style:=FontStyles;
     Label5.Caption:=Format('%s, '+RString(301)+': %d',[FontName,FontSize]);
     FloatEdit1.Value:=MarginLeft;
@@ -729,7 +734,7 @@ begin
     begin
       Items.Clear;
       for i:=ord(CodePageLow) to ord(CodePageHigh) do
-        Items.Append(CodePageNames[TCodePage(i)]);
+        Items.Append(CodePageInfo[TCodePage(i)].name);
       ItemIndex:=ord(CodePage);
     end;
 
@@ -916,6 +921,14 @@ begin
     if FontDialog1.Execute then
     begin
       Memo1.Font:=FontDialog1.Font;
+      if Memo1.Font.Charset=238 then begin //East Europe
+                                       Memo1.Lines.Strings[0]:=RString(50000);
+                                       Memo1.Lines.Strings[1]:=RString(50001);
+                                     end
+                                else begin
+                                       Memo1.Lines.Strings[0]:=RString(51000);
+                                       Memo1.Lines.Strings[1]:=RString(51001);
+                                     end;
       Label5.Caption:=Format('%s, '+RString(301)+': %d',[Memo1.Font.Name,Memo1.Font.Size]);
       ConfigChanged(Sender);
     end;
@@ -942,6 +955,14 @@ begin
   Memo1.Font.Name:=DEFAULT_FONT_NAME;
   Memo1.Font.Size:=DEFAULT_FONT_SIZE;
   Memo1.Font.Charset:=DEFAULT_FONT_CHARSET;
+  if Memo1.Font.Charset=238 then begin //East Europe
+                                   Memo1.Lines.Strings[0]:=RString(50000);
+                                   Memo1.Lines.Strings[1]:=RString(50001);
+                                 end
+                            else begin
+                                   Memo1.Lines.Strings[0]:=RString(51000);
+                                   Memo1.Lines.Strings[1]:=RString(51001);
+                                 end;
   Memo1.Font.Style:=DEFAULT_FONT_STYLES;
   Label5.Caption:=Format('%s, '+RString(301)+': %d',[DEFAULT_FONT_NAME,DEFAULT_FONT_SIZE]);
   FloatEdit1.Value:=DEFAULT_MARGIN_LEFT;
