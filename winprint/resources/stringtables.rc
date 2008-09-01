@@ -1,8 +1,17 @@
 #pragma code_page(1250)
 STRINGTABLE
 BEGIN
+
+ 50000  "πÊÍ≥ÒÛúüø"
+ 50001  "•∆ £—”åèØ"
+
+ 51000	"acelnosxz"    
+ 51001	"ACELNOSXZ"    
+
  60000 "PL"
  61000 "EN"
+
+
 
 //------------------------ConfigForm------------------------------
  60100 "Stosuje zmiany dokonane w konfiguracji programu."

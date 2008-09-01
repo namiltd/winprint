@@ -65,9 +65,9 @@ object ConfigForm: TConfigForm
     Top = 334
     Width = 25
     Height = 25
-    TabOrder = 4
     Anchors = [akRight, akBottom]
     Caption = 'Button11'
+    TabOrder = 4
     OnClick = Button11Click
   end
   object PageControl1: TPageControl
@@ -75,7 +75,7 @@ object ConfigForm: TConfigForm
     Top = 0
     Width = 314
     Height = 326
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 3
     object TabSheet2: TTabSheet
@@ -110,14 +110,15 @@ object ConfigForm: TConfigForm
           Height = 45
           TabStop = False
           Anchors = [akLeft, akTop, akRight]
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           Lines.Strings = (
-            #261#263#281#322#324#243#347#378#380
-            #260#262#280#321#323#211#346#377#379)
+            'Memo1_0'
+            'Memo1_1')
           ParentFont = False
           ReadOnly = True
           TabOrder = 0
