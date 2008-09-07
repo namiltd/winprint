@@ -851,7 +851,7 @@ begin
     RootKey:=HKEY_LOCAL_MACHINE;
     try
       if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',true) then
-      if CheckBox1.Checked then WriteString('WinPrint',Application.ExeName) else WriteString('WinPrint','');
+      if CheckBox1.Checked then WriteString('WinPrint',Application.ExeName) else DeleteValue('WinPrint');
     finally
       CloseKey;
     end;
