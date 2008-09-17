@@ -209,32 +209,6 @@ begin
             ((dwFileAttributes and FILE_ATTRIBUTE_READONLY)=0);
 end;
 
-
-function ExchangeSubstring(AString: string;
-                           AFrom: string;
-                           ATo: string): string;
-var
-  TempString: string;
-  TempPos: integer;
-begin
-  TempString:='';
-  while length(AString)>0 do
-  begin
-    TempPos:=pos(AFrom,AString);
-    if TempPos>0 then
-    begin
-      TempString:=concat(TempString,copy(AString,1,TempPos-1),ATo);
-      AString:=copy(AString,TempPos+length(AFrom),length(AString));
-    end
-    else
-    begin
-      TempString:=concat(TempString,AString);
-      AString:='';
-    end;
-  end;
-  result:=TempString;
-end;
-
 procedure TMainForm.ProcessFormatFile(FileName: string; var ConfigData: TConfigData);
 var
   TempFile: TextFile;
