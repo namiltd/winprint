@@ -31,6 +31,9 @@
 
 unit ConfigFormUnit;
 
+{$WARN UNIT_PLATFORM OFF}
+{$WARN SYMBOL_PLATFORM OFF}
+
 interface
 
 uses
@@ -151,7 +154,6 @@ type
     procedure Button2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
@@ -207,7 +209,7 @@ var
 implementation
 
 uses
-  MainFormUnit, FileCtrl, Registry,
+  MainFormUnit, FileCtrl, Registry, IniFiles,
   SetString; //dla SetToString
 
 {$R *.DFM}
@@ -215,7 +217,7 @@ uses
 const
   DEFAULT_INPUT_FILES_DIR = '';
   DEFAULT_INPUT_FILES_MASK = '*.txt';
-  DEFAULT_FORMAT_FILE_EXTENSION = 'ini';
+  DEFAULT_FORMAT_FILE_EXTENSION = 'frm';
   DEFAULT_ENABLE_FORMATTING = true;
   DEFAULT_TIMER_INTERVAL = 500;
   DEFAULT_MIN_FILE_AGE = 500;
@@ -241,7 +243,7 @@ const
   DEFAULT_LOGO_LEFT = 12.7;
   DEFAULT_LOGO_TOP = 12.7;
   DEFAULT_LOGO_1PAGE_ONLY = false;
-const
+
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
 
@@ -251,11 +253,7 @@ const
          HIGH_PRIORITY_CLASS,
          REALTIME_PRIORITY_CLASS);
 var
-  PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string =
-        ('bezczynny',
-         'normalny',
-         'wysoki',
-         'czasu rzeczywistego');
+  PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string;
 
 
 function RString(ID: WORD):string;
@@ -423,9 +421,6 @@ begin
   with MainForm.CEVersionInfo1 do
     Caption:=ProductName+' '+FileVersion;
 
-//  MainForm.Xml10n1.Load;
-//  MainForm.Xml10n1.XmlToForm(ConfigForm);
-
   PageControl1.ActivePageIndex:=0;
   FloatEdit5.Color:=clBtnFace;
   IntEdit1.Color:=clWindow;
@@ -463,223 +458,286 @@ begin
   result:=(length(APath)>=2) and (APath[2]=':');
 end;
 
-
-
 procedure TConfigForm.ReadConfig;
 var
   Registry: TRegistry;
+  IniFile: TIniFile;
   i: integer;
   MemStream: TMemoryStream;
+  section: string;
 begin
   with ConfigData do
   begin
-    Registry:=TRegistry.Create;
-    with Registry do
-    try
-      RootKey:=HKEY_LOCAL_MACHINE;
+    if FileExists(ChangeFileExt(Application.ExeName,'.ini')) then
+    begin
+      IniFile:=TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+      with IniFile do
       try
-        if OpenKey('Software\GNU\WinPrint',false) then
-        begin
+        section:='Settings';
+        InputFilesDir:=ReadString(section,'InputFilesDir',DEFAULT_INPUT_FILES_DIR);
+        InputFilesMask:=ReadString(section,'InputFilesMask',DEFAULT_INPUT_FILES_MASK);
+        FormatFileExtension:=ReadString(section,'FormatFileExtension',DEFAULT_FORMAT_FILE_EXTENSION);
+        EnableFormatting:=ReadBool(section,'EnableFormatting',DEFAULT_ENABLE_FORMATTING);
+        TimerInterval:=ReadInteger(section,'TimerInterval',DEFAULT_TIMER_INTERVAL);
+        if (TimerInterval<UpDown1.Min) or (TimerInterval>UpDown1.Max) then TimerInterval:=DEFAULT_TIMER_INTERVAL;
+        MinFileAge:=ReadInteger(section,'MinFileAge',DEFAULT_MIN_FILE_AGE);
+        if (MinFileAge<UpDown2.Min) or (MinFileAge>UpDown2.Max) then MinFileAge:=DEFAULT_MIN_FILE_AGE;
+        Priority:=ReadInteger(section,'Priority',DEFAULT_PRIORITY);
+        if (Priority<MinPriorityClass) or (Priority>MaxPriorityClass) then Priority:=DEFAULT_PRIORITY;
+        AutoStart:=ReadBool(section,'AutoStart',DEFAULT_AUTO_START);
+        FontName:=ReadString(section,'FontName',DEFAULT_FONT_NAME);
+        if (FontName='') then FontName:=DEFAULT_FONT_NAME;
+        FontSize:=ReadInteger(section,'FontSize',DEFAULT_FONT_SIZE);
+        if (FontSize<=0) then FontSize:=DEFAULT_FONT_SIZE;
+        FontCharset:=ReadInteger(section,'FontCharset',DEFAULT_FONT_CHARSET);
+        FontStyles:=DEFAULT_FONT_STYLES;
+        StringToSet(ReadString(section,'FontStyles',SetToString(TypeInfo(TFontStyles),FontStyles)),TypeInfo(TFontStyles),FontStyles);
+        MarginLeft:=ReadFloat(section,'MarginLeft',DEFAULT_MARGIN_LEFT);
+        MarginRight:=ReadFloat(section,'MarginRight',DEFAULT_MARGIN_RIGHT);
+        MarginTop:=ReadFloat(section,'MarginTop',DEFAULT_MARGIN_TOP);
+        MarginBottom:=ReadFloat(section,'MarginBottom',DEFAULT_MARGIN_BOTTOM);
+        Orientation:=TPrinterOrientation(ReadInteger(section,'Orientation',ord(DEFAULT_ORIENTATION)));
+        if not (Orientation in [low(TPrinterOrientation)..high(TPrinterOrientation)]) then Orientation:=DEFAULT_ORIENTATION;
+        LinesPerInch:=ReadFloat(section,'LinesPerInch',DEFAULT_LINES_PER_INCH);
+        if (LinesPerInch<0) then LinesPerInch:=DEFAULT_LINES_PER_INCH;
+        LinesPerPage:=ReadInteger(section,'LinesPerPage',DEFAULT_LINES_PER_PAGE);
+        if (LinesPerPage<0) then LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+        EOPCodes:=DEFAULT_EOP_CODES;
+        StringToSet(ReadString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),EOPCodes)),TypeInfo(TCharCodes),EOPCodes);
+        SkipEmptyPages:=ReadBool(section,'SkipEmptyPages',DEFAULT_SKIP_EMPTY_PAGES);
+        ClipperCompatible:=ReadBool(section,'ClipperCompatible',DEFAULT_CLIPPER_COMPATIBLE);
+        CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)))));
+        if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
+        UseCustomConversionTable:=ReadBool(section,'UseCustomConversionTable',DEFAULT_USE_CUSTOM_CONVERSION_TABLE);
+        try
+          MemStream:=TMemoryStream.Create;
           try
-            InputFilesDir:=ReadString('InputFilesDir');
-          except
-            InputFilesDir:=DEFAULT_INPUT_FILES_DIR;
+            ReadBinaryStream(section,'CustomConversionTable',MemStream);
+            MemStream.Seek(0,soFromBeginning);
+            LoadCollectionFromStream(MemStream,ConfigData.ConversionItems);
+          finally
+            MemStream.Free;
           end;
-          try
-            InputFilesMask:=ReadString('InputFilesMask');
-            if (InputFilesMask='') then InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
-          except
-            InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
-          end;
-          try
-            FormatFileExtension:=ReadString('FormatFileExtension');
-            if (FormatFileExtension='') then FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
-          except
-            FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
-          end;
-          try
-            EnableFormatting:=ReadBool('EnableFormatting');
-          except
-            EnableFormatting:=DEFAULT_ENABLE_FORMATTING;
-          end;
-          try
-            TimerInterval:=ReadInteger('TimerInterval');
-            if (TimerInterval<UpDown1.Min) or (TimerInterval>UpDown1.Max) then TimerInterval:=DEFAULT_TIMER_INTERVAL;
-          except
-            TimerInterval:=DEFAULT_TIMER_INTERVAL;
-          end;
-          try
-            MinFileAge:=ReadInteger('MinFileAge');
-            if (MinFileAge<UpDown2.Min) or (MinFileAge>UpDown2.Max) then MinFileAge:=DEFAULT_MIN_FILE_AGE;
-          except
-            MinFileAge:=DEFAULT_MIN_FILE_AGE;
-          end;
-          try
-            Priority:=ReadInteger('Priority');
-            if (Priority<MinPriorityClass) or (Priority>MaxPriorityClass) then Priority:=DEFAULT_PRIORITY;
-          except
-            Priority:=DEFAULT_PRIORITY;
-          end;
-          try
-            AutoStart:=ReadBool('AutoStart');
-          except
-            AutoStart:=DEFAULT_AUTO_START;
-          end;
-          try
-            FontName:=ReadString('FontName');
-            if (FontName='') then FontName:=DEFAULT_FONT_NAME;
-          except
-            FontName:=DEFAULT_FONT_NAME;
-          end;
-          try
-            FontSize:=ReadInteger('FontSize');
-            if (FontSize<=0) then FontSize:=DEFAULT_FONT_SIZE;
-          except
-            FontSize:=DEFAULT_FONT_SIZE;
-          end;
-          try
-            FontCharset:=ReadInteger('FontCharset');
-          except
-            FontCharset:=DEFAULT_FONT_CHARSET;
-          end;
-          try
-            StringToSet(ReadString('FontStyles'),TypeInfo(TFontStyles),FontStyles);
-          except
-            FontStyles:=DEFAULT_FONT_STYLES;
-          end;
-          try
-            MarginLeft:=ReadFloat('MarginLeft');
-          except
-            MarginLeft:=DEFAULT_MARGIN_LEFT;
-          end;
-          try
-            MarginRight:=ReadFloat('MarginRight');
-          except
-            MarginRight:=DEFAULT_MARGIN_RIGHT;
-          end;
-          try
-            MarginTop:=ReadFloat('MarginTop');
-          except
-            MarginTop:=DEFAULT_MARGIN_TOP;
-          end;
-          try
-            MarginBottom:=ReadFloat('MarginBottom');
-          except
-            MarginBottom:=DEFAULT_MARGIN_BOTTOM;
-          end;
-          try
-            Orientation:=TPrinterOrientation(ReadInteger('Orientation'));
-            if not (Orientation in [low(TPrinterOrientation)..high(TPrinterOrientation)]) then Orientation:=DEFAULT_ORIENTATION;
-          except
-            Orientation:=DEFAULT_ORIENTATION;
-          end;
-          try
-            LinesPerInch:=ReadFloat('LinesPerInch');
-            if (LinesPerInch<0) then LinesPerInch:=DEFAULT_LINES_PER_INCH;
-          except
-            LinesPerInch:=DEFAULT_LINES_PER_INCH;
-          end;
-          try
-            LinesPerPage:=ReadInteger('LinesPerPage');
-            if (LinesPerPage<0) then LinesPerPage:=DEFAULT_LINES_PER_PAGE;
-          except
-            LinesPerPage:=DEFAULT_LINES_PER_PAGE;
-          end;
-          try
-            StringToSet(ReadString('EOPCodes'),TypeInfo(TCharCodes),EOPCodes);
-          except
-            EOPCodes:=DEFAULT_EOP_CODES;
-          end;
-          try
-            SkipEmptyPages:=ReadBool('SkipEmptyPages');
-          except
-            SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
-          end;
-          try
-            ClipperCompatible:=ReadBool('ClipperCompatible');
-          except
-            ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
-          end;
-          try
-            CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString('CodePage')));
-            if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
-          except
-            CodePage:=DEFAULT_CODE_PAGE;
-          end;
-          try
-            UseCustomConversionTable:=ReadBool('UseCustomConversionTable');
-          except
-            UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
-          end;
-          try
-            MemStream:=TMemoryStream.Create;
+        except
+        end;
+        Logo:=ReadString(section,'Logo',DEFAULT_LOGO);
+        LogoLeft:=ReadFloat(section,'LogoLeft',DEFAULT_LOGO_LEFT);
+        LogoTop:=ReadFloat(section,'LogoTop',DEFAULT_LOGO_TOP);
+        Logo1PageOnly:=ReadBool(section,'Logo1PageOnly',DEFAULT_LOGO_1PAGE_ONLY);
+      finally
+        IniFile.Free;
+      end;
+    end
+    else
+    begin
+      //backward compatibility for older version with registry-based config
+      Registry:=TRegistry.Create;
+      with Registry do
+      try
+        RootKey:=HKEY_LOCAL_MACHINE;
+        try
+          if OpenKey('Software\GNU\WinPrint',false) then
+          begin
             try
-              MemStream.SetSize(Registry.GetDataSize('CustomConversionTable'));
-              Registry.ReadBinaryData('CustomConversionTable',MemStream.Memory^,MemStream.Size);
-              LoadCollectionFromStream(MemStream,ConfigData.ConversionItems);
-            finally
-              MemStream.Free;
+              InputFilesDir:=ReadString('InputFilesDir');
+            except
+              InputFilesDir:=DEFAULT_INPUT_FILES_DIR;
             end;
-          except
-          end;
-          try
-            Logo:=ReadString('Logo');
-          except
+            try
+              InputFilesMask:=ReadString('InputFilesMask');
+              if (InputFilesMask='') then InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
+            except
+              InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
+            end;
+            try
+              FormatFileExtension:=ReadString('FormatFileExtension');
+              if (FormatFileExtension='') then FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
+            except
+              FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
+            end;
+            try
+              EnableFormatting:=ReadBool('EnableFormatting');
+            except
+              EnableFormatting:=DEFAULT_ENABLE_FORMATTING;
+            end;
+            try
+              TimerInterval:=ReadInteger('TimerInterval');
+              if (TimerInterval<UpDown1.Min) or (TimerInterval>UpDown1.Max) then TimerInterval:=DEFAULT_TIMER_INTERVAL;
+            except
+              TimerInterval:=DEFAULT_TIMER_INTERVAL;
+            end;
+            try
+              MinFileAge:=ReadInteger('MinFileAge');
+              if (MinFileAge<UpDown2.Min) or (MinFileAge>UpDown2.Max) then MinFileAge:=DEFAULT_MIN_FILE_AGE;
+            except
+              MinFileAge:=DEFAULT_MIN_FILE_AGE;
+            end;
+            try
+              Priority:=ReadInteger('Priority');
+              if (Priority<MinPriorityClass) or (Priority>MaxPriorityClass) then Priority:=DEFAULT_PRIORITY;
+            except
+              Priority:=DEFAULT_PRIORITY;
+            end;
+            try
+              AutoStart:=ReadBool('AutoStart');
+            except
+              AutoStart:=DEFAULT_AUTO_START;
+            end;
+            try
+              FontName:=ReadString('FontName');
+              if (FontName='') then FontName:=DEFAULT_FONT_NAME;
+            except
+              FontName:=DEFAULT_FONT_NAME;
+            end;
+            try
+              FontSize:=ReadInteger('FontSize');
+              if (FontSize<=0) then FontSize:=DEFAULT_FONT_SIZE;
+            except
+              FontSize:=DEFAULT_FONT_SIZE;
+            end;
+            try
+              FontCharset:=ReadInteger('FontCharset');
+            except
+              FontCharset:=DEFAULT_FONT_CHARSET;
+            end;
+            try
+              StringToSet(ReadString('FontStyles'),TypeInfo(TFontStyles),FontStyles);
+            except
+              FontStyles:=DEFAULT_FONT_STYLES;
+            end;
+            try
+              MarginLeft:=ReadFloat('MarginLeft');
+            except
+              MarginLeft:=DEFAULT_MARGIN_LEFT;
+            end;
+            try
+              MarginRight:=ReadFloat('MarginRight');
+            except
+              MarginRight:=DEFAULT_MARGIN_RIGHT;
+            end;
+            try
+              MarginTop:=ReadFloat('MarginTop');
+            except
+              MarginTop:=DEFAULT_MARGIN_TOP;
+            end;
+            try
+              MarginBottom:=ReadFloat('MarginBottom');
+            except
+              MarginBottom:=DEFAULT_MARGIN_BOTTOM;
+            end;
+            try
+              Orientation:=TPrinterOrientation(ReadInteger('Orientation'));
+              if not (Orientation in [low(TPrinterOrientation)..high(TPrinterOrientation)]) then Orientation:=DEFAULT_ORIENTATION;
+            except
+              Orientation:=DEFAULT_ORIENTATION;
+            end;
+            try
+              LinesPerInch:=ReadFloat('LinesPerInch');
+              if (LinesPerInch<0) then LinesPerInch:=DEFAULT_LINES_PER_INCH;
+            except
+              LinesPerInch:=DEFAULT_LINES_PER_INCH;
+            end;
+            try
+              LinesPerPage:=ReadInteger('LinesPerPage');
+              if (LinesPerPage<0) then LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+            except
+              LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+            end;
+            try
+              StringToSet(ReadString('EOPCodes'),TypeInfo(TCharCodes),EOPCodes);
+            except
+              EOPCodes:=DEFAULT_EOP_CODES;
+            end;
+            try
+              SkipEmptyPages:=ReadBool('SkipEmptyPages');
+            except
+              SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
+            end;
+            try
+              ClipperCompatible:=ReadBool('ClipperCompatible');
+            except
+              ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
+            end;
+            try
+              CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString('CodePage')));
+              if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
+            except
+              CodePage:=DEFAULT_CODE_PAGE;
+            end;
+            try
+              UseCustomConversionTable:=ReadBool('UseCustomConversionTable');
+            except
+              UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
+            end;
+            try
+              MemStream:=TMemoryStream.Create;
+              try
+                MemStream.SetSize(Registry.GetDataSize('CustomConversionTable'));
+                Registry.ReadBinaryData('CustomConversionTable',MemStream.Memory^,MemStream.Size);
+                LoadCollectionFromStream(MemStream,ConfigData.ConversionItems);
+              finally
+                MemStream.Free;
+              end;
+            except
+            end;
+            try
+              Logo:=ReadString('Logo');
+            except
+              Logo:=DEFAULT_LOGO;
+            end;
+            try
+              LogoLeft:=ReadFloat('LogoLeft');
+            except
+              LogoLeft:=DEFAULT_LOGO_LEFT;
+            end;
+            try
+              LogoTop:=ReadFloat('LogoTop');
+            except
+              LogoTop:=DEFAULT_LOGO_TOP;
+            end;
+            try
+              Logo1PageOnly:=ReadBool('Logo1PageOnly');
+            except
+              Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
+            end;
+          end
+          else
+          begin
+            InputFilesDir:=DEFAULT_INPUT_FILES_DIR;
+            InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
+            FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
+            EnableFormatting:=DEFAULT_ENABLE_FORMATTING;
+            TimerInterval:=DEFAULT_TIMER_INTERVAL;
+            MinFileAge:=DEFAULT_MIN_FILE_AGE;
+            Priority:=DEFAULT_PRIORITY;
+            AutoStart:=DEFAULT_AUTO_START;
+            FontName:=DEFAULT_FONT_NAME;
+            FontSize:=DEFAULT_FONT_SIZE;
+            FontCharset:=DEFAULT_FONT_CHARSET;
+            FontStyles:=DEFAULT_FONT_STYLES;
+            MarginLeft:=DEFAULT_MARGIN_LEFT;
+            MarginRight:=DEFAULT_MARGIN_RIGHT;
+            MarginTop:=DEFAULT_MARGIN_TOP;
+            MarginBottom:=DEFAULT_MARGIN_BOTTOM;
+            Orientation:=DEFAULT_ORIENTATION;
+            LinesPerInch:=DEFAULT_LINES_PER_INCH;
+            LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+            EOPCodes:=DEFAULT_EOP_CODES;
+            SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
+            ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
+            CodePage:=DEFAULT_CODE_PAGE;
+            UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
             Logo:=DEFAULT_LOGO;
-          end;
-          try
-            LogoLeft:=ReadFloat('LogoLeft');
-          except
             LogoLeft:=DEFAULT_LOGO_LEFT;
-          end;
-          try
-            LogoTop:=ReadFloat('LogoTop');
-          except
             LogoTop:=DEFAULT_LOGO_TOP;
-          end;
-          try
-            Logo1PageOnly:=ReadBool('Logo1PageOnly');
-          except
             Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
           end;
-        end
-        else
-        begin
-          InputFilesDir:=DEFAULT_INPUT_FILES_DIR;
-          InputFilesMask:=DEFAULT_INPUT_FILES_MASK;
-          FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
-          EnableFormatting:=DEFAULT_ENABLE_FORMATTING;
-          TimerInterval:=DEFAULT_TIMER_INTERVAL;
-          MinFileAge:=DEFAULT_MIN_FILE_AGE;
-          Priority:=DEFAULT_PRIORITY;
-          AutoStart:=DEFAULT_AUTO_START;
-          FontName:=DEFAULT_FONT_NAME;
-          FontSize:=DEFAULT_FONT_SIZE;
-          FontCharset:=DEFAULT_FONT_CHARSET;
-          FontStyles:=DEFAULT_FONT_STYLES;
-          MarginLeft:=DEFAULT_MARGIN_LEFT;
-          MarginRight:=DEFAULT_MARGIN_RIGHT;
-          MarginTop:=DEFAULT_MARGIN_TOP;
-          MarginBottom:=DEFAULT_MARGIN_BOTTOM;
-          Orientation:=DEFAULT_ORIENTATION;
-          LinesPerInch:=DEFAULT_LINES_PER_INCH;
-          LinesPerPage:=DEFAULT_LINES_PER_PAGE;
-          EOPCodes:=DEFAULT_EOP_CODES;
-          SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
-          ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
-          CodePage:=DEFAULT_CODE_PAGE;
-          UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
-          Logo:=DEFAULT_LOGO;
-          LogoLeft:=DEFAULT_LOGO_LEFT;
-          LogoTop:=DEFAULT_LOGO_TOP;
-          Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
+        finally
+          CloseKey;
         end;
       finally
-        CloseKey;
+        Registry.Free;
       end;
-
-    finally
-      Registry.Free;
     end;
 
     Edit1.Text:=InputFilesDir;
@@ -690,7 +748,6 @@ begin
     FloatEdit6.Value:=LogoLeft;
     FloatEdit7.Value:=LogoTop;
     CheckBox6.Checked:=Logo1PageOnly;
-
     if EnableFormatting then
     begin
       Edit3.Enabled:=true;
@@ -782,7 +839,6 @@ begin
         AddObject(TempConversionItems[i-1].DisplayText,TempConversionItems[i-1]);
     end;
 
-    {**********************}
     ResolveEditValues1(self); //Ustaw wartosci domyslne, gdy obie gestosci rowne 0
     if not IsFullPath(InputFilesDir) then   //normalizacja sciezek bezwzglednych i wzglednych
       InputFilesDir:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+InputFilesDir;
@@ -793,65 +849,82 @@ begin
   end;
 end;
 
-
 procedure TConfigForm.WriteConfig;
 var
   Registry: TRegistry;
+  IniFile: TIniFile;
   Styles: TFontStyles;
   TempSet: TCharCodes;
   MemStream: TMemoryStream;
+  section: string;
 begin
+  IniFile:=TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+  with IniFile do
+  try
+    section:='Settings';
+    WriteString(section,'InputFilesDir',Edit1.Text);
+    WriteString(section,'InputFilesMask',Edit2.Text);
+    WriteString(section,'FormatFileExtension',Edit3.Text);
+    WriteBool(section,'EnableFormatting',CheckBox2.Checked);
+    WriteInteger(section,'TimerInterval',UpDown1.Position);
+    WriteInteger(section,'MinFileAge',UpDown2.Position);
+    WriteInteger(section,'Priority',TrackBar1.Position);
+    WriteBool(section,'AutoStart',CheckBox1.Checked);
+    WriteString(section,'FontName',Memo1.Font.Name);
+    WriteInteger(section,'FontSize',Memo1.Font.Size);
+    WriteInteger(section,'FontCharset',Memo1.Font.Charset);
+    Styles:=Memo1.Font.Style; WriteString(section,'FontStyles',SetToString(TypeInfo(TFontStyles),Styles));
+    WriteFloat(section,'MarginLeft',FloatEdit1.Value);
+    WriteFloat(section,'MarginRight',FloatEdit2.Value);
+    WriteFloat(section,'MarginTop',FloatEdit3.Value);
+    WriteFloat(section,'MarginBottom',FloatEdit4.Value);
+    WriteInteger(section,'Orientation',RadioGroup1.ItemIndex);
+    WriteFloat(section,'LinesPerInch',FloatEdit5.Value);
+    WriteInteger(section,'LinesPerPage',IntEdit1.Value);
+    StringToSet(Edit4.Text,TypeInfo(TCharCodes),TempSet); WriteString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),TempSet));
+    WriteBool(section,'SkipEmptyPages',CheckBox3.Checked);
+    WriteBool(section,'ClipperCompatible',CheckBox5.Checked);
+    WriteString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ComboBox1.ItemIndex));
+    WriteBool(section,'UseCustomConversionTable',CheckBox4.Checked);
+    ConfigData.ConversionItems.Assign(TempConversionItems);
+    MemStream:=TMemoryStream.Create;
+    try
+      SaveCollectionToStream(ConfigData.ConversionItems,MemStream);
+      MemStream.Seek(0,soFromBeginning);
+      WriteBinaryStream(section,'CustomConversionTable',MemStream);
+    finally
+      MemStream.Free;
+    end;
+    WriteString(section,'Logo',Edit8.Text);
+    WriteFloat(section,'LogoLeft',FloatEdit6.Value);
+    WriteFloat(section,'LogoTop',FloatEdit7.Value);
+    WriteBool(section,'Logo1PageOnly',CheckBox6.Checked);
+  finally
+    IniFile.Free;
+  end;
+
   Registry:=TRegistry.Create;
   with Registry do
   try
+    //user may not have delete rights in HKLM
+    //so we move autostart to the HKCU root key
     RootKey:=HKEY_LOCAL_MACHINE;
     try
-      if OpenKey('Software\GNU\WinPrint',true) then
-      begin
-        WriteString('InputFilesDir',Edit1.Text);
-        WriteString('InputFilesMask',Edit2.Text);
-        WriteString('FormatFileExtension',Edit3.Text);
-        WriteBool('EnableFormatting',CheckBox2.Checked);
-        WriteInteger('TimerInterval',UpDown1.Position);
-        WriteInteger('MinFileAge',UpDown2.Position);
-        WriteInteger('Priority',TrackBar1.Position);
-        WriteBool('AutoStart',CheckBox1.Checked);
-        WriteString('FontName',Memo1.Font.Name);
-        WriteInteger('FontSize',Memo1.Font.Size);
-        WriteInteger('FontCharset',Memo1.Font.Charset);
-        Styles:=Memo1.Font.Style; WriteString('FontStyles',SetToString(TypeInfo(TFontStyles),Styles));
-        WriteFloat('MarginLeft',FloatEdit1.Value);
-        WriteFloat('MarginRight',FloatEdit2.Value);
-        WriteFloat('MarginTop',FloatEdit3.Value);
-        WriteFloat('MarginBottom',FloatEdit4.Value);
-        WriteInteger('Orientation',RadioGroup1.ItemIndex);
-        WriteFloat('LinesPerInch',FloatEdit5.Value);
-        WriteInteger('LinesPerPage',IntEdit1.Value);
-        StringToSet(Edit4.Text,TypeInfo(TCharCodes),TempSet); WriteString('EOPCodes',SetToString(TypeInfo(TCharCodes),TempSet));
-        WriteBool('SkipEmptyPages',CheckBox3.Checked);
-        WriteBool('ClipperCompatible',CheckBox5.Checked);
-        WriteString('CodePage',OrdToString(TypeInfo(TCodePage),ComboBox1.ItemIndex));
-        WriteBool('UseCustomConversionTable',CheckBox4.Checked);
-        WriteString('Logo',Edit8.Text);
-        WriteFloat('LogoLeft',FloatEdit6.Value);
-        WriteFloat('LogoTop',FloatEdit7.Value);
-        WriteBool('Logo1PageOnly',CheckBox6.Checked);
-        ConfigData.ConversionItems.Assign(TempConversionItems);
-        MemStream:=TMemoryStream.Create;
-        try
-          SaveCollectionToStream(ConfigData.ConversionItems,MemStream);
-          Registry.WriteBinaryData('CustomConversionTable',MemStream.Memory^,MemStream.Size);
-        finally
-          MemStream.Free;
-        end;
+      if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',false) then
+      try
+        DeleteValue('WinPrint');
+      except
       end;
     finally
       CloseKey;
     end;
-    RootKey:=HKEY_LOCAL_MACHINE;
+    RootKey:=HKEY_CURRENT_USER;
     try
-      if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',true) then
-      if CheckBox1.Checked then WriteString('WinPrint',Application.ExeName) else DeleteValue('WinPrint');
+      if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',false) then
+      if CheckBox1.Checked then
+        WriteString('WinPrint',Application.ExeName)
+      else
+        DeleteValue('WinPrint');
     finally
       CloseKey;
     end;
@@ -870,21 +943,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-procedure TConfigForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  ReadConfig;
-end;
-
-procedure TConfigForm.Button10Click(Sender: TObject);
-begin
-  Edit8.Text:=DEFAULT_LOGO;
-  FloatEdit6.Value:=DEFAULT_LOGO_LEFT;
-  FloatEdit7.Value:=DEFAULT_LOGO_TOP;
-  CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
-  ConfigChanged(Sender);
-end;
-
-//Klawisz OK
+//Klawisz jêzyka
 procedure TConfigForm.Button11Click(Sender: TObject);
 begin
   if LANG=61000 then LANG:=60000
@@ -893,9 +952,11 @@ begin
   MainForm.Loadlang;
 end;
 
+//Klawisz OK
 procedure TConfigForm.Button1Click(Sender: TObject);
 begin
   WriteConfig;
+  ReadConfig;  
   Close;
 end;
 
@@ -986,6 +1047,16 @@ begin
   CheckBox5.Checked:=DEFAULT_CLIPPER_COMPATIBLE;
   ComboBox1.ItemIndex:=ord(DEFAULT_CODE_PAGE);
   CheckBox4.Checked:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
+  ConfigChanged(Sender);
+end;
+
+//Karta Inne - Klawisz domyœlne
+procedure TConfigForm.Button10Click(Sender: TObject);
+begin
+  Edit8.Text:=DEFAULT_LOGO;
+  FloatEdit6.Value:=DEFAULT_LOGO_LEFT;
+  FloatEdit7.Value:=DEFAULT_LOGO_TOP;
+  CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
   ConfigChanged(Sender);
 end;
 

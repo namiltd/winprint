@@ -15,7 +15,6 @@ object ConfigForm: TConfigForm
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
@@ -75,13 +74,17 @@ object ConfigForm: TConfigForm
     Top = 0
     Width = 314
     Height = 326
-    ActivePage = TabSheet2
+    ActivePage = TabSheet4
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 3
     object TabSheet2: TTabSheet
       BorderWidth = 8
       Caption = 'PageControl1'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -226,6 +229,10 @@ object ConfigForm: TConfigForm
     object TabSheet1: TTabSheet
       BorderWidth = 8
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -329,12 +336,12 @@ object ConfigForm: TConfigForm
         Left = 0
         Top = 117
         Width = 290
-        Height = 134
+        Height = 133
         Caption = 'GroupBox2'
         TabOrder = 1
         DesignSize = (
           290
-          134)
+          133)
         object Label3: TLabel
           Left = 174
           Top = 20
@@ -459,6 +466,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'TabSheet3'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 0
@@ -586,7 +597,7 @@ object ConfigForm: TConfigForm
           Width = 185
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 0
           OnChange = ConfigChanged
           Items.Strings = (
