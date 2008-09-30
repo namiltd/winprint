@@ -465,7 +465,7 @@ var
   i: integer;
   MemStream: TMemoryStream;
   section: string;
-begin
+  begin
   with ConfigData do
   begin
     if FileExists(ChangeFileExt(Application.ExeName,'.ini')) then
@@ -477,6 +477,10 @@ begin
         InputFilesDir:=ReadString(section,'InputFilesDir',DEFAULT_INPUT_FILES_DIR);
         InputFilesMask:=ReadString(section,'InputFilesMask',DEFAULT_INPUT_FILES_MASK);
         FormatFileExtension:=ReadString(section,'FormatFileExtension',DEFAULT_FORMAT_FILE_EXTENSION);
+
+	//by sie nie pogryzly
+        if LowerCase(FormatFileExtension) = LowerCase('ini') then FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
+
         EnableFormatting:=ReadBool(section,'EnableFormatting',DEFAULT_ENABLE_FORMATTING);
         TimerInterval:=ReadInteger(section,'TimerInterval',DEFAULT_TIMER_INTERVAL);
         if (TimerInterval<UpDown1.Min) or (TimerInterval>UpDown1.Max) then TimerInterval:=DEFAULT_TIMER_INTERVAL;
@@ -552,6 +556,8 @@ begin
             try
               FormatFileExtension:=ReadString('FormatFileExtension');
               if (FormatFileExtension='') then FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
+	            //by sie nie pogryzly
+              if LowerCase(FormatFileExtension) = LowerCase('ini') then FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
             except
               FormatFileExtension:=DEFAULT_FORMAT_FILE_EXTENSION;
             end;
