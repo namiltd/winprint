@@ -915,6 +915,19 @@ begin
     //user may not have delete rights in HKLM
     //so we move autostart to the HKCU root key
     RootKey:=HKEY_LOCAL_MACHINE;
+
+//skasuj pozostalosci po wersji rejestrowej
+    try
+      if OpenKey('Software\GNU\WinPrint',false) then
+      try
+        DeleteKey('');
+      except
+      end;
+    finally
+      CloseKey;
+    end;
+//-----------------------------------------
+
     try
       if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',false) then
       try
