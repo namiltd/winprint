@@ -68,6 +68,7 @@ type
     LogoLeft: double;
     LogoTop: double;
     Logo1PageOnly: boolean;
+    PrinterId: integer;
   end;
 
   TConfigForm = class(TForm)
@@ -149,6 +150,9 @@ type
     Button10: TButton;
     CheckBox6: TCheckBox;
     Button11: TButton;
+    ComboBox2: TComboBox;
+    GroupBox9: TGroupBox;
+    Label22: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -205,6 +209,7 @@ type
 var
   ConfigForm: TConfigForm;
   LANG: word = 61000;
+  PROGRAMNAME: string;
 
 implementation
 
@@ -243,6 +248,7 @@ const
   DEFAULT_LOGO_LEFT = 12.7;
   DEFAULT_LOGO_TOP = 12.7;
   DEFAULT_LOGO_1PAGE_ONLY = false;
+  DEFAULT_PRINTER = '';
 
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
@@ -290,6 +296,7 @@ end;
 {}
 
 procedure TConfigForm.FormCreate(Sender: TObject);
+var i: integer;
 begin
  Label8.Caption:=RString(111);
 {komponenty dynamiczne}
@@ -418,8 +425,17 @@ begin
           Visible := true;
   end;
 
+  combobox2.Items.Clear;
+  combobox2.Items.Add(RString(163));
+  combobox2.ItemIndex:=0;
+
+  Printer.Refresh; //odœwie¿ zainstalowane drukarki
+  if Printer.Printers.Count>0 then
+    for i:=0 to Printer.Printers.Count - 1 do
+      combobox2.Items.Add(printer.Printers.Strings[i]);
+
   with MainForm.CEVersionInfo1 do
-    Caption:=ProductName+' '+FileVersion;
+    Caption:=PROGRAMNAME+' - '+ProductName+' '+FileVersion;
 
   PageControl1.ActivePageIndex:=0;
   FloatEdit5.Color:=clBtnFace;
@@ -528,6 +544,17 @@ var
         LogoLeft:=ReadFloat(section,'LogoLeft',DEFAULT_LOGO_LEFT);
         LogoTop:=ReadFloat(section,'LogoTop',DEFAULT_LOGO_TOP);
         Logo1PageOnly:=ReadBool(section,'Logo1PageOnly',DEFAULT_LOGO_1PAGE_ONLY);
+  	
+        i := ComboBox2.Items.IndexOf(ReadString(section,'Printer',DEFAULT_PRINTER));
+        if i>=0 then begin
+                       ComboBox2.ItemIndex:= i;
+                       PrinterId:= i-1;
+                     end
+                else begin
+                       ComboBox2.ItemIndex:= 0;
+                       PrinterId:=-1;
+                     end;
+
       finally
         IniFile.Free;
       end;
@@ -706,6 +733,7 @@ var
             except
               Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
             end;
+            PrinterId:=-1;
           end
           else
           begin
@@ -737,6 +765,7 @@ var
             LogoLeft:=DEFAULT_LOGO_LEFT;
             LogoTop:=DEFAULT_LOGO_TOP;
             Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
+            PrinterId:=-1;
           end;
         finally
           CloseKey;
@@ -905,6 +934,11 @@ begin
     WriteFloat(section,'LogoLeft',FloatEdit6.Value);
     WriteFloat(section,'LogoTop',FloatEdit7.Value);
     WriteBool(section,'Logo1PageOnly',CheckBox6.Checked);
+    if ComboBox2.ItemIndex=0 then 
+        WriteString(section,'Printer',DEFAULT_PRINTER)
+    else
+        WriteString(section,'Printer',ComboBox2.Items.Strings[ComboBox2.ItemIndex]);
+
   finally
     IniFile.Free;
   end;
@@ -931,7 +965,7 @@ begin
     try
       if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',false) then
       try
-        DeleteValue('WinPrint');
+        DeleteValue(PROGRAMNAME);
       except
       end;
     finally
@@ -941,9 +975,9 @@ begin
     try
       if OpenKey('Software\Microsoft\Windows\CurrentVersion\Run',false) then
       if CheckBox1.Checked then
-        WriteString('WinPrint',Application.ExeName)
+        WriteString(PROGRAMNAME,Application.ExeName)
       else
-        DeleteValue('WinPrint');
+        DeleteValue(PROGRAMNAME);
     finally
       CloseKey;
     end;
@@ -1076,6 +1110,7 @@ begin
   FloatEdit6.Value:=DEFAULT_LOGO_LEFT;
   FloatEdit7.Value:=DEFAULT_LOGO_TOP;
   CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
+  ComboBox2.ItemIndex:=0;
   ConfigChanged(Sender);
 end;
 
@@ -1368,7 +1403,16 @@ begin
   CheckBox6.Hint := RString(159);
   CheckBox6.Caption := RString(160);
   Button10.Caption := RString(116);
-  IntEdit3.Hint :=  RString(161);
+  IntEdit3.Hint :=  RString(164);
+
+  GroupBox9.Caption := RString(161);
+
+  Label22.Caption := RString(162);
+
+  i:=ComboBox2.ItemIndex; //save
+  ComboBox2.Items.Strings[0] := RString(163);
+  ComboBox2.ItemIndex:=i; //restore
+
   Button11.Caption := RString(000);
 
   PriorityClassNames[MinPriorityClass+0] := RString(200);

@@ -84,8 +84,8 @@ uses
 
 {$R *.DFM}
 
-var
-  Atom1: TAtom;
+//var
+//  Atom1: TAtom;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
@@ -106,6 +106,8 @@ begin
           //Left := 32;
           //Top := 16;
   end;
+  PROGRAMNAME:=StringReplace(ExtractFileName(Paramstr(0)),'.exe','',[rfReplaceAll, rfIgnoreCase]);
+  if PROGRAMNAME='' then PROGRAMNAME:='WinPrint';
 
   Application.OnException:=AppException;
   Icon:=TIcon.Create;
@@ -117,21 +119,24 @@ begin
   end;
   with CEVersionInfo1 do
   begin
-    Application.Title:=ProductName+' '+ProductVersion;
+    Application.Title:=PROGRAMNAME+' - '+ProductName+' '+ProductVersion;
     TrayIcon1.ToolTip:=Application.Title;
-    if (GlobalFindAtom(PChar(CompanyName+' '+ProductName))<>0) then
+    CreateFileMapping(THANDLE($FFFFFFFF), nil, PAGE_READONLY, 0, 32, PChar(ProductName+'-'+PROGRAMNAME));
+    if (GetLastError = ERROR_ALREADY_EXISTS) then
+//    if (GlobalFindAtom(PChar(CompanyName+' '+ProductName))<>0) then
     if (Application.MessageBox(PChar(
-      'Program '+ProductName+' '+RString(500)),
+      'Program '+PROGRAMNAME+' '+RString(500)),
       PChar(RString(501)),
+
       MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_SYSTEMMODAL)=IDNO) then
         Halt; //zakoñcz program
-    Atom1:=GlobalAddAtom(PChar(CompanyName+' '+ProductName));
+//    Atom1:=GlobalAddAtom(PChar(CompanyName+' '+ProductName));
   end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  GlobalDeleteAtom(Atom1);
+//  GlobalDeleteAtom(Atom1);
 end;
 
 procedure TMainForm.Zakocz1Click(Sender: TObject);
@@ -334,9 +339,10 @@ begin
         end;
         try
           //procedure drukujaca StringList
-          PrintStrings('Dokument programu WinPrint - '+SearchRec.Name,
+          PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
                        StringList,
                        CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,
+                       TempConfigData.PrinterId,
                        cMILTOINCH*TempConfigData.MarginLeft,
                        cMILTOINCH*TempConfigData.MarginRight,
                        cMILTOINCH*TempConfigData.MarginTop,

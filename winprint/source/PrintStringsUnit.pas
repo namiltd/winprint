@@ -112,6 +112,7 @@ type
 function PrintStrings(Title: string;
                       lines: TStrings;
                       const CpNr: integer;
+                      const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -133,6 +134,7 @@ uses
 function PrintStrings(Title: string;
                       lines: TStrings;
                       const CpNr: integer;
+                      const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -462,8 +464,9 @@ begin
   continuePrint := True;
   pagecount     := 0;
   textstart     := 0;
-  Printer.Refresh; //odœwie¿ zainstalowane drukarki
-  Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
+//  Printer.Refresh; //odœwie¿ zainstalowane drukarki
+//  Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
+  Printer.PrinterIndex:= PrinterId;
   Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
   Printer.Orientation:=orientation;
   Printer.BeginDoc;
