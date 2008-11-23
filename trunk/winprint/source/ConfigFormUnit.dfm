@@ -81,6 +81,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'PageControl1'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -225,6 +229,10 @@ object ConfigForm: TConfigForm
     object TabSheet1: TTabSheet
       BorderWidth = 8
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -458,6 +466,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'TabSheet3'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 0
@@ -731,6 +743,34 @@ object ConfigForm: TConfigForm
           ShowHint = True
           TabOrder = 1
           OnClick = CheckBox2Click
+        end
+      end
+      object GroupBox9: TGroupBox
+        Left = 0
+        Top = 120
+        Width = 290
+        Height = 73
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'GroupBox9'
+        TabOrder = 2
+        object Label22: TLabel
+          Left = 12
+          Top = 20
+          Width = 36
+          Height = 13
+          Caption = 'Labe22'
+        end
+        object ComboBox2: TComboBox
+          Left = 12
+          Top = 36
+          Width = 265
+          Height = 21
+          Style = csDropDownList
+          ItemHeight = 13
+          TabOrder = 0
+          OnChange = ConfigChanged
+          Items.Strings = (
+            '')
         end
       end
       object Button10: TButton

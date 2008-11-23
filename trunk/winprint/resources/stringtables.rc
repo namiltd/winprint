@@ -194,9 +194,18 @@ BEGIN
  60160 "tylko na 1-szej stronie"
  61160 "on 1-st page only"
 
+ 60161 "Drukarka"
+ 61161 "Printer"
+
+ 60162 "Wybór drukarki"
+ 61162 "Printer selection"
+
+ 60163 "Drukarka domyœlna"
+ 61163 "Default Printer"
+
 //------------------------CFU-ConfigForm-dynamic------------------
- 60161 "pozostaw 0 by usun¹æ znak"
- 61161 "set 0 to remove"
+ 60164 "pozostaw 0 by usun¹æ znak"
+ 61164 "set 0 to remove"
 
 //------------------------CFU-PriorityClassNames------------------
  60200 "bezczynny"
