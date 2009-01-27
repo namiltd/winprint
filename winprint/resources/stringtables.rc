@@ -262,4 +262,8 @@ BEGIN
  60504 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki\nProgram WinPrint zostanie zakoñczony"
  61504  "Critical error during removing format file from queue\nProgram WinPrint will exit"
 
+
+ 60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê"
+ 61600 "PrintString: margins too big, not enough space to print"
+
 END

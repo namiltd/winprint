@@ -356,6 +356,7 @@ begin
                        cMILTOINCH*TempConfigData.LogoLeft,
                        cMILTOINCH*TempConfigData.LogoTop,
                        TempConfigData.Logo1PageOnly,
+                       TempConfigData.EOPCodes,
                        false,
                        nil,nil);
         except

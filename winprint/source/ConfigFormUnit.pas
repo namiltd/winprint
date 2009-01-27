@@ -204,11 +204,8 @@ type
     procedure ResolveEditValues1(Sender: TObject);
   end;
 
- function RString(ID: WORD):string;
-
 var
   ConfigForm: TConfigForm;
-  LANG: word = 61000;
   PROGRAMNAME: string;
 
 implementation
@@ -261,16 +258,6 @@ const
 var
   PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string;
 
-
-function RString(ID: WORD):string;
-var
-  a : array[0..255] of char;
-begin
- result:='';
- if ID<1000 then ID:=ID+LANG; //multilingual respurces
- if (LoadString(hInstance,ID,@a,sizeof(a)) <> 0)
-   then result:=StrPas(a);
-end;
 
 procedure SaveCollectionToStream(Collection: TCollection; Stream: TStream);
 begin

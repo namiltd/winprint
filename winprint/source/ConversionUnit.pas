@@ -41,7 +41,7 @@
    Interface
 
    uses
-     Classes;
+     Windows, Classes;
 
 
 type
@@ -181,12 +181,15 @@ const
 
 
    Var
-     Source, Table : String;   {旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴?}
+
+  LANG: word = 61000;
+
+(*     Source, Table : String;   {旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴?}
                                {3This Forces these Variables to be  3}
                                {3in the data segment. Both Variables3}
                                {3passed to TXlat must be created in 3}
                                {3this segment.                      3}
-                               {A컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴훃}
+                               {A컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴훃} *)
 
 (*   Function TXlat(Var Source: String; Var Table: String):String; *)
 
@@ -195,6 +198,9 @@ const
                               var SL: TStringList;//output strings
             UseCustomConversionTable: boolean;
                      ConversionItems: TConversionItems);
+
+   function RString(ID: WORD):string;
+
 
    Implementation
 
@@ -226,6 +232,16 @@ const
         @end: pop ds            {restore data segment}
    end;
 *)
+
+function RString(ID: WORD):string;
+var
+  a : array[0..255] of char;
+begin
+ result:='';
+ if ID<1000 then ID:=ID+LANG; //multilingual resources
+ if (LoadString(hInstance,ID,@a,sizeof(a)) <> 0)
+   then result:=StrPas(a);
+end;
 
 { TConversionItem }
 
@@ -318,6 +334,41 @@ begin
   Result:=True;
 end;
 
+Function GetNextLineMy10(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
+
+Var
+  PS : PChar;
+  IP,L : Integer;
+
+begin
+  L:=Length(Value);
+  S:='';
+  Result:=False;
+  If ((L-P)<0) then
+    exit;
+  if ((L-P)=0) and (not (value[P] = #10)) Then
+    Begin
+      s:=value[P];
+      inc(P);
+      Result:=True;
+      Exit;
+//      Exit(True);
+    End;
+  PS:=PChar(Value)+P-1;
+  IP:=P;
+  While ((L-P)>=0) and (not (PS^ = #10)) do
+    begin
+    P:=P+1;
+    Inc(PS);
+    end;
+  SetLength (S,P-IP);
+  System.Move (Value[IP],Pointer(S)^,P-IP);
+  If (P<=L) and (Value[P]=#10) then
+    Inc(P); // Point to character after #10(#13)
+  Result:=True;
+end;
+
+
 Procedure SetTextStrMy(SL: Tstrings; const Value: string);
 
 Var
@@ -329,7 +380,7 @@ begin
     SL.beginUpdate;
     SL.Clear;
     P:=1;
-    While GetNextLineMy(SL, Value,S,P) do
+    While GetNextLineMy10(SL, Value,S,P) do
       SL.Add(S);
   finally
     SL.EndUpdate;

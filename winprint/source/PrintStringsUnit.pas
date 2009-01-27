@@ -34,7 +34,7 @@ unit PrintStringsUnit;
 interface
 
 uses
-  Windows, Classes, Graphics, Printers;
+  Windows, Classes, Graphics, Printers, ConversionUnit;
 
 const
   cMILTOINCH = 0.03937;
@@ -122,6 +122,7 @@ function PrintStrings(Title: string;
                       const Bitmap: TBitmap;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
+                      const EOPcodes: TCharCodes;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 
@@ -144,6 +145,7 @@ function PrintStrings(Title: string;
                       const Bitmap: TBitmap;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
+                      const EOPcodes: TCharCodes;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 var
@@ -222,8 +224,7 @@ var
 
         { Validate the margins. }
         if (left>=right) or (top>=bottom) then
-          raise EPrinter.Create(
-            'PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê');
+          raise EPrinter.Create(RString(600));
       end;
 
       { Convert textrect to canvas coordinates. }
@@ -307,13 +308,26 @@ var
 
     function Filter: boolean;
     var
-        ind1,ind2,index: integer;
+        index: integer;
+
+        licz: integer;
+        linialength: integer;
+        linia: string; 
+
     begin
         result:=false;
-        ind1:=pos(char(12),lines[textStart]);
-        ind2:=pos(char(26),lines[textStart]);
-        index:=min(ind1,ind2); //char(12) = FF,char(26) = EOF ??
-        if (index=0) then index:=max(ind1,ind2);
+
+//EOPcodes finding  char(12) = FF,char(26) = EOF ??
+        linia:=lines[textStart];
+        linialength:=length(lines[textStart]);
+        index:=0;
+        if (linialength>0) then for licz:=1 to linialength do begin //min finding
+          if ord(linia[licz]) in EOPCodes then begin
+            index:=licz;
+            break;
+          end;
+        end;
+
         if (index>1) then
         begin
           lines.Insert(textStart+1,copy(lines[textStart],index,length(lines[textStart])-index+1));
@@ -322,7 +336,7 @@ var
         else
           if (index=1) then
           begin
-            while (index<length(lines[textStart])) and (lines[textStart][index] in [char(12),char(26)]) do
+            while (index<length(lines[textStart])) and (ord(lines[textStart][index]) in EOPCodes) do
               inc(index);
             if (length(lines[textStart])>index) then
               lines[textStart]:=copy(lines[textStart],index,length(lines[textStart])-index+1)
@@ -406,7 +420,13 @@ var
                 83: ig:=1; //ESC S zignor.ustawianie indeks gorny/dolny
              end
              else case integer(wstmp[1]) of
-                0..13,16,17,19,21..31: ; //puste by nic nie malowalo
+                0..7,9..12,16,17,19,21..31: ; //puste by nic nie malowalo
+                 8: if tw< printer.canvas.TextWidth('A') then tw:=0 //backspace
+                    else tw:=tw-printer.canvas.TextWidth('A');
+            //     8: if tw< printer.canvas.TextWidth(wstmp) then tw:=0 //backspace
+            //        else tw:=tw-printer.canvas.TextWidth(wstmp);
+
+                13: tw:=0;		  //CR czyli cofnij do poczatku linii
                 20: doublewidthco:=true; //DC4
                 14: doublewidthco:=true; //SO to sam co ESC SO
                 15: case charheightco of //SI to samo co ESC SI
