@@ -364,6 +364,7 @@ var
 
       SetLength(wstmp,1);
       y:=textrect.top;
+      tw:=0;
       while (textStart<lines.count) and Filter do;
       while (textStart<lines.count) and (y<=(textrect.bottom-charheight)) do
       begin
@@ -384,7 +385,7 @@ var
         begin
           SetLength(ws,len);
           MultiByteToWideChar(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
-          tw:=0;
+//          tw:=0;
           ks:=false;
           ig:=0;
           for licz:=1 to len do begin

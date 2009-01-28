@@ -297,8 +297,8 @@ begin
   inherited SetItem(Index,Value);
 end;
 
-
-Function GetNextLineMy(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
+(*
+Function GetNextLineMy1013(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
 
 Var
   PS : PChar;
@@ -333,11 +333,12 @@ begin
     Inc(P); // Point to character after #10(#13)
   Result:=True;
 end;
+*)
 
-Function GetNextLineMy10(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
+Function GetNextLineMy(SL: Tstrings; Const Value : String; Var S : String; Var P : Integer) : Boolean;
 
 Var
-  PS : PChar;
+//  PS : PChar;
   IP,L : Integer;
 
 begin
@@ -352,22 +353,21 @@ begin
       inc(P);
       Result:=True;
       Exit;
-//      Exit(True);
     End;
-  PS:=PChar(Value)+P-1;
   IP:=P;
+(*  PS:=PChar(Value)+P-1;
   While ((L-P)>=0) and (not (PS^ = #10)) do
     begin
     P:=P+1;
     Inc(PS);
-    end;
+    end; *)
+  While ((L-P)>=0) and (value[P]<>#10) do Inc(P);
   SetLength (S,P-IP);
   System.Move (Value[IP],Pointer(S)^,P-IP);
   If (P<=L) and (Value[P]=#10) then
-    Inc(P); // Point to character after #10(#13)
+    Inc(P); // Point to character after #10
   Result:=True;
 end;
-
 
 Procedure SetTextStrMy(SL: Tstrings; const Value: string);
 
@@ -380,7 +380,7 @@ begin
     SL.beginUpdate;
     SL.Clear;
     P:=1;
-    While GetNextLineMy10(SL, Value,S,P) do
+    While GetNextLineMy(SL, Value,S,P) do
       SL.Add(S);
   finally
     SL.EndUpdate;
