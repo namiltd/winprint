@@ -154,12 +154,13 @@ var
   textrect     : TRect;       { output area, in canvas coordinates }
   headerrect   : TRect;       { area for header, in canvas coordinates }
   footerrect   : TRect;       { area for footes, in canvas coordinates }
-  lineheight   : Integer;     { line spacing in dots }
+  lineheight   : Integer;     { line spacing in dots}
   charheight   : Integer;     { font height in dots  }
-  charheightco : Integer;     { font height coefficient }
+  charheightco : Integer;     { font height coefficient (10,12,15,17,20)}
   charstyleco  : TFontStyles; { font style coefficient }
-  lineheightco : Integer;     { line spacing in dots coefficient }
-  doublewidthco: Boolean;     { double width coefficient }
+  lineheightco : Integer;     { line spacing in dots coefficient (6,8,10)}
+  sscriptco    : Integer;     { subscript/superscript coefficient (0,1,2)}
+  doublewidthco: Integer;     { double width coefficient  (10 normal, 16 double)}
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
   ll,tl        : integer;     {logo position}
@@ -269,7 +270,9 @@ var
       licz : integer; tw: integer; //text width
       ks: boolean; //kod sterujacy
       ig: integer; //ignore next znakow
+      kodig: integer; //kod dwu (nie liczac ESC) lub wiecej znakowy (dziala dla ig>0)
       ep: boolean; //empty page
+      pcfsm:integer; //Printer.Canvas.Font.size memory
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -369,7 +372,7 @@ var
       while (textStart<lines.count) and (y<=(textrect.bottom-charheight)) do
       begin
         do_break:=false;
-        doublewidthco:=false;
+        if doublewidthco<128 then doublewidthco:=10; //10/10=1
 
         while (textStart<lines.count) and Filter do
           do_break:=true;
@@ -385,12 +388,32 @@ var
         begin
           SetLength(ws,len);
           MultiByteToWideChar(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
-//          tw:=0;
+
           ks:=false;
           ig:=0;
+          kodig:=0;
           for licz:=1 to len do begin
 	           wstmp[1]:=ws[licz];
              if ig>0 then begin //ignore next znakow
+                            if (kodig<>0) then begin
+                                case kodig of
+                                 87: if ig=1 then case integer(wstmp[1]) of
+                                      0,48: doublewidthco:=10; //10/10=1
+                                      1,49: doublewidthco:=128+14; //+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4
+                                     end;
+                                 83: if ig=1 then case integer(wstmp[1]) of
+                                      0,48: sscriptco:=0;
+                                      1,49: sscriptco:=2;
+                                     end;
+                                 91: if ig=1 then case integer(wstmp[1]) of
+                                      100: ig:=4; //ESC [d  Set Print Quality
+                                       73: ig:=5; //ESC [I  Select Font and Pitch
+                                       75: ig:=3; //ESC [K  Set initial condition
+                                      1,49: sscriptco:=2;
+                                     end;
+                                end;
+                                kodig:=0;
+                            end;
                             dec(ig);
                             continue;
                           end;
@@ -403,33 +426,66 @@ var
                       charheightco:=10;
                       lineheightco:=6;
                       charstyleco:=[];
-                      doublewidthco:=false;
+                      doublewidthco:=10; //10/10=1
+                      sscriptco:=1;
                     end;
-                14: doublewidthco:=true; //ESC SO to sam co SO
+                14: if doublewidthco<128 then doublewidthco:=14; //ESC SO to sam co SO  14/10=1.4
                 48: lineheightco:=8;  //ESC 0
                 50: lineheightco:=6;  //ESC 2
                 49: lineheightco:=10; //ESC 1
                 77: charheightco:=12; //ESC M
                 80: charheightco:=10; //ESC P
+                84: sscriptco:=1;     //ESC T
                103: charheightco:=15; //ESC g
-	           71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
+             71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
              72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
-		            52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
+                52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
                 53: charstyleco:=charstyleco-[fsItalic]; //ESC 5
-	             120: ig:=1; //ESC x zignor.ustawianie NLQ
+
+
+                87: begin //ESC W  druk podwojnie szeroki
+                     ig:=1;
+                     kodig:=87;
+                    end;
+
+                83: begin //ESC S  indeks gorny/dolny
+                     ig:=1;
+                     kodig:=83;
+                    end;
+
+                91: begin //ESC [  rozne ignorowane kody ... okaze sie pozniej jakie
+                     ig:=1;
+                     kodig:=91;
+                    end;
+
+	       120: ig:=1; //ESC x zignor.ustawianie NLQ
                116: ig:=1; //ESC t zignor.ustawianie chartable
-                83: ig:=1; //ESC S zignor.ustawianie indeks gorny/dolny
+
+               119: ig:=1; //ESC w zignor.ustawianie podwojna wysokosc
+                85: ig:=1; //ESC U zignor.ustawianie drukowanie jednokierunkowe
+               112: ig:=1; //ESC p zignor.ustawianie druk proporcjonalny
+
              end
              else case integer(wstmp[1]) of
                 0..7,9..12,16,17,19,21..31: ; //puste by nic nie malowalo
-                 8: if tw< printer.canvas.TextWidth('A') then tw:=0 //backspace
-                    else tw:=tw-printer.canvas.TextWidth('A');
+                 8: if tw>0 then begin
+                     pcfsm:=Printer.Canvas.Font.size; //save 
+                     if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco
+                                                   else Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco;
+                     tw:=tw-printer.canvas.TextWidth('A');
+                     Printer.Canvas.Font.size:=pcfsm; //restore
+                     if tw<0 then tw:=0;                   
+                   end;
+
+            //     8: if tw< printer.canvas.TextWidth('A') then tw:=0 //backspace
+            //        else tw:=tw-printer.canvas.TextWidth('A');
+
             //     8: if tw< printer.canvas.TextWidth(wstmp) then tw:=0 //backspace
             //        else tw:=tw-printer.canvas.TextWidth(wstmp);
 
-                13: tw:=0;		  //CR czyli cofnij do poczatku linii
-                20: doublewidthco:=true; //DC4
-                14: doublewidthco:=true; //SO to sam co ESC SO
+                13: tw:=0;	       //CR czyli cofnij do poczatku linii
+                20: if doublewidthco<128 then doublewidthco:=10; //DC4  10/10=1
+                14: if doublewidthco<128 then doublewidthco:=14; //SO to sam co ESC SO  14/10=1.4
                 15: case charheightco of //SI to samo co ESC SI
                        10: charheightco:=17;
                        12: charheightco:=20;
@@ -451,17 +507,26 @@ var
                           end;
                           if not ContinuePrint then exit;
                    end;
-	           if doublewidthco then Printer.Canvas.Font.size:=(aFont.Size * 16) div charheightco
-                                    else Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco;
+                   Printer.Canvas.Font.size:=(aFont.Size * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)));
                    Printer.Canvas.Font.style:=aFont.style + charstyleco;
+                   // srodek - ((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 2) przesuwa w dó³ by byly w jednej linii
+                   // troche nizej (4*(charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 5) przesuwa w dó³ by byly w jednej linii
+
                    if integer(wstmp[1])<>32 then ExtTextOutW(Printer.Canvas.Handle,
-                      r.Left+tw,r.Top,
+                      r.Left+tw,r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
                       ETO_CLIPPED,
                       @r,
                       PWideChar(wstmp),
                       1,
                       nil);
-                   tw:=tw+printer.canvas.TextWidth(wstmp);
+
+                   pcfsm:=Printer.Canvas.Font.size; //save 
+                   if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco
+                                                 else Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco;
+                   tw:=tw+printer.canvas.TextWidth('A');
+                   Printer.Canvas.Font.size:=pcfsm; //restore
+
+                   //tw:=tw+printer.canvas.TextWidth(wstmp);
                 end;
              end;
              if integer(wstmp[1])=27 then ks:=true
@@ -502,6 +567,8 @@ begin
     charheight:=printer.canvas.TextHeight('Äy');
     charheightco:=10; //10/10=1
     lineheightco:=6; //6/6=1
+    doublewidthco:=10; //10/10=1
+    sscriptco:=1;
     charstyleco:=[];
     while (textstart<lines.count) and continuePrint do
       PrintPage;

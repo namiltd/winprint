@@ -411,7 +411,7 @@ object ConfigForm: TConfigForm
           Height = 21
           Associate = Edit7
           Min = 100
-          Max = 5000
+          Max = 30000
           Increment = 100
           Position = 100
           TabOrder = 5
