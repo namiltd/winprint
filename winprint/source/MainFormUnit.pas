@@ -316,7 +316,7 @@ begin
       try
         TempConfigData:=ConfigForm.ConfigData;
 
-        if ConfigForm.ConfigData.ClipperCompatible and (StringList.Count>0) and (length(StringList.Strings[0])=0) then
+        if ConfigForm.ConfigData.ClipperCompatible and (StringList.Count>0) and ((length(StringList.Strings[0])=0) or ((length(StringList.Strings[0])=1)and(StringList.Strings[0][1]=#13)))  then
           StringList.Delete(0);
 
         if ConfigForm.ConfigData.EnableFormatting then
