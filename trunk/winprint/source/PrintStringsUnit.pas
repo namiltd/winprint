@@ -458,12 +458,14 @@ var
                      kodig:=91;
                     end;
 
-	       120: ig:=1; //ESC x zignor.ustawianie NLQ
+               120: ig:=1; //ESC x zignor.ustawianie NLQ
                116: ig:=1; //ESC t zignor.ustawianie chartable
 
                119: ig:=1; //ESC w zignor.ustawianie podwojna wysokosc
                 85: ig:=1; //ESC U zignor.ustawianie drukowanie jednokierunkowe
                112: ig:=1; //ESC p zignor.ustawianie druk proporcjonalny
+
+                67: ig:=1; //ESC C ignore page length
 
              end
              else case integer(wstmp[1]) of
