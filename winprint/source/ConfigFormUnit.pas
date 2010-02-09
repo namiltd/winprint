@@ -58,6 +58,7 @@ type
     Orientation: TPrinterOrientation;
     LinesPerInch: double;
     LinesPerPage: integer;
+    NumberOfcopies: integer;
     EOPCodes: TCharCodes;
     SkipEmptyPages: boolean;
     ClipperCompatible: boolean;
@@ -153,6 +154,7 @@ type
     ComboBox2: TComboBox;
     GroupBox9: TGroupBox;
     Label22: TLabel;
+    Label23: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -185,6 +187,7 @@ type
     IntEdit1: TIntEdit;
     IntEdit2: TIntEdit;
     IntEdit3: TIntEdit;
+    IntEdit4: TIntEdit;
     FloatEdit1: TFloatEdit;
     FloatEdit2: TFloatEdit;
     FloatEdit3: TFloatEdit;
@@ -236,6 +239,7 @@ const
   DEFAULT_ORIENTATION = poPortrait;
   DEFAULT_LINES_PER_INCH = 6;
   DEFAULT_LINES_PER_PAGE = 0;
+  DEFAULT_NUMBER_OF_COPIES = 1;
   DEFAULT_EOP_CODES = [12,26];
   DEFAULT_SKIP_EMPTY_PAGES = true;
   DEFAULT_CLIPPER_COMPATIBLE = TRUE;
@@ -291,7 +295,7 @@ begin
   with IntEdit1 do begin
           Left := 212;
           Top := 22;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 1;
           Text := '0';
@@ -325,11 +329,26 @@ begin
           Parent := GroupBox7;
           Visible := true;
   end;
+  IntEdit4:=TIntEdit.Create(Self);
+  with IntEdit4 do begin
+          Left := 12;
+          Top := 80;
+          Width := 48;
+          Height := 21;
+          Hint := 'IntEdit4';
+          ParentShowHint := False;
+          ShowHint := True;
+//          TabOrder := 3;
+          Text := '0';
+          OnChange := ConfigChanged;
+          Parent := GroupBox9;
+          Visible := true;
+  end;
   FloatEdit1:=TFloatEdit.Create(Self);
   with FloatEdit1 do begin
           Left := 44;
           Top := 24;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 0;
           Text := '0';
@@ -341,7 +360,7 @@ begin
   with FloatEdit2 do begin
           Left := 136;
           Top := 24;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 1;
           Text := '0';
@@ -353,7 +372,7 @@ begin
   with FloatEdit3 do begin
           Left := 44;
           Top := 56;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 2;
           Text := '0';
@@ -365,7 +384,7 @@ begin
   with FloatEdit4 do begin
           Left := 136;
           Top := 56;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 3;
           Text := '0';
@@ -377,7 +396,7 @@ begin
   with FloatEdit5 do begin
           Left := 92;
           Top := 22;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 5;
           Text := '0';
@@ -390,7 +409,7 @@ begin
   with FloatEdit6 do begin
           Left := 12;
           Top := 80;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 3;
           Text := '0';
@@ -402,7 +421,7 @@ begin
   with FloatEdit7 do begin
           Left := 88;
           Top := 80;
-          Width := 50;
+          Width := 48;
           Height := 21;
 //          TabOrder := 0;
           Text := '0';
@@ -509,6 +528,9 @@ var
         if (LinesPerInch<0) then LinesPerInch:=DEFAULT_LINES_PER_INCH;
         LinesPerPage:=ReadInteger(section,'LinesPerPage',DEFAULT_LINES_PER_PAGE);
         if (LinesPerPage<0) then LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+        NumberOfCopies:=ReadInteger(section,'NumberOfCopies',DEFAULT_NUMBER_OF_COPIES);
+        if (NumberOfCopies<1) then NumberOfCopies:=DEFAULT_NUMBER_OF_COPIES
+        else if (NumberOfCopies>99) then NumberOfCopies:=99;
         EOPCodes:=DEFAULT_EOP_CODES;
         StringToSet(ReadString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),EOPCodes)),TypeInfo(TCharCodes),EOPCodes);
         SkipEmptyPages:=ReadBool(section,'SkipEmptyPages',DEFAULT_SKIP_EMPTY_PAGES);
@@ -664,6 +686,13 @@ var
               LinesPerPage:=DEFAULT_LINES_PER_PAGE;
             end;
             try
+              NumberOfCopies:=ReadInteger('NumberOfCopies');
+              if (NumberOfCopies<1) then NumberOfCopies:=DEFAULT_NUMBER_OF_COPIES
+              else if (NumberOfCopies>99) then NumberOfCopies:=99;
+            except
+              NumberOfCopies:=DEFAULT_NUMBER_OF_COPIES;
+            end;
+            try
               StringToSet(ReadString('EOPCodes'),TypeInfo(TCharCodes),EOPCodes);
             except
               EOPCodes:=DEFAULT_EOP_CODES;
@@ -743,6 +772,7 @@ var
             Orientation:=DEFAULT_ORIENTATION;
             LinesPerInch:=DEFAULT_LINES_PER_INCH;
             LinesPerPage:=DEFAULT_LINES_PER_PAGE;
+            NumberOfCopies:=DEFAULT_NUMBER_OF_COPIES;
             EOPCodes:=DEFAULT_EOP_CODES;
             SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
             ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
@@ -808,6 +838,7 @@ var
     Edit4.Text:=SetToString(TypeInfo(TCharCodes),EOPCodes,',','','');
     CheckBox3.Checked:=SkipEmptyPages;
     CheckBox5.Checked:=ClipperCompatible;
+    IntEdit4.Value:=NumberOfCopies;
 
     with ComboBox1 do
     begin
@@ -903,6 +934,7 @@ begin
     WriteInteger(section,'Orientation',RadioGroup1.ItemIndex);
     WriteFloat(section,'LinesPerInch',FloatEdit5.Value);
     WriteInteger(section,'LinesPerPage',IntEdit1.Value);
+    WriteInteger(section,'NumberOfCopies',IntEdit4.Value);
     StringToSet(Edit4.Text,TypeInfo(TCharCodes),TempSet); WriteString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),TempSet));
     WriteBool(section,'SkipEmptyPages',CheckBox3.Checked);
     WriteBool(section,'ClipperCompatible',CheckBox5.Checked);
@@ -1098,6 +1130,7 @@ begin
   FloatEdit7.Value:=DEFAULT_LOGO_TOP;
   CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
   ComboBox2.ItemIndex:=0;
+  IntEdit4.Value:=DEFAULT_NUMBER_OF_COPIES;
   ConfigChanged(Sender);
 end;
 
@@ -1390,7 +1423,8 @@ begin
   CheckBox6.Hint := RString(159);
   CheckBox6.Caption := RString(160);
   Button10.Caption := RString(116);
-  IntEdit3.Hint :=  RString(164);
+  IntEdit3.Hint :=  RString(165);
+  IntEdit4.Hint :=  RString(166);
 
   GroupBox9.Caption := RString(161);
 
@@ -1399,6 +1433,8 @@ begin
   i:=ComboBox2.ItemIndex; //save
   ComboBox2.Items.Strings[0] := RString(163);
   ComboBox2.ItemIndex:=i; //restore
+
+  Label23.Caption := RString(164);
 
   Button11.Caption := RString(000);
 

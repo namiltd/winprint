@@ -552,9 +552,11 @@ begin
   continuePrint := True;
   pagecount     := 0;
   textstart     := 0;
+
 //  Printer.Refresh; //odœwie¿ zainstalowane drukarki
 //  Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
   Printer.PrinterIndex:= PrinterId;
+  Printer.Copies:= 1;
   Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
   Printer.Orientation:=orientation;
   Printer.BeginDoc;

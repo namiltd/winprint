@@ -203,9 +203,15 @@ BEGIN
  60163 "Drukarka domyœlna"
  61163 "Default Printer"
 
+ 60164 "Liczba kopii (posortowanych)"
+ 61164 "Number of copies (sorted)"
+
 //------------------------CFU-ConfigForm-dynamic------------------
- 60164 "pozostaw 0 by usun¹æ znak"
- 61164 "set 0 to remove"
+ 60165 "pozostaw 0 by usun¹æ znak"
+ 61165 "set 0 to remove"
+
+ 60166 "wartoœæ od 0 do 99"
+ 61166 "value from 0 to 99"
 
 //------------------------CFU-PriorityClassNames------------------
  60200 "bezczynny"

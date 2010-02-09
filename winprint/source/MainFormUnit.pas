@@ -302,6 +302,7 @@ var
   TempFont: TFont;
   TempConfigData: TConfigData;
   Bitmap : TBitmap;
+  kopii : Integer;
 begin
   ZeroTrayIconIndex:=true;
 
@@ -331,15 +332,19 @@ begin
         TempFont.Style:=TempConfigData.FontStyles;
 
         Bitmap:=TBitmap.Create;
-        if TempConfigData.Logo<>'' then begin 
+        if TempConfigData.Logo<>'' then begin
          try
           Bitmap.LoadFromFile(TempConfigData.Logo);
          except
          end;
         end;
-        try
-          //procedure drukujaca StringList
-          PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
+        kopii := TempConfigData.NumberOfCopies;
+        if kopii<1 then kopii:=1
+        else if kopii>99 then kopii:=99;
+        while (kopii>0) do  begin
+          try
+            //procedure drukujaca StringList
+            PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
                        StringList,
                        CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,
                        TempConfigData.PrinterId,
@@ -359,20 +364,23 @@ begin
                        TempConfigData.EOPCodes,
                        false,
                        nil,nil);
-        except
-          //wyj¹tek podczas drukowania plik nie wydrukowany - nie usuwaj pliku tylko
-          //zmieñ rozszerzenie na .bad lub skasuj
-          BadFileName:=ChangeFileExt(InputFileName,'.bad');
-          if FileExists(BadFileName) then DeleteFile(BadFileName);
-          if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad
-          if not DeleteFile(InputFileName) then //na koniec probuj skasowac plik
-          begin
-            //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
-            MustExit:=true;
-            raise EInOutError.Create(RString(502));
+          except
+            //wyj¹tek podczas drukowania plik nie wydrukowany - nie usuwaj pliku tylko
+            //zmieñ rozszerzenie na .bad lub skasuj
+            BadFileName:=ChangeFileExt(InputFileName,'.bad');
+            if FileExists(BadFileName) then DeleteFile(BadFileName);
+            if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad
+            if not DeleteFile(InputFileName) then //na koniec probuj skasowac plik
+            begin
+              //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
+              MustExit:=true;
+              raise EInOutError.Create(RString(502));
+            end;
+            //re-raise inne wyj¹tki powstale przy wydruku
+            raise;
+            break;
           end;
-          //re-raise inne wyj¹tki powstale przy wydruku
-          raise;
+          dec(kopii);
         end;
 
         Bitmap.free;

@@ -585,7 +585,7 @@ object ConfigForm: TConfigForm
           Width = 185
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 0
           OnChange = ConfigChanged
           Items.Strings = (
@@ -737,7 +737,7 @@ object ConfigForm: TConfigForm
         Left = 0
         Top = 120
         Width = 290
-        Height = 73
+        Height = 113
         Anchors = [akLeft, akTop, akRight]
         Caption = 'GroupBox9'
         TabOrder = 2
@@ -747,6 +747,13 @@ object ConfigForm: TConfigForm
           Width = 36
           Height = 13
           Caption = 'Labe22'
+        end
+        object Label23: TLabel
+          Left = 12
+          Top = 63
+          Width = 36
+          Height = 13
+          Caption = 'Labe23'
         end
         object ComboBox2: TComboBox
           Left = 12
