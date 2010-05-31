@@ -548,45 +548,47 @@ var
     end;
 
 begin
-  assert(Assigned(afont),'PrintString: requires a valid aFont parameter!');
-  continuePrint := True;
-  pagecount     := 0;
-  textstart     := 0;
+  if Lines.Count>0 then begin
+    assert(Assigned(afont),'PrintString: requires a valid aFont parameter!');
+    continuePrint := True;
+    pagecount     := 0;
+    textstart     := 0;
 
-//  Printer.Refresh; //odœwie¿ zainstalowane drukarki
-//  Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
-  Printer.PrinterIndex:= PrinterId;
-  Printer.Copies:= 1;
-  Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
-  Printer.Orientation:=orientation;
-  Printer.BeginDoc;
-  try
-    CalcPrintRects;
-    {$IFNDEF WIN32}
-      { Fix for Delphi 1 bug. }
-      Printer.Canvas.Font.PixelsPerInch := Y_resolution;
-    {$ENDIF }
-    Printer.Canvas.Font := aFont;
-    Printer.Canvas.Brush.Style:=bsClear; //przeŸroczyste t³o czcionek
-    charheight:=printer.canvas.TextHeight('Äy');
-    charheightco:=10; //10/10=1
-    lineheightco:=6; //6/6=1
-    doublewidthco:=10; //10/10=1
-    sscriptco:=1;
-    charstyleco:=[];
-    while (textstart<lines.count) and continuePrint do
-      PrintPage;
-  finally
-    if continuePrint and not measureonly then
-      Printer.EndDoc
+//   Printer.Refresh; //odœwie¿ zainstalowane drukarki
+//   Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
+    Printer.PrinterIndex:= PrinterId;
+    Printer.Copies:= 1;
+    Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
+    Printer.Orientation:=orientation;
+    Printer.BeginDoc;
+    try
+      CalcPrintRects;
+      {$IFNDEF WIN32}
+        { Fix for Delphi 1 bug. }
+        Printer.Canvas.Font.PixelsPerInch := Y_resolution;
+      {$ENDIF }
+      Printer.Canvas.Font := aFont;
+      Printer.Canvas.Brush.Style:=bsClear; //przeŸroczyste t³o czcionek
+      charheight:=printer.canvas.TextHeight('Äy');
+      charheightco:=10; //10/10=1
+      lineheightco:=6; //6/6=1
+      doublewidthco:=10; //10/10=1
+      sscriptco:=1;
+      charstyleco:=[];
+      while (textstart<lines.count) and continuePrint do
+        PrintPage;
+    finally
+      if continuePrint and not measureonly then
+        Printer.EndDoc
+      else
+        Printer.Abort;
+    end;
+
+    if continuePrint then
+      result:=pagecount
     else
-      Printer.Abort;
-  end;
-
-  if continuePrint then
-    result:=pagecount
-  else
-    result:=0;
+      result:=0;
+  end else result:=0;
 end;
 
 end.
