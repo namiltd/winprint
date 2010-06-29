@@ -205,12 +205,24 @@ end;
 function TMainForm.TestFile;
 var
   NowSystemTime : SYSTEMTIME;
+  TestFS: TFileStream;
+  TestFileName : string;
+  TestResult : Boolean;
 begin
   GetSystemTime(NowSystemTime);
 
+  TestResult := true;
+  TestFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
+  try
+  // Open for read test
+     TestFS:=TFileStream.Create(TestFileName,fmOpenRead or fmShareDenyNone);
+     TestFS.Free;
+  except
+        on EFOpenError do TestResult:= false;
+  end;
   //10*1000*1000 = 1 sekunda wyra¿ona w setkach nanosekund
   with SearchRec.FindData do
-    result:=((SystemTimeToInt64(NowSystemTime)-Int64(ConfigForm.ConfigData.MinFileAge)*10*1000)>max(FileTimeToInt64(ftCreationTime),FileTimeToInt64(ftLastWriteTime))) and
+      result:=TestResult and ((SystemTimeToInt64(NowSystemTime)-Int64(ConfigForm.ConfigData.MinFileAge)*10*1000)>max(FileTimeToInt64(ftCreationTime),FileTimeToInt64(ftLastWriteTime))) and
             ((dwFileAttributes and FILE_ATTRIBUTE_READONLY)=0);
 end;
 
