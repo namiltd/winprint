@@ -730,17 +730,19 @@ object ConfigForm: TConfigForm
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
-          OnClick = CheckBox2Click
+          OnClick = ConfigChanged
         end
       end
       object GroupBox9: TGroupBox
         Left = 0
-        Top = 120
+        Top = 117
         Width = 290
-        Height = 113
-        Anchors = [akLeft, akTop, akRight]
+        Height = 133
         Caption = 'GroupBox9'
         TabOrder = 2
+        DesignSize = (
+          290
+          133)
         object Label22: TLabel
           Left = 12
           Top = 20
@@ -766,6 +768,18 @@ object ConfigForm: TConfigForm
           OnChange = ConfigChanged
           Items.Strings = (
             '')
+        end
+        object CheckBox7: TCheckBox
+          Left = 12
+          Top = 106
+          Width = 165
+          Height = 17
+          Hint = 'CheckBox7'
+          Caption = 'CheckBox7'
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 3
+          OnClick = ConfigChanged
         end
       end
       object Button10: TButton

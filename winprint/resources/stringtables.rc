@@ -194,8 +194,8 @@ BEGIN
  60160 "tylko na 1-szej stronie"
  61160 "on 1-st page only"
 
- 60161 "Drukarka"
- 61161 "Printer"
+ 60161 "Wejœcie/Wyjœcie"
+ 61161 "Input/Output"
 
  60162 "Wybór drukarki"
  61162 "Printer selection"
@@ -206,12 +206,18 @@ BEGIN
  60164 "Liczba kopii (posortowanych)"
  61164 "Number of copies (sorted)"
 
-//------------------------CFU-ConfigForm-dynamic------------------
- 60165 "pozostaw 0 by usun¹æ znak"
- 61165 "set 0 to remove"
+ 60165 "Ignoruj pliki o zerowej d³ugoœci"
+ 61165 "Ignore zero-sized files"
 
- 60166 "wartoœæ od 0 do 99"
- 61166 "value from 0 to 99"
+ 60166 "Ignoruj puste pliki"
+ 61166 "Ignore empty files"
+
+//------------------------CFU-ConfigForm-dynamic------------------
+ 60175 "pozostaw 0 by usun¹æ znak"
+ 61175 "set 0 to remove"
+
+ 60176 "wartoœæ od 0 do 99"
+ 61176 "value from 0 to 99"
 
 //------------------------CFU-PriorityClassNames------------------
  60200 "bezczynny"
