@@ -37,8 +37,8 @@ uses
   Windows, Classes, Graphics, Printers, ConversionUnit;
 
 const
-  cMILTOINCH = 0.03937;
-
+//  cMILTOINCH = 0.03937;
+    cMILTOINCH = (1/25.4);
 type
  { Prototype for a callback method that PrintString will call
    when it is time to print a header or footer on a page. The
@@ -119,7 +119,8 @@ function PrintStrings(Title: string;
                       const LinesPerPage: integer;
                       const SkipEmptyPages: boolean;
                       const aFont: TFont;
-                      const Bitmap: TBitmap;
+                      const Info: PBitmapInfo;
+                      const Image: TmemoryStream;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
                       const EOPcodes: TCharCodes;
@@ -142,7 +143,8 @@ function PrintStrings(Title: string;
                       const LinesPerPage: integer;
                       const SkipEmptyPages: boolean;
                       const aFont: TFont;
-                      const Bitmap: TBitmap;
+                      const Info: PBitmapInfo;
+                      const Image: TmemoryStream;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
                       const EOPcodes: TCharCodes;
@@ -299,23 +301,74 @@ var
       FireHeaderFooterEvent( OnPrintFooter, footerrect );
     end;
 
-    procedure DoLogo(const Bitmap: TBitMap; const ll,tl:integer);
-    begin
-      if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+     procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer);
+     begin
+     if (Image<>nil) and (Info<>nil) then begin
        try
-          Printer.Canvas.Draw(ll, tl, Bitmap);
+//          Printer.Canvas.Draw(ll, tl, Bitmap);
+         if (Info^.bmiHeader.biXPelsPerMeter=0) or (Info^.bmiHeader.biYPelsPerMeter=0)
+          then
+            StretchDIBits(Printer.Canvas.Handle,
+             ll, tl, Info^.bmiHeader.biWidth, Info^.bmiHeader.biHeight,
+             0,  0, Info^.bmiHeader.biWidth, Info^.bmiHeader.biHeight,
+             Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY)
+          else StretchDIBits(Printer.Canvas.Handle,
+             ll, tl,
+             Round(GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSX )/(Info^.bmiHeader.biXPelsPerMeter/(cMILTOINCH*1000))
+              *Info^.bmiHeader.biWidth),
+             Round(GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSY )/(Info^.bmiHeader.biYPelsPerMeter/(cMILTOINCH*1000))
+              *Info^.bmiHeader.biHeight),
+             0,  0, Info^.bmiHeader.biWidth, Info^.bmiHeader.biHeight,
+             Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY);
        finally
        end;
-      end;
+     end;
     end;
 
+{
+    procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer);
+    var sx,sy,sym,dx,dy,mx,my:Integer;
+              fx,fy:Real;
+    begin
+      if (Image<>nil) and (Info<>nil) then begin
+        sx:=Info^.bmiHeader.biWidth;
+        sy:=Info^.bmiHeader.biHeight;
+        if (Info^.bmiHeader.biXPelsPerMeter=0) or (Info^.bmiHeader.biYPelsPerMeter=0) then begin
+          fx:=1;
+          fy:=1;
+        end else begin
+          fx:=GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSX )/(Info^.bmiHeader.biXPelsPerMeter/(cMILTOINCH*1000));
+          fy:=GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSY )/(Info^.bmiHeader.biYPelsPerMeter/(cMILTOINCH*1000));
+        end;
+        dx:=Round(fx*sx);
+        dy:=Round(fy*sy);
+        if (dx>0) and (dy>0) then  begin
+          mx:= Printer.PageWidth+GetDeviceCaps( Printer.Canvas.Handle, PHYSICALOFFSETX );
+          my:= Printer.PageHeight+GetDeviceCaps( Printer.Canvas.Handle, PHYSICALOFFSETY);
+//          my:=1335;
+          //sxm:=sx;
+          sym:=sy;
+          if (ll+dx>mx) then sx:= Round(sx*(mx-ll)/dx);
+          if (tl+dy>my) then sy:= Round(sy*(my-tl)/dy);
+          dx:=Round(fx*sx);
+          dy:=Round(fy*sy);
+          if (dx>0) and (dy>0) and (sx>0) and (sy>0)then
+            try
+              StretchDIBits(Printer.Canvas.Handle, ll, tl, dx, dy,
+              0,  sym-sy, sx, sy, Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY);
+            finally
+          end;
+        end;
+      end;
+    end;
+ }
     function Filter: boolean;
     var
         index: integer;
 
         licz: integer;
         linialength: integer;
-        linia: string; 
+        linia: string;
 
     begin
         result:=false;
@@ -357,10 +410,10 @@ var
              Inc(pagecount);
       	     if pagecount>1 then Printer.NewPage;
              DoHeader;
-             if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+             if (Image<>nil) and (Info<>nil) then begin
                if (pagecount<2) or
                   ( (firstpageonlylogo=false) and (pagecount>1)) then
-                    DoLogo(Bitmap,ll,tl);
+                    DoLogo(Info,Image,ll ,tl);
              end;
              if not ContinuePrint then exit;
       end;
@@ -502,10 +555,10 @@ var
                           Inc(pagecount);
       	                  if pagecount>1 then Printer.NewPage;
                           DoHeader;
-                          if (Bitmap<>nil) and (Bitmap.Empty = false) then begin
+                          if (Image<>nil) and (Info<>nil) then begin
                             if (pagecount<2) or
                                ( (firstpageonlylogo=false) and (pagecount>1)) then
-                                   DoLogo(Bitmap,ll,tl);
+                                   DoLogo(Info,Image,ll,tl);
                           end;
                           if not ContinuePrint then exit;
                    end;

@@ -38,7 +38,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, StdCtrls, Buttons, ExtCtrls, NumEdit, Printers, ConversionUnit;
+  ComCtrls, StdCtrls, Buttons, ExtCtrls, NumEdit, Printers, ConversionUnit, StrUtils;
 
 type
   TConfigData = record
@@ -466,16 +466,32 @@ begin
   ConfigData.ConversionItems.Free;
 end;
 
+function IgnoreString(IString: string; GString: string): string;
+var
+ maxi,maxg: Integer;
+begin
+ maxi:=Length(IString);
+ maxg:=Length(GString);
+ if maxg=0 then result:=''
+ else if (maxi<=0) or (maxg<0) then result:=GString
+      else if maxi>maxg then result:=''
+           else if CompareText(IString,LeftStr(GString,maxi))<>0
+             then result:=Gstring
+             else if maxi=maxg then result:=''
+                  else result:=RightStr(GString,maxg-maxi);
+end;
+
 procedure TConfigForm.SpeedButton1Click(Sender: TObject);
 var
   TempDir: string;
 begin
   if SelectDirectory(RString(300),'\',TempDir) then
-  begin
+    Edit1.Text:=IgnoreString(ExtractFilePath(ParamStr(0)),IncludeTrailingBackslash(TempDir));
+{  begin
     if TempDir<>'' then TempDir:=IncludeTrailingBackslash(TempDir);
     If LowerCase(TempDir) = LowerCase(ExtractFilePath(ParamStr(0))) then TempDir := '';
     Edit1.Text:=TempDir;
-  end;
+  end; }
 end;
 
 function IsFullPath(APath: string): boolean;
@@ -907,6 +923,10 @@ var
     if not IsFullPath(InputFilesDir) then   //normalizacja sciezek bezwzglednych i wzglednych
       InputFilesDir:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+InputFilesDir;
     InputFilesDir:=IncludeTrailingBackslash(ExpandFileName(InputFilesDir));
+
+    if not IsFullPath(Logo) then   //normalizacja sciezek bezwzglednych i wzglednych
+      Logo:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+Logo;
+
     MainForm.Timer1.Interval:=TimerInterval; //ustawienie Timera
     SetPriorityClass(GetCurrentProcess,PriorityClassValues[Priority]);
     Button3.Enabled:=false; //Klawisz Zastosuj
@@ -1301,7 +1321,8 @@ begin
   openDialog.Filter := RString(405);
   openDialog.FilterIndex := 1;
   if openDialog.Execute then
-      Edit8.Text := openDialog.FileName;
+      Edit8.Text := IgnoreString(ExtractFilePath(ParamStr(0)),openDialog.FileName);
+//      Edit8.Text := openDialog.FileName;
   openDialog.Free;
 end;
 

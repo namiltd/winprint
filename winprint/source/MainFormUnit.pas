@@ -320,6 +320,21 @@ var
   TempConfigData: TConfigData;
   Bitmap : TBitmap;
   kopii : Integer;
+  Image : TmemoryStream;
+  ImageSize : Cardinal;
+  Info : PBitmapInfo;
+  InfoSize : Cardinal;
+
+  Header : Record
+    FileHeader : tBitmapFileHeader;
+    InfoHeader : tBitmapInfoHeader;
+  end;
+  Bmp : File;
+  dpmok : Boolean;
+  Count : Integer;
+  xDPM : DWORD;
+  yDPM : DWORD;
+
 begin
   ZeroTrayIconIndex:=true;
 
@@ -328,7 +343,6 @@ begin
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
     StringList:=TStringList.Create;
     try
-
       ReadANDConvert(ConfigForm.ConfigData.CodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
       TempFont:=TFont.Create;
       try
@@ -349,11 +363,79 @@ begin
         TempFont.Style:=TempConfigData.FontStyles;
 
         Bitmap:=TBitmap.Create;
+        Image := nil;
+        Info := nil;
         if TempConfigData.Logo<>'' then begin
-         try
-          Bitmap.LoadFromFile(TempConfigData.Logo);
-         except
-         end;
+          dpmok := True;
+          xDPM:=0;
+          yDPM:=0;
+          AssignFile(Bmp, TempConfigData.Logo);
+          try
+          Reset(Bmp, 1);
+          except
+            dpmok := False;
+          end;
+          if dpmok then begin
+            BlockRead(Bmp, Header, sizeof(Header), Count);
+            if Count = sizeof(Header) then
+            begin
+              xDPM := Header.InfoHeader.biXPelsPerMeter;
+              yDPM := Header.InfoHeader.biYPelsPerMeter;
+              if (xDPM=0) or (yDPM=0) then begin
+                dpmok:=false;
+                xDPM:=0;
+                yDPM:=0;
+              end;
+            end
+            else dpmok:=false;
+            CloseFile(Bmp);
+          end;
+          try
+            Bitmap.LoadFromFile(TempConfigData.Logo);
+            if Bitmap.Empty = false then begin
+              GetDIBSizes(Bitmap.Handle, InfoSize, ImageSize);
+              try
+                Info := AllocMem(InfoSize);
+                try
+                  Image := Tmemorystream.Create;
+                  try
+                    Image.SetSize(Imagesize);
+                    try
+                      if not GetDIB(Bitmap.Handle, Bitmap.Palette, Info^, Image.Memory^)
+                      then begin
+                        FreeMem(Info, InfoSize);
+                        Image.free;
+                        Image := nil;
+                        Info := nil;
+                      end else
+                      if dpmok then begin
+                        Info^.bmiHeader.biXPelsPerMeter:=xDPM;
+                        Info^.bmiHeader.biYPelsPerMeter:=yDPM;
+                      end;
+                    except
+                      FreeMem(Info, InfoSize);
+                      Image.free;
+                      Image := nil;
+                      Info := nil;
+                    end;
+                  except
+                    FreeMem(Info, InfoSize);
+                    Image.free;
+                    Image := nil;
+                    Info := nil;
+                  end;
+                except
+                  FreeMem(Info, InfoSize);
+                  Image := nil;
+                  Info := nil;
+                end;
+              except
+                Info := nil;
+                Image := nil;
+              end;
+            end;
+            except
+          end;
         end;
         kopii := TempConfigData.NumberOfCopies;
         if kopii<1 then kopii:=1
@@ -374,7 +456,8 @@ begin
                        TempConfigData.LinesPerPage,
                        TempConfigData.SkipEmptyPages,
                        TempFont,
-                       Bitmap,
+                       Info,
+                       Image,
                        cMILTOINCH*TempConfigData.LogoLeft,
                        cMILTOINCH*TempConfigData.LogoTop,
                        TempConfigData.Logo1PageOnly,
@@ -399,7 +482,12 @@ begin
           end;
           dec(kopii);
         end;
-
+        if (Image<>nil) and (Info<>nil) then begin
+          FreeMem(Info, InfoSize);
+          Image.free;
+//          Image := nil;
+//          Info := nil;
+        end;
         Bitmap.free;
 
         //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
