@@ -1067,6 +1067,7 @@ end;
 //Klawisz Anuluj
 procedure TConfigForm.Button2Click(Sender: TObject);
 begin
+  if Button3.Enabled=true then readconfig;
   Close;
 end;
 
