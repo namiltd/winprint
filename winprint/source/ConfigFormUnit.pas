@@ -474,7 +474,7 @@ begin
  maxg:=Length(GString);
  if maxg=0 then result:=''
  else if (maxi<=0) or (maxg<0) then result:=GString
-      else if maxi>maxg then result:=''
+      else if maxi>maxg then result:=Gstring
            else if CompareText(IString,LeftStr(GString,maxi))<>0
              then result:=Gstring
              else if maxi=maxg then result:=''
