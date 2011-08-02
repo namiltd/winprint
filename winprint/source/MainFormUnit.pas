@@ -208,7 +208,15 @@ var
   TestFS: TFileStream;
   TestFileName : string;
   TestResult : Boolean;
+  FNLength : integer;
 begin
+  FNLength := Length(SearchRec.Name);
+  if (FNLength<1) or (SearchRec.Name[FNLength]='~') then //Nazwa tymczasowa lub archiwalna po b³êdzie
+  begin
+    result:=false;
+    exit;
+  end;
+  
   GetSystemTime(NowSystemTime);
 
   if (not ConfigForm.ConfigData.IgnoreEmptyFiles)
@@ -315,6 +323,7 @@ var
   InputFileName: string;
   FormatFileName: string;
   BadFileName: string;
+  TmpFileName: string;
   StringList: TStringList;
   TempFont: TFont;
   TempConfigData: TConfigData;
@@ -341,6 +350,18 @@ begin
   Timer2.Enabled:=true;
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
+
+    TmpFileName:=ChangeFileExt(InputFileName,'.tmp~');
+    if FileExists(TmpFileName) then DeleteFile(TmpFileName);
+    if not RenameFile(InputFileName,TmpFileName) then //próbuj zmienic rozszerzenie na .tmp~
+    begin
+        //krytyczny b³¹d podczas zmiany nazwy pliku wydruku na tymczasow¹ - zakoñcz aplikacje
+        MustExit:=true;
+        raise EInOutError.Create(RString(505)); 
+    end
+    else InputFileName := TmpFileName;
+ 
+
     StringList:=TStringList.Create;
     try
       ReadANDConvert(ConfigForm.ConfigData.CodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
@@ -440,7 +461,7 @@ begin
         kopii := TempConfigData.NumberOfCopies;
         if kopii<1 then kopii:=1
         else if kopii>99 then kopii:=99;
-        while (kopii>0) do  begin
+        while (kopii>0) do begin
           try
             //procedure drukujaca StringList
             PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
@@ -465,11 +486,11 @@ begin
                        false,
                        nil,nil);
           except
-            //wyj¹tek podczas drukowania plik nie wydrukowany - nie usuwaj pliku tylko
-            //zmieñ rozszerzenie na .bad lub skasuj
-            BadFileName:=ChangeFileExt(InputFileName,'.bad');
+      		//wyj¹tek podczas drukowania plik nie wydrukowany
+            //zmieñ rozszerzenie na .bad~ lub jesli nie chce zmienic skasuj plik
+            BadFileName:=ChangeFileExt(InputFileName,'.bad~');
             if FileExists(BadFileName) then DeleteFile(BadFileName);
-            if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad
+            if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad~
             if not DeleteFile(InputFileName) then //na koniec probuj skasowac plik
             begin
               //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
@@ -490,22 +511,21 @@ begin
         end;
         Bitmap.free;
 
-        //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
-        if not DeleteFile(InputFileName) then
+        if not DeleteFile(InputFileName) then //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
         begin
-          //krytyczny b³¹d podczas usuwania pliku z kolejki - zakoñcz aplikacje
-          MustExit:=true;
-          raise EInOutError.Create(RString(503));
+            //krytyczny b³¹d podczas usuwania pliku z kolejki - zakoñcz aplikacje
+            MustExit:=true;
+            raise EInOutError.Create(RString(503));
         end;
 
-        //jezelio w³¹czono formatowanie prÓbuj usun¹æ równie¿ plik formatuj¹cy
+        //jezeli w³¹czono formatowanie próbuj usun¹æ plik formatuj¹cy
         if ConfigForm.ConfigData.EnableFormatting then
         if FileExists(FormatFileName) then
         if not DeleteFile(FormatFileName) then
         begin
-          //krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki - zakoñcz aplikacje
-          MustExit:=true;
-          raise EInOutError.Create(RString(504));
+            //krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki - zakoñcz aplikacje
+            MustExit:=true;
+            raise EInOutError.Create(RString(504));
         end;
 
       finally
