@@ -83,8 +83,8 @@ BEGIN
  60122 "Folder plików"
  61122 "Files folder"
 
- 60123 "Maska plików"
- 61123 "Files mask"
+ 60123 "Maska plików/Port"
+ 61123 "Files mask/Port"
 
  60124 "Rozszerzenie plików formatuj¹cych"
  61124 "Formatting files extension"
@@ -92,8 +92,8 @@ BEGIN
  60125 "Œcie¿ka do katalogu z plikami, które bêd¹ przetwarzane."
  61125 "Path to processing files folder"
 
- 60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt)."
- 61126 "Mask of processing files (e.g. *.txt)"
+ 60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt) lub podwieszony port (np. LPT1)"
+ 61126 "Mask of processing files (e.g. *.txt) or captured port (e.g. LPT1)"
 
  60127 "Rozszerzenie plików formatuj¹cych"
  61127 "Formatting files extension"
@@ -276,6 +276,9 @@ BEGIN
 
  60505 "Wyst¹pi³ krytyczny b³¹d podczas zmiany nazwy pliku na tymczasow¹\nProgram WinPrint zostanie zakoñczony"
  61505 "Critical error during renaming filename to temporary\nProgram WinPrint will exit"
+
+ 60506 "Wyst¹pi³ krytyczny b³¹d podczas tworzenia pliku spoolera\nProgram WinPrint zostanie zakoñczony"
+ 61506 "Critical error during creating spooler file\nProgram WinPrint will exit"
 
  60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê"
  61600 "PrintString: margins too big, not enough space to print"

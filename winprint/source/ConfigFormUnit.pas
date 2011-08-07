@@ -71,6 +71,7 @@ type
     Logo1PageOnly: boolean;
     IgnoreEmptyFiles: boolean;
     PrinterId: integer;
+    PortCapturing: integer;
   end;
 
   TConfigForm = class(TForm)
@@ -287,11 +288,17 @@ begin
   end;
 end;
 
-{}
-
 procedure TConfigForm.FormCreate(Sender: TObject);
 var i: integer;
+  osVerInfo: TOSVersionInfo;
 begin
+  osVerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
+  if GetVersionEx(osVerInfo) 
+    and (osVerInfo.dwPlatformId=VER_PLATFORM_WIN32_NT) 
+    and (osVerInfo.dwMajorVersion>=5) and (osVerInfo.dwMinorVersion>=1) 
+  then ConfigData.PortCapturing:=0
+  else ConfigData.PortCapturing:=-1;//disabled for Windows < XP
+  
  Label8.Caption:=RString(111);
 {komponenty dynamiczne}
   IntEdit1:=TIntEdit.Create(Self);
@@ -464,6 +471,9 @@ procedure TConfigForm.FormDestroy(Sender: TObject);
 begin
   TempConversionItems.Free;
   ConfigData.ConversionItems.Free;
+
+  if ConfigData.PortCapturing=1 
+    then DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(ConfigData.InputFilesMask), PChar(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp'));
 end;
 
 function IgnoreString(IString: string; GString: string): string;
@@ -506,9 +516,15 @@ var
   i: integer;
   MemStream: TMemoryStream;
   section: string;
+  nazwa: string;
+  OldInputFilesDir: string;
+  OldInputFilesMask: string;
+  HandleToFile: THandle;
   begin
   with ConfigData do
   begin
+    OldInputFilesDir:=InputFilesDir; {old values}
+    OldInputFilesMask:=InputFilesMask;
     if FileExists(ChangeFileExt(Application.ExeName,'.ini')) then
     begin
       IniFile:=TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
@@ -572,7 +588,7 @@ var
         LogoLeft:=ReadFloat(section,'LogoLeft',DEFAULT_LOGO_LEFT);
         LogoTop:=ReadFloat(section,'LogoTop',DEFAULT_LOGO_TOP);
         Logo1PageOnly:=ReadBool(section,'Logo1PageOnly',DEFAULT_LOGO_1PAGE_ONLY);
-  	IgnoreEmptyFiles:=ReadBool(section,'IgnoreEmptyFiles',DEFAULT_IGNORE_EMPTY_FILES);
+        IgnoreEmptyFiles:=ReadBool(section,'IgnoreEmptyFiles',DEFAULT_IGNORE_EMPTY_FILES);
 
         i := ComboBox2.Items.IndexOf(ReadString(section,'Printer',DEFAULT_PRINTER));
         if i>=0 then begin
@@ -923,7 +939,29 @@ var
     if not IsFullPath(InputFilesDir) then   //normalizacja sciezek bezwzglednych i wzglednych
       InputFilesDir:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+InputFilesDir;
     InputFilesDir:=IncludeTrailingBackslash(ExpandFileName(InputFilesDir));
-
+    
+    if (PortCapturing>=0)and((compareText(OldInputFilesMask,InputFilesMask)<>0) or (CompareText(OldInputFilesDir,InputFilesDir)<>0)) then begin
+        if PortCapturing=1 
+            then DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(OldInputFilesMask), PChar(OldInputFilesDir+OldInputFilesMask+'spl.tmp'));
+        nazwa:=UpperCase(InputFilesMask);
+        if ((Length(nazwa)=3)and(nazwa[1]='P')and(nazwa[2]='R')and(nazwa[3]='N'))
+            or ((Length(nazwa)=4)and
+            (((nazwa[1]='L')and(nazwa[2]='P')and(nazwa[3]='T')) or ((nazwa[1]='C')and(nazwa[2]='O')and(nazwa[3]='M'))) and
+            ((nazwa[4]>='1')and(nazwa[4]<='9'))) then 
+            begin
+                HandleToFile:=CreateFile(PChar(InputFilesDir+InputFilesMask+'spl.tmp'), GENERIC_WRITE, 0, NIL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+                if HandleToFile = INVALID_HANDLE_VALUE then
+                begin
+                    //krytyczny b³¹d podczas tworzenia pliku spoolera - zakoñcz aplikacje
+                    raise EInOutError.Create(RString(506)); 
+                end
+                else CloseHandle(HandleToFile);
+                DefineDosDevice(0, PChar(InputFilesMask), PChar(InputFilesDir+InputFilesMask+'spl.tmp'));
+                PortCapturing:=1;
+            end
+            else PortCapturing:=0;       
+    end;
+    
     if not IsFullPath(Logo) then   //normalizacja sciezek bezwzglednych i wzglednych
       Logo:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+Logo;
 

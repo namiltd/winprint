@@ -343,6 +343,7 @@ var
   Count : Integer;
   xDPM : DWORD;
   yDPM : DWORD;
+  HandleToFile: THandle;
 
 begin
   ZeroTrayIconIndex:=true;
@@ -359,7 +360,19 @@ begin
         MustExit:=true;
         raise EInOutError.Create(RString(505)); 
     end
-    else InputFileName := TmpFileName;
+    else begin
+        if ConfigForm.ConfigData.PortCapturing=1 then begin
+            HandleToFile:=CreateFile(PChar(InputFileName), GENERIC_WRITE, 0, NIL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+            if HandleToFile = INVALID_HANDLE_VALUE then
+            begin
+                //krytyczny b³¹d podczas tworzenia pliku spoolera - zakoñcz aplikacje
+                MustExit:=true;
+                raise EInOutError.Create(RString(506)); 
+            end
+            else CloseHandle(HandleToFile);
+        end;
+        InputFileName := TmpFileName;
+    end;
  
 
     StringList:=TStringList.Create;
@@ -544,6 +557,7 @@ end;
 procedure TMainForm.Timer1Timer(Sender: TObject);
 var
   Processed: boolean;
+  addtomask: string;
 begin
   Timer1.Enabled:=false;
   if not MustExit then
@@ -552,7 +566,9 @@ begin
     if (InputFilesDir<>'') and DirectoryExists(InputFilesDir) then
     try
       Processed:=false;
-      if FindFirst(InputFilesDir+InputFilesMask,0,SearchRec)=0 then
+      if PortCapturing=1 then addtomask:='spl.tmp'
+                         else addtomask:='';
+      if FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0 then
       if TestFile then
       begin
         ProcessFile;
