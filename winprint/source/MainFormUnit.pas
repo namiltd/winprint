@@ -219,7 +219,7 @@ begin
   
   GetSystemTime(NowSystemTime);
 
-  if (not ConfigForm.ConfigData.IgnoreEmptyFiles)
+  if ((not ConfigForm.ConfigData.IgnoreEmptyFiles) and (ConfigForm.ConfigData.PortCapturing<>1))//Not IgnoreEmptyFiles only if not port capturing
       or (SearchRec.FindData.nFileSizeHigh<>0)
       or (SearchRec.FindData.nFileSizeLow<>0) then begin
     TestResult := true;
