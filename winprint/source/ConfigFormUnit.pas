@@ -468,12 +468,25 @@ begin
 end;
 
 procedure TConfigForm.FormDestroy(Sender: TObject);
+var
+  TempFile: File;
+  FS: Cardinal;
 begin
   TempConversionItems.Free;
   ConfigData.ConversionItems.Free;
 
-  if ConfigData.PortCapturing=1 
-    then DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(ConfigData.InputFilesMask), PChar(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp'));
+  if ConfigData.PortCapturing=1 then begin
+        DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(ConfigData.InputFilesMask), PChar(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp'));
+        AssignFile(TempFile,ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+        try
+           FS:=1; //cokolwiek <>0
+           Reset(TempFile);
+           FS:=FileSize(TempFile);
+        finally
+           CloseFile(TempFile);
+        end;
+        if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+  end;
 end;
 
 function IgnoreString(IString: string; GString: string): string;
@@ -511,6 +524,8 @@ end;
 
 procedure TConfigForm.ReadConfig;
 var
+  TempFile: File;
+  FS: Cardinal;
   Registry: TRegistry;
   IniFile: TIniFile;
   i: integer;
@@ -520,7 +535,7 @@ var
   OldInputFilesDir: string;
   OldInputFilesMask: string;
   HandleToFile: THandle;
-  begin
+begin
   with ConfigData do
   begin
     OldInputFilesDir:=InputFilesDir; {old values}
@@ -941,8 +956,18 @@ var
     InputFilesDir:=IncludeTrailingBackslash(ExpandFileName(InputFilesDir));
     
     if (PortCapturing>=0)and((compareText(OldInputFilesMask,InputFilesMask)<>0) or (CompareText(OldInputFilesDir,InputFilesDir)<>0)) then begin
-        if PortCapturing=1 
-            then DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(OldInputFilesMask), PChar(OldInputFilesDir+OldInputFilesMask+'spl.tmp'));
+        if PortCapturing=1 then begin
+                DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(OldInputFilesMask), PChar(OldInputFilesDir+OldInputFilesMask+'spl.tmp'));
+                AssignFile(TempFile,ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+                try
+                   FS:=1; //cokolwiek <>0
+                   Reset(TempFile);
+                   FS:=FileSize(TempFile);
+                finally
+                   CloseFile(TempFile);
+                end;
+                if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+        end;
         nazwa:=UpperCase(InputFilesMask);
         if ((Length(nazwa)=3)and(nazwa[1]='P')and(nazwa[2]='R')and(nazwa[3]='N'))
             or ((Length(nazwa)=4)and
@@ -953,7 +978,7 @@ var
                 if HandleToFile = INVALID_HANDLE_VALUE then
                 begin
                     //krytyczny b³¹d podczas tworzenia pliku spoolera - zakoñcz aplikacje
-                    raise EInOutError.Create(RString(506)); 
+                    raise EInOutError.Create(RString(507)); 
                 end
                 else CloseHandle(HandleToFile);
                 DefineDosDevice(0, PChar(InputFilesMask), PChar(InputFilesDir+InputFilesMask+'spl.tmp'));

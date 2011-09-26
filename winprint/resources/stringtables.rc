@@ -280,6 +280,9 @@ BEGIN
  60506 "Wyst¹pi³ krytyczny b³¹d podczas tworzenia pliku spoolera\nProgram WinPrint zostanie zakoñczony"
  61506 "Critical error during creating spooler file\nProgram WinPrint will exit"
 
+ 60507 "Wyst¹pi³ b³¹d podczas tworzenia pliku spoolera\nSprawdŸ œcie¿kê folderu plików"
+ 61507 "Error during creating spooler file\nCheck files folder path"
+
  60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê"
  61600 "PrintString: margins too big, not enough space to print"
 
