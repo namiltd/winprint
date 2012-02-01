@@ -25,13 +25,18 @@ object MainForm: TMainForm
       Hint = 'PopupMenu1'
       OnClick = Konfiguracja1Click
     end
+    object Info1: TMenuItem
+      Caption = 'Info1'
+      Hint = 'Info1'
+      OnClick = Info1Click
+    end
     object N1: TMenuItem
       Caption = '-'
     end
-    object Zakocz1: TMenuItem
-      Caption = 'Zakocz1'
-      Hint = 'Zakocz1'
-      OnClick = Zakocz1Click
+    object Zakoncz1: TMenuItem
+      Caption = 'Zakoncz1'
+      Hint = 'Zakoncz1'
+      OnClick = Zakoncz1Click
     end
   end
   object Timer1: TTimer

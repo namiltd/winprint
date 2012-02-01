@@ -92,7 +92,7 @@ BEGIN
  60125 "Œcie¿ka do katalogu z plikami, które bêd¹ przetwarzane."
  61125 "Path to processing files folder"
 
- 60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt) lub podwieszony port (np. LPT1)"
+ 60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt) lub przechwytywany port (np. LPT1)"
  61126 "Mask of processing files (e.g. *.txt) or captured port (e.g. LPT1)"
 
  60127 "Rozszerzenie plików formatuj¹cych"
@@ -258,6 +258,12 @@ BEGIN
  60405 "Pliki logo (*.bmp)|*.BMP"
  61405 "Logo files (*.bmp)|*.BMP"
 
+ 60406 "Info"
+ 61406 "Info"
+
+ 60407 "Informacje o programie."
+ 61407 "Program info."
+
 //------------------------MFU-------------------------------------
  60500 "jest ju¿ uruchomiony.\nPowtórne uruchomienie programu mo¿e spowodowaæ b³êdy w jego dzia³aniu.\n\nCzy chcesz uruchomiæ ten program ponownie?"
  61500 "already running.\nSecond run may couse errors in his action.\n\nRun program again?"
@@ -285,5 +291,18 @@ BEGIN
 
  60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê"
  61600 "PrintString: margins too big, not enough space to print"
+
+//------------------------Info-------------------------------------
+ 60700 "Przechwytywany port"
+ 61700 "Captured port"
+
+ 60701 "Tymczasowy plik przechwytywania"
+ 61701 "Temporary capturing file"
+
+ 60702 "Maska plików"
+ 61702 "Files mask"
+
+ 60703 "Folder plików"
+ 61703 "Files folder"
 
 END

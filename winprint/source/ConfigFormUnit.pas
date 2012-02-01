@@ -182,6 +182,7 @@ type
     procedure Button10Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     ListBox1HintIndex: integer;
@@ -479,13 +480,12 @@ begin
         DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(ConfigData.InputFilesMask), PChar(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp'));
         AssignFile(TempFile,ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
         try
-           FS:=1; //cokolwiek <>0
            Reset(TempFile);
            FS:=FileSize(TempFile);
-        finally
            CloseFile(TempFile);
+           if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+        except;
         end;
-        if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
   end;
 end;
 
@@ -954,19 +954,17 @@ begin
     if not IsFullPath(InputFilesDir) then   //normalizacja sciezek bezwzglednych i wzglednych
       InputFilesDir:=IncludeTrailingBackslash(ExtractFilePath(ParamStr(0)))+InputFilesDir;
     InputFilesDir:=IncludeTrailingBackslash(ExpandFileName(InputFilesDir));
-    
     if (PortCapturing>=0)and((compareText(OldInputFilesMask,InputFilesMask)<>0) or (CompareText(OldInputFilesDir,InputFilesDir)<>0)) then begin
         if PortCapturing=1 then begin
                 DefineDosDevice(DDD_REMOVE_DEFINITION, PChar(OldInputFilesMask), PChar(OldInputFilesDir+OldInputFilesMask+'spl.tmp'));
-                AssignFile(TempFile,ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
+                AssignFile(TempFile,OldInputFilesDir+OldInputFilesMask+'spl.tmp');
                 try
-                   FS:=1; //cokolwiek <>0
                    Reset(TempFile);
                    FS:=FileSize(TempFile);
-                finally
                    CloseFile(TempFile);
+                   if FS=0 then DeleteFile(OldInputFilesDir+OldInputFilesMask+'spl.tmp');
+                except;
                 end;
-                if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
         end;
         nazwa:=UpperCase(InputFilesMask);
         if ((Length(nazwa)=3)and(nazwa[1]='P')and(nazwa[2]='R')and(nazwa[3]='N'))
@@ -1110,6 +1108,11 @@ begin
   ConfigChanged(Sender);
 end;
 
+procedure TConfigForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   if Button3.Enabled=true then ReadConfig;
+end;
+
 //Klawisz jêzyka
 procedure TConfigForm.Button11Click(Sender: TObject);
 begin
@@ -1122,15 +1125,17 @@ end;
 //Klawisz OK
 procedure TConfigForm.Button1Click(Sender: TObject);
 begin
-  WriteConfig;
-  ReadConfig;  
+  if Button3.Enabled=true then begin
+    WriteConfig;
+//    ReadConfig;
+  end;  
   Close;
 end;
 
 //Klawisz Anuluj
 procedure TConfigForm.Button2Click(Sender: TObject);
 begin
-  if Button3.Enabled=true then readconfig;
+//  if Button3.Enabled=true then ReadConfig;
   Close;
 end;
 

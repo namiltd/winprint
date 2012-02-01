@@ -15,6 +15,7 @@ object ConfigForm: TConfigForm
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
@@ -740,9 +741,6 @@ object ConfigForm: TConfigForm
         Height = 133
         Caption = 'GroupBox9'
         TabOrder = 2
-        DesignSize = (
-          290
-          133)
         object Label22: TLabel
           Left = 12
           Top = 20
@@ -778,7 +776,7 @@ object ConfigForm: TConfigForm
           Caption = 'CheckBox7'
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 1
           OnClick = ConfigChanged
         end
       end

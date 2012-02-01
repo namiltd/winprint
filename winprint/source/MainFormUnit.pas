@@ -42,13 +42,15 @@ type
     PopupMenu1: TPopupMenu;
     Konfiguracja1: TMenuItem;
     N1: TMenuItem;
-    Zakocz1: TMenuItem;
+    Zakoncz1: TMenuItem;
+    Info1: TMenuItem;
     Timer1: TTimer;
     OpenDialog1: TOpenDialog;
     FontDialog1: TFontDialog;
     Timer2: TTimer;
     SaveDialog1: TSaveDialog;
-    procedure Zakocz1Click(Sender: TObject);
+    procedure Zakoncz1Click(Sender: TObject);
+    procedure Info1Click(Sender: TObject);
     procedure TrayIcon1DblClick(Sender: TObject);
     procedure Konfiguracja1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -139,9 +141,24 @@ begin
 //  GlobalDeleteAtom(Atom1);
 end;
 
-procedure TMainForm.Zakocz1Click(Sender: TObject);
+procedure TMainForm.Zakoncz1Click(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TMainForm.Info1Click(Sender: TObject);
+var lpTargetPath :array[0..2048] of char;
+begin
+  if ConfigForm.ConfigData.PortCapturing=1 then begin
+    QueryDosDevice(PChar('LPT1'), @lpTargetPath[0], sizeof(lpTargetPath));
+    Application.MessageBox(PChar(RString(700)+ ': ' + ConfigForm.ConfigData.InputFilesMask +
+    #13 + #13 + RString(701) + ': ' + String(PChar(@lpTargetPath[0])))
+    ,PChar(ConfigForm.Caption),MB_OK);
+  end else begin
+    Application.MessageBox(PChar(RString(702) + ': ' + ConfigForm.ConfigData.InputFilesMask +
+    #13 + #13+ RString(703) + ': ' + ConfigForm.ConfigData.InputFilesDir)
+    ,PChar(ConfigForm.Caption),MB_OK);
+  end;
 end;
 
 procedure TMainForm.TrayIcon1DblClick(Sender: TObject);
@@ -633,8 +650,11 @@ begin
   Konfiguracja1.Caption := RString(400);
   Konfiguracja1.Hint := RString(401);
 
-  Zakocz1.Caption := RString(402);
-  Zakocz1.Hint := RString(403);
+  Zakoncz1.Caption := RString(402);
+  Zakoncz1.Hint := RString(403);
+
+  Info1.Caption := RString(406);
+  Info1.Hint := RString(407);
 
   OpenDialog1.Filter := RString(404);
   SaveDialog1.Filter := RString(404);
