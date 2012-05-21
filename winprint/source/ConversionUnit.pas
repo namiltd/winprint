@@ -47,7 +47,7 @@
 type
   TCodePage = (cp1250, cp620, cp852, cp28592,
               cp1251, cp20866, cp866, cp28595,
-              cp1252, cp437, cp850, cp28591,
+              cp865, cp1252, cp437, cp850, cp28591,
               cp65001);
 
 
@@ -170,6 +170,8 @@ const
               (name:'KOI8-R (CP20866)'; CpNr:20866; utf8:nil),
               (name:'IBM RUSSIAN (CP866)'; CpNr:866; utf8:nil),
               (name:'ISO IR-113 (CP8859-5)'; CpNr:28595; utf8:nil),
+
+              (name:'IBM NORDIC (CP865)'; CpNr:865; utf8:nil),
 
               (name:'WINDOWS WE (CP1252)'; CpNr:1252; utf8:nil),
               (name:'IBM WE (CP437)'; CpNr:437; utf8:nil),
