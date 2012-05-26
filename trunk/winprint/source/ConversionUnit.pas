@@ -233,7 +233,7 @@ const
               (name:'Latin 2 (ISO-8859-2)'; CpNr:28592; utf8:nil),
               (name:'Latin 3 (ISO-8859-3)'; CpNr:28593; utf8:nil),
               (name:'Baltic (ISO-8859-4)'; CpNr:28594; utf8:nil),
-              (name:'Cyrillic KOI8-E	(ISO-8859-5)'; CpNr:28595; utf8:nil),
+              (name:'Cyrillic KOI8-E (ISO-8859-5)'; CpNr:28595; utf8:nil),
               (name:'Arabic (ISO-8859-6)'; CpNr:28596; utf8:nil),
               (name:'Greek (ISO-8859-7)'; CpNr:28597; utf8:nil),
               (name:'Hebrew (ISO-8859-8)'; CpNr:28598; utf8:nil),
