@@ -249,8 +249,7 @@ var
       if (LinesPerPage<>0) then
         lineheight:=round((textrect.bottom-textrect.top)/LinesPerPage)
       else
-        raise EPrinter.Create(
-          'PrintString: iloœæ linii na cal i iloœæ linii na stronê nie mog¹ byæ obie równe zero.');
+        raise EPrinter.Create(RString(601));
 
     ll:=round(leftlogo*X_resolution);
     if (ll<printorigin.x) then
@@ -325,43 +324,6 @@ var
      end;
     end;
 
-{
-    procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer);
-    var sx,sy,sym,dx,dy,mx,my:Integer;
-              fx,fy:Real;
-    begin
-      if (Image<>nil) and (Info<>nil) then begin
-        sx:=Info^.bmiHeader.biWidth;
-        sy:=Info^.bmiHeader.biHeight;
-        if (Info^.bmiHeader.biXPelsPerMeter=0) or (Info^.bmiHeader.biYPelsPerMeter=0) then begin
-          fx:=1;
-          fy:=1;
-        end else begin
-          fx:=GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSX )/(Info^.bmiHeader.biXPelsPerMeter/(cMILTOINCH*1000));
-          fy:=GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSY )/(Info^.bmiHeader.biYPelsPerMeter/(cMILTOINCH*1000));
-        end;
-        dx:=Round(fx*sx);
-        dy:=Round(fy*sy);
-        if (dx>0) and (dy>0) then  begin
-          mx:= Printer.PageWidth+GetDeviceCaps( Printer.Canvas.Handle, PHYSICALOFFSETX );
-          my:= Printer.PageHeight+GetDeviceCaps( Printer.Canvas.Handle, PHYSICALOFFSETY);
-//          my:=1335;
-          //sxm:=sx;
-          sym:=sy;
-          if (ll+dx>mx) then sx:= Round(sx*(mx-ll)/dx);
-          if (tl+dy>my) then sy:= Round(sy*(my-tl)/dy);
-          dx:=Round(fx*sx);
-          dy:=Round(fy*sy);
-          if (dx>0) and (dy>0) and (sx>0) and (sy>0)then
-            try
-              StretchDIBits(Printer.Canvas.Handle, ll, tl, dx, dy,
-              0,  sym-sy, sx, sy, Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY);
-            finally
-          end;
-        end;
-      end;
-    end;
- }
     function Filter: boolean;
     var
         index: integer;
@@ -436,11 +398,11 @@ var
         //printer.canvas.TextOut( textrect.left, y, lines[textStart]);
 
         r:=Rect(textrect.left,y,textrect.right,y+charheight);
-        len:=MultiByteToWideChar(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
+        len:=MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
         if (len>0) then
         begin
           SetLength(ws,len);
-          MultiByteToWideChar(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
+          MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
 
           ks:=false;
           ig:=0;

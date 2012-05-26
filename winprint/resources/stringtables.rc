@@ -271,26 +271,37 @@ BEGIN
  60501 "Ostrze¿enie"
  61501 "Warning"
 
- 60502 "Wyst¹pi³ krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku\nProgram WinPrint zostanie zakoñczony"
- 61502 "Critical error during bad print file archiving\nProgram WinPrint will exit"
+ 60502 "Wyst¹pi³ krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku.\nProgram WinPrint zostanie zakoñczony."
+ 61502 "Critical error during bad print file archiving.\nProgram WinPrint will now exit."
 
- 60503 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku wydruku z kolejki\nProgram WinPrint zostanie zakoñczony"
- 61503 "Critical error during print removing file from queue\nProgram WinPrint will exit"
+ 60503 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku wydruku z kolejki.\nProgram WinPrint zostanie zakoñczony."
+ 61503 "Critical error during print removing file from queue.\nProgram WinPrint will now exit."
 
- 60504 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki\nProgram WinPrint zostanie zakoñczony"
- 61504  "Critical error during removing format file from queue\nProgram WinPrint will exit"
+ 60504 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki.\nProgram WinPrint zostanie zakoñczony."
+ 61504  "Critical error during removing format file from queue.\nProgram WinPrint will now exit."
 
- 60505 "Wyst¹pi³ krytyczny b³¹d podczas zmiany nazwy pliku na tymczasow¹\nProgram WinPrint zostanie zakoñczony"
- 61505 "Critical error during renaming filename to temporary\nProgram WinPrint will exit"
+ 60505 "Wyst¹pi³ krytyczny b³¹d podczas zmiany nazwy pliku na tymczasow¹.\nProgram WinPrint zostanie zakoñczony."
+ 61505 "Critical error during renaming filename to temporary.\nProgram WinPrint will now exit."
 
- 60506 "Wyst¹pi³ krytyczny b³¹d podczas tworzenia pliku spoolera\nProgram WinPrint zostanie zakoñczony"
- 61506 "Critical error during creating spooler file\nProgram WinPrint will exit"
+ 60506 "Wyst¹pi³ krytyczny b³¹d podczas tworzenia pliku spoolera.\nProgram WinPrint zostanie zakoñczony."
+ 61506 "Critical error during creating spooler file.\nProgram WinPrint will now exit."
 
- 60507 "Wyst¹pi³ b³¹d podczas tworzenia pliku spoolera\nSprawdŸ œcie¿kê folderu plików"
- 61507 "Error during creating spooler file\nCheck files folder path"
+ 60507 "Wyst¹pi³ b³¹d podczas tworzenia pliku spoolera.\nSprawdŸ œcie¿kê folderu plików."
+ 61507 "Error during creating spooler file.\nCheck files folder path."
 
- 60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê"
- 61600 "PrintString: margins too big, not enough space to print"
+ 60508 "B³¹d"
+ 61508 "Error"
+
+ 60509 "Microsoft Layer for Unicode nie zainstalowany.\nProgram WinPrint zostanie zakoñczony."
+ 61509 "Microsoft Layer for Unicode not installed.\nProgram WinPrint will now exit."
+
+
+ 60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê."
+ 61600 "PrintString: margins too big, not enough space to print."
+
+ 60601 "PrintString: iloœæ linii na cal i na stronê nie mog¹ byæ obie równe zero."
+ 61601 "PrintString: lines per inch and per page could not be both equal zero."
+
 
 //------------------------Info-------------------------------------
  60700 "Przechwytywany port"

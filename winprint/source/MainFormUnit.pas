@@ -95,31 +95,44 @@ var
   lpTargetPath :array[0..2048] of char;
   nazwa: string;
   osVerInfo: TOSVersionInfo;
+
 begin
-{info  for example: Winprint.exe /LPT1} 
+
+{info  for example: Winprint.exe /LPT1}
+
  if ParamCount>0 then begin
-    osVerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo); 
+    osVerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
     if GetVersionEx(osVerInfo) { XP or above }
-      and (osVerInfo.dwPlatformId=VER_PLATFORM_WIN32_NT) 
-      and (osVerInfo.dwMajorVersion>=5) and (osVerInfo.dwMinorVersion>=1) 
+      and (osVerInfo.dwPlatformId=VER_PLATFORM_WIN32_NT)
+      and ( ((osVerInfo.dwMajorVersion=5) and (osVerInfo.dwMinorVersion>=1)) or (osVerInfo.dwMajorVersion>5) )
     then begin
     	nazwa:=UpperCase(ParamStr(1));
     	if ((Length(nazwa)=4)and(nazwa[1]='/')and(nazwa[2]='P')and(nazwa[3]='R')and(nazwa[4]='N'))
             or ((Length(nazwa)=5)and
             (((nazwa[1]='/')and(nazwa[2]='L')and(nazwa[3]='P')and(nazwa[4]='T')) or ((nazwa[1]='/')and(nazwa[2]='C')and(nazwa[3]='O')and(nazwa[4]='M'))) and
-            ((nazwa[5]>='1')and(nazwa[5]<='9'))) then 
+            ((nazwa[5]>='1')and(nazwa[5]<='9'))) then
             begin
                 lpTargetPath[0] := #0;
                 QueryDosDevice(PChar(nazwa)+1, @lpTargetPath[0], sizeof(lpTargetPath));
-                Application.MessageBox(@lpTargetPath[0],PChar(nazwa)+1,MB_OK);  
+                Application.MessageBox(@lpTargetPath[0],PChar(nazwa)+1,MB_OK);
             end;
     end;
     Halt;
  end;
 
  if (GetUserDefaultLangID and $3ff)=LANG_POLISH then LANG := 60000
-                                                else LANG := 61000; 
-{komponenty dynamiczne}
+                                                else LANG := 61000;
+
+
+ If not LoadUnicode then begin
+    Application.MessageBox(PChar(RString(509)),
+      PChar(RString(508)),
+      MB_ICONERROR+MB_SYSTEMMODAL);
+    halt;
+ end;
+
+
+ {komponenty dynamiczne}
   CEVersionInfo1:=TCEVersionInfo.Create(self);
   TrayIcon1:=TTrayIcon2.Create(self);
   with TrayIcon1 do begin

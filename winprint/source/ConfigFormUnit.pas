@@ -296,7 +296,7 @@ begin
   osVerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
   if GetVersionEx(osVerInfo) 
     and (osVerInfo.dwPlatformId=VER_PLATFORM_WIN32_NT) 
-    and (osVerInfo.dwMajorVersion>=5) and (osVerInfo.dwMinorVersion>=1) 
+    and ( ((osVerInfo.dwMajorVersion=5) and (osVerInfo.dwMinorVersion>=1)) or (osVerInfo.dwMajorVersion>5) )
   then ConfigData.PortCapturing:=0
   else ConfigData.PortCapturing:=-1;//disabled for Windows < XP
   
@@ -1119,7 +1119,7 @@ begin
   if LANG=61000 then LANG:=60000
                 else LANG:=61000;
   LoadLang;
-  MainForm.Loadlang;
+  MainForm.LoadLang;
 end;
 
 //Klawisz OK
