@@ -212,9 +212,9 @@ const
 
               (name:'Thai (Win-874)'; CpNr:874; utf8:nil),
               (name:'Japanese (Win-932)'; CpNr:932; utf8:nil),
-              (name:'Simplified Chinese (win-936)'; CpNr:936; utf8:nil),
-              (name:'Korean (win-949)'; CpNr:949; utf8:nil),
-              (name:'Traditional Chinese (win-950)'; CpNr:950; utf8:nil),
+              (name:'Simplified Chinese (Win-936)'; CpNr:936; utf8:nil),
+              (name:'Korean (Win-949)'; CpNr:949; utf8:nil),
+              (name:'Traditional Chinese (Win-950)'; CpNr:950; utf8:nil),
 
               (name:'Central European (Win-1250)'; CpNr:1250; utf8:nil),
               (name:'Cyrillic (Win-1251)'; CpNr:1251; utf8:nil),
