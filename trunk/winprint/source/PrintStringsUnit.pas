@@ -162,7 +162,7 @@ var
   charstyleco  : TFontStyles; { font style coefficient }
   lineheightco : Integer;     { line spacing in dots coefficient (6,8,10)}
   sscriptco    : Integer;     { subscript/superscript coefficient (0,1,2)}
-  doublewidthco: Integer;     { double width coefficient  (10 normal, 16 double)}
+  doublewidthco: Integer;     { double width coefficient  (10 normal, 14 double)}
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
   ll,tl        : integer;     {logo position}
@@ -448,8 +448,14 @@ var
                 48: lineheightco:=8;  //ESC 0
                 50: lineheightco:=6;  //ESC 2
                 49: lineheightco:=10; //ESC 1
-                77: charheightco:=12; //ESC M
-                80: charheightco:=10; //ESC P
+                77: case charheightco of //ESC M
+                      17,20: charheightco:=20;
+                     else charheightco:=12;
+                     end;
+                80: case charheightco of //ESC P
+                      17,20: charheightco:=17;
+                     else charheightco:=10;
+                     end;
                 84: sscriptco:=1;     //ESC T
                103: charheightco:=15; //ESC g
              71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
