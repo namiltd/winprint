@@ -590,7 +590,9 @@ begin
       {$ENDIF }
       Printer.Canvas.Font := aFont;
       Printer.Canvas.Brush.Style:=bsClear; //przeŸroczyste t³o czcionek
+      Printer.Canvas.Font.style:=Printer.Canvas.Font.style+[fsBold]; //bold do testu wielkosci bo wy¿sze
       charheight:=printer.canvas.TextHeight('Äy');
+      Printer.Canvas.Font.style:=Printer.Canvas.Font.style-[fsBold]; //normal
       charheightco:=10; //10/10=1
       lineheightco:=6; //6/6=1
       doublewidthco:=10; //10/10=1
