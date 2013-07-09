@@ -1116,8 +1116,9 @@ end;
 //Klawisz jêzyka
 procedure TConfigForm.Button11Click(Sender: TObject);
 begin
-  if LANG=61000 then LANG:=60000
-                else LANG:=61000;
+  if LANG=60000 then LANG:=61000
+                else if LANG=61000 then LANG:=62000
+                                    else LANG:=60000;
   LoadLang;
   MainForm.LoadLang;
 end;

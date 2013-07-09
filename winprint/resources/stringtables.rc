@@ -5,315 +5,411 @@ BEGIN
  50000  "¹æê³ñóœŸ¿"
  50001  "¥ÆÊ£ÑÓŒ¯"
 
- 51000	"acelnosxz"    
- 51001	"ACELNOSXZ"    
+ 51000	"acelnosxz"
+ 51001	"ACELNOSXZ"
 
  60000 "PL"
  61000 "EN"
-
+ 62000 "CZ"
 
 
 //------------------------ConfigForm------------------------------
  60100 "Stosuje zmiany dokonane w konfiguracji programu."
  61100 "Apply configuration changes"
+ 62100 "Pouij zmìny v nastavení programu."
 
  60101 "Zastosuj"
  61101 "Apply"
+ 62101 "Pouij"
 
  60102 "Anuluje zmiany dokonane w konfiguracji programu."
  61102 "Cancel configuration changes."
+ 62102 "Zruš zmìny v konfiguraci programu."
 
  60103 "Anuluj"
  61103 "Cancel"
+ 62103 "Zruš"
 
  60104 "OK"
  61104 "OK"
+ 62104 "OK"
 
  60105 "Ustawienia strony"
  61105 "Page settings"
+ 62105 "Nastavení stránky"
 
  60106 " Czcionka "
  61106 " Font "
+ 62106 " Font "
 
  60107 "Wybierz"
  61107 "Select"
+ 62107 "Vıbìr"
 
  60108 " Marginesy (mm) "
  61108 " Margins (mm) "
+ 62108 " Okraj (mm) "
 
  60109 "Lewy"
  61109 "Left"
+ 62109 "Levı"
 
  60110 "Prawy"
  61110 "Right"
+ 62110 "Pravı"
 
  60111 "Górny"
  61111 "Top"
+ 62111 "Horní"
 
  60112 "Dolny"
  61112 "Bottom"
+ 62112 "Dolní"
 
  60113 " Orientacja "
  61113 " Orientation "
+ 62113 " Orientace "
 
  60114 "Pionowa"
  61114 "Vertical"
+ 62114 "Svisle"
 
  60115 "Pozioma"
  61115 "Horizontal"
+ 62115 "Vodorovnì"
 
  60116 "Domyœlne"
  61116 "Default"
+ 62116 "Default"
 
  60117 " Gêstoœæ "
  61117 " Density "
+ 62117 " Hustota "
 
  60118 "Iloœæ linii na cal"
  61118 "Lines per inch"
+ 62118 "Øádkù na palec"
 
  60119 "na stronê"
  61119 "per page"
+ 62119 "na stránce"
 
  60120 "Opcje u¿ytkowe"
  61120 "Utility options"
+ 62120 "Monosti nástrojù"
 
  60121 " Lokalizacja dokumentów "
  61121 " Documents location "
+ 62121 " Umístìní dokumentù "
 
  60122 "Folder plików"
  61122 "Files folder"
+ 62122 "Sloka souborù"
 
  60123 "Maska plików/Port"
  61123 "Files mask/Port"
+ 62123 "Mask souborù/Port"
 
  60124 "Rozszerzenie plików formatuj¹cych"
  61124 "Formatting files extension"
+ 62124 "Pøípona souboru formátování"
 
  60125 "Œcie¿ka do katalogu z plikami, które bêd¹ przetwarzane."
  61125 "Path to processing files folder"
+ 62125 "Cesta k adresáøi obsahující soubory ke zpracování."
 
  60126 "Maska plików, które bêd¹ przetwarzane (np. *.txt) lub przechwytywany port (np. LPT1)"
  61126 "Mask of processing files (e.g. *.txt) or captured port (e.g. LPT1)"
+ 62126 "Mask souborù ke zpracování (e.g. *.txt) nebo zachycenı port (napø. LPT1)"
 
  60127 "Rozszerzenie plików formatuj¹cych"
  61127 "Formatting files extension"
+ 62127 "Pøípona souboru formátování"
 
  60128 "w³¹czone"
  61128 "enabled"
+ 62128 "zapnuto"
 
  60129 " Aplikacja "
  61129 " Application "
+ 62129 " Aplikace "
 
  60130 "Przetwarzaj pliki co (ms)"
  61130 "Files processing period (ms)"
+ 62130 "Perioda zpracování souborù (ms)"
 
  60131 "Oczekiwanie na zakoñczenie zapisu (ms)"
  61131 "Wait time from write ending (ms)"
+ 62131 "Èas èekání na dokonèení zápisu (ms)"
 
  60132 "Piorytet"
  61132 "Priority"
+ 62132 "Priorita"
 
  60133 "Okreœla czas, co jaki nale¿y przetwarzaæ kolejny plik."
  61133 "Time period of processing the next file."
+ 62133 "Urèuje èas pro zpracování následujícího souboru."
 
  60134 "Okreœla po jakim czasie od ostatniego zapisu do pliku mo¿na go przetwarzaæ."
  61134 "Waiting time from last file writig to processing."
+ 62134 "Èas èekání od zpracování posledního souboru."
 
  60135 "Uruchamianie programu przy starcie Windows."
  61135 "Run program on windows start"
+ 62135 "Spustit program pøi spuštìní Windows"
 
  60136 "Uruchom przy starcie systemu"
  61136 "Run on Windows start"
+ 62136 "Spustit program pøi spuštìní Windows"
 
  60138 "Format danych"
  61138 "Format of data"
+ 62138 "Formát dat"
 
  60139 " Znaki steruj¹ce "
  61139 " Control characters "
+ 62139 " Kontrolní znaky "
 
  60140 "Kody znaków koñca strony"
  61140 "Codes of page end"
+ 62140 "Kódy konce stránky"
 
  60141 "odrzuæ puste strony"
  61141 "Skip empty pages"
+ 62141 "Pøeskoèit prázdné stránky"
 
  60142 "Pomija pierwszy wiersz wydruku (je¿eli pusty)"
  61142 "Skip first line (if empty)"
+ 62142 "Spøeskoèit první øádek (pokud je prázdnı)"
 
  60143 "zgodnoœæ z Clipper'em"
  61143 "Clipper compatibility"
+ 62143 "Kompatibilita s Clipperem"
 
  60144 " Konwersja znaków "
  61144 " Characters conversion "
+ 62144 " Konverze znakù "
 
  60145 "Strona kodowa"
  61145 "Code page"
+ 62145 "Kódová stránka"
 
  60146 "dodaj"
  61146 "add"
+ 62146 "pøidat"
 
  60147 "usuñ"
  61147 "remove"
+ 62147 "odebrat"
 
  60148 "stary kod na nowy kod"
  61148 "old code to new code"
+ 62148 "starı kód na novı kód"
 
  60149 "Opis"
  61149 "Info"
+ 62149 "Info"
 
  60150 "dodatkowo przekoduj"
  61150 "additionally transcode"
+ 62150 "dodateèné pøekódování"
 
  60151 "Zapisz"
  61151 "Save"
+ 62151 "Ulo"
 
  60152 "Wczytaj"
  61152 "Load"
+ 62152 "Nahrej"
 
  60153 "Inne"
  61153 "Misc"
+ 62153 "Ostatní"
 
  60154 " Logo "
  61154 " Logo "
+ 62154 " Logo "
 
  60155 "Plik bitmapy z logo"
  61155 "Bitmap logo file"
+ 62155 "Bitmapovı obrázek s logem "
 
  60156 "Od lewej (mm)"
  61156 "From left (mm)"
+ 62156 "Z leva (mm)"
 
  60157 "Od góry (mm)"
  61157 "From top (mm)"
+ 62157 "Z vrchu (mm)"
 
  60158 "Œcie¿ka do pliku w formacie BMP z logo."
  61158 "Path to BMP logo file."
+ 62158 "Cesta k BMP souboru s logem."
 
  60159 "Drukuj logo tylko na pierwszej stronie"
- 61159 "Pring logo on first page only"
+ 61159 "Print logo on first page only"
+ 62159 "Tiskni logo jen na první stránce"
 
  60160 "tylko na 1-szej stronie"
  61160 "on 1-st page only"
+ 62160 "jen na první stránce"
 
  60161 "Wejœcie/Wyjœcie"
  61161 "Input/Output"
+ 62161 "Vstup/Vıstup"
 
  60162 "Wybór drukarki"
  61162 "Printer selection"
+ 62162 "Vıbìr tiskárny"
 
  60163 "Drukarka domyœlna"
  61163 "Default Printer"
+ 62163 "Vıchozí tiskárna"
 
  60164 "Liczba kopii (posortowanych)"
  61164 "Number of copies (sorted)"
+ 62164 "Poèet kopií (setøídìnıch)"
 
  60165 "Ignoruj pliki o zerowej d³ugoœci"
  61165 "Ignore zero-sized files"
+ 62165 "Ignoruj soubory s nulovou velikostí"
 
  60166 "Ignoruj puste pliki"
  61166 "Ignore empty files"
+ 62166 "Ignoruj prázdné soubory"
 
 //------------------------CFU-ConfigForm-dynamic------------------
  60175 "pozostaw 0 by usun¹æ znak"
  61175 "set 0 to remove"
+ 62175 "nastav 0 k odebrání"
 
  60176 "wartoœæ od 0 do 99"
  61176 "value from 0 to 99"
+ 62176 "rozsah od 0 do 99"
 
 //------------------------CFU-PriorityClassNames------------------
  60200 "bezczynny"
  61200 "idle"
+ 62200 "neèinnı"
 
  60201 "normalny"
  61201 "normal"
+ 62201 "normální"
 
  60202 "wysoki"
  61202 "hight"
+ 62202 "vysokı"
 
  60203 "czasu rzeczywistego"
  61203 "realtime"
+ 62203 "realtime"
 
 //------------------------CFU-------------------------------------
  60300 "Wska¿ folder plików."
  61300 "Select files folder."
+ 62300 "Vyber sloku souborù."
 
  60301 "rozmiar"
  61301 "size"
+ 62301 "velikost"
 
 //------------------------MainForm--------------------------------
  60400 "Konfiguracja"
  61400 "Configuration"
+ 62400 "Konfigurace"
 
  60401 "Ustawienia programu."
  61401 "Program settings."
+ 62401 "Nastavení programu."
 
  60402 "Zakoñcz"
  61402 "Exit"
+ 62402 "Konec"
 
  60403 "Zakoñczenie pracy programu."
  61403 "Program exit."
+ 62403 "Konec programu."
 
  60404 "Tabele konwersji (*.tk)|*.TK"
  61404 "Conversion tables (*.tk)|*.TK"
+ 62404 "Konverzní tabulka (*.tk)|*.TK"
 
  60405 "Pliki logo (*.bmp)|*.BMP"
  61405 "Logo files (*.bmp)|*.BMP"
+ 62405 "Soubor loga (*.bmp)|*.BMP"
 
  60406 "Info"
  61406 "Info"
+ 62406 "Info"
 
  60407 "Informacje o programie."
  61407 "Program info."
+ 62407 "Infromace o programu."
 
 //------------------------MFU-------------------------------------
  60500 "jest ju¿ uruchomiony.\nPowtórne uruchomienie programu mo¿e spowodowaæ b³êdy w jego dzia³aniu.\n\nCzy chcesz uruchomiæ ten program ponownie?"
  61500 "already running.\nSecond run may couse errors in his action.\n\nRun program again?"
+ 62500 "ji bìí.\nZnovuspuštìní mùe zpùsobit problémy.\n\nSpustit program znovu?"
 
  60501 "Ostrze¿enie"
  61501 "Warning"
+ 62501 "Varování"
 
  60502 "Wyst¹pi³ krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku.\nProgram WinPrint zostanie zakoñczony."
  61502 "Critical error during bad print file archiving.\nProgram WinPrint will now exit."
+ 62502 "Kritická chyba pøi nesprávné archivaci souboru tisku.\nProgram WinPrint bude nyní ukonèen."
 
  60503 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku wydruku z kolejki.\nProgram WinPrint zostanie zakoñczony."
  61503 "Critical error during print removing file from queue.\nProgram WinPrint will now exit."
+ 62503 "Kritická chyba pøi odstraòování souboru tisku z fronty.\nProgram WinPrint bude nyní ukonèen."
 
  60504 "Wyst¹pi³ krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki.\nProgram WinPrint zostanie zakoñczony."
  61504  "Critical error during removing format file from queue.\nProgram WinPrint will now exit."
+ 62504  "Krytická chyba pøi odstraòování souboru formátování z fronty.\nProgram WinPrint bude nyní ukonèen."
 
  60505 "Wyst¹pi³ krytyczny b³¹d podczas zmiany nazwy pliku na tymczasow¹.\nProgram WinPrint zostanie zakoñczony."
  61505 "Critical error during renaming filename to temporary.\nProgram WinPrint will now exit."
+ 62505 "Kritická chyba pøi pøejmenování souboru na doèasnı.\nProgram WinPrint bude nyní ukonèen."
 
  60506 "Wyst¹pi³ krytyczny b³¹d podczas tworzenia pliku spoolera.\nProgram WinPrint zostanie zakoñczony."
  61506 "Critical error during creating spooler file.\nProgram WinPrint will now exit."
+ 62506 "Kritická chyba pøi vytváøení souboru spooleru.\nProgram WinPrint bude nyní ukonèen."
 
  60507 "Wyst¹pi³ b³¹d podczas tworzenia pliku spoolera.\nSprawdŸ œcie¿kê folderu plików."
  61507 "Error during creating spooler file.\nCheck files folder path."
+ 62507 "Chyba pøi vytváøení souboru spooleru.\nZkontrolujte cestu k adresáøi souborù."
 
  60508 "B³¹d"
  61508 "Error"
+ 62508 "Chyba"
 
  60509 "Microsoft Layer for Unicode nie zainstalowany.\nProgram WinPrint zostanie zakoñczony."
  61509 "Microsoft Layer for Unicode not installed.\nProgram WinPrint will now exit."
-
+ 62509 "Microsoft Layer for Unicode není nainstalován.\nProgram WinPrint bude nyní ukonèen."
 
  60600 "PrintString: podane marginesy s¹ za du¿e, brak miejsca by wydrukowaæ stronê."
  61600 "PrintString: margins too big, not enough space to print."
+ 62600 "PrintString: okraje jsou pøíliš velké, není místo pro tisk."
 
  60601 "PrintString: iloœæ linii na cal i na stronê nie mog¹ byæ obie równe zero."
  61601 "PrintString: lines per inch and per page could not be both equal zero."
-
+ 62601 "PrintString: øádky na palec a na stránku nemohou bıt obì nastaveny na nulu."
 
 //------------------------Info-------------------------------------
  60700 "Przechwytywany port"
  61700 "Captured port"
+ 62700 "Zachycenı port"
 
  60701 "Tymczasowy plik przechwytywania"
  61701 "Temporary capturing file"
+ 62701 "Doèasnı soubor zachytávání"
 
  60702 "Maska plików"
  61702 "Files mask"
+ 62702 "Maska souborù"
 
  60703 "Folder plików"
  61703 "Files folder"
+ 62703 "Adresáø souborù"
 
 END

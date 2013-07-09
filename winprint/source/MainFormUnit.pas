@@ -120,8 +120,11 @@ begin
     Halt;
  end;
 
- if (GetUserDefaultLangID and $3ff)=LANG_POLISH then LANG := 60000
-                                                else LANG := 61000;
+ if (GetUserDefaultLangID and $3ff)=LANG_POLISH
+     then LANG := 60000
+     else if (GetUserDefaultLangID and $3ff)=LANG_CZECH
+               then LANG := 62000
+               else LANG := 61000;
 
 
  If not LoadUnicode then begin
