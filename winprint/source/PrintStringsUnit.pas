@@ -166,12 +166,12 @@ var
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
   ll,tl        : integer;     {logo position}
+  X_resolution : Integer;     { horizontal printer resolution, in dpi }
+  Y_resolution : Integer;     { vertical printer resolution, in dpi }
 
   { Calculate text output and header/footer rectangles. }
   procedure CalcPrintRects;
   var
-    X_resolution: Integer;  { horizontal printer resolution, in dpi }
-    Y_resolution: Integer;  { vertical printer resolution, in dpi }
     pagerect    : TRect;    { total page, in paper coordinates }
     printorigin : TPoint;   { origin of canvas coordinate system in
                               paper coordinates. }
@@ -300,7 +300,7 @@ var
       FireHeaderFooterEvent( OnPrintFooter, footerrect );
     end;
 
-     procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer);
+     procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer; const X_resolution,Y_resolution: integer);
      begin
      if (Image<>nil) and (Info<>nil) then begin
        try
@@ -313,9 +313,9 @@ var
              Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY)
           else StretchDIBits(Printer.Canvas.Handle,
              ll, tl,
-             Round(GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSX )/(Info^.bmiHeader.biXPelsPerMeter/(cMILTOINCH*1000))
+             Round(X_resolution/(Info^.bmiHeader.biXPelsPerMeter/(cMILTOINCH*1000))
               *Info^.bmiHeader.biWidth),
-             Round(GetDeviceCaps( Printer.Canvas.handle, LOGPIXELSY )/(Info^.bmiHeader.biYPelsPerMeter/(cMILTOINCH*1000))
+             Round(Y_resolution/(Info^.bmiHeader.biYPelsPerMeter/(cMILTOINCH*1000))
               *Info^.bmiHeader.biHeight),
              0,  0, Info^.bmiHeader.biWidth, Info^.bmiHeader.biHeight,
              Image.Memory, Info^, DIB_RGB_COLORS, SRCCOPY);
@@ -375,7 +375,7 @@ var
              if (Image<>nil) and (Info<>nil) then begin
                if (pagecount<2) or
                   ( (firstpageonlylogo=false) and (pagecount>1)) then
-                    DoLogo(Info,Image,ll ,tl);
+                    DoLogo(Info,Image,ll ,tl, X_resolution, Y_resolution);
              end;
              if not ContinuePrint then exit;
       end;
@@ -526,7 +526,7 @@ var
                           if (Image<>nil) and (Info<>nil) then begin
                             if (pagecount<2) or
                                ( (firstpageonlylogo=false) and (pagecount>1)) then
-                                   DoLogo(Info,Image,ll,tl);
+                                   DoLogo(Info,Image,ll,tl, X_resolution, Y_resolution);
                           end;
                           if not ContinuePrint then exit;
                    end;
