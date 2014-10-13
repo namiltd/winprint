@@ -64,7 +64,7 @@ type
     TrayIconIndex: integer;
     TrayIcon1: TTrayIcon2;
     function TestFile: boolean;
-    procedure ProcessFile;
+    function ProcessFile: boolean;
     procedure ProcessFormatFile(FileName: string;
       var ConfigData: TConfigData);
     procedure AppException(Sender: TObject; E: Exception);
@@ -375,7 +375,7 @@ begin
   end;
 end;
 
-procedure TMainForm.ProcessFile;
+function TMainForm.ProcessFile;
 var
   InputFileName: string;
   FormatFileName: string;
@@ -403,9 +403,7 @@ var
   HandleToFile: THandle;
 
 begin
-  ZeroTrayIconIndex:=true;
-
-  Timer2.Enabled:=true;
+  result:=true;
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
 
@@ -414,10 +412,16 @@ begin
     if not RenameFile(InputFileName,TmpFileName) then //próbuj zmienic rozszerzenie na .tmp~
     begin
         //krytyczny b³¹d podczas zmiany nazwy pliku wydruku na tymczasow¹ - zakoñcz aplikacje
-        MustExit:=true;
-        raise EInOutError.Create(RString(505)); 
+        //MustExit:=true;
+        //raise EInOutError.Create(RString(505));
+        result:=false;
+        exit;
     end
     else begin
+        ZeroTrayIconIndex:=true;
+
+        Timer2.Enabled:=true;
+
         if ConfigForm.ConfigData.PortCapturing=1 then begin
             HandleToFile:=CreateFile(PChar(InputFileName), GENERIC_WRITE, 0, NIL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
             if HandleToFile = INVALID_HANDLE_VALUE then
@@ -628,14 +632,12 @@ begin
       if FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0 then
       if TestFile then
       begin
-        ProcessFile;
-        Processed:=true;
+        if ProcessFile then Processed:=true;
       end;
       while (not Processed) and (FindNext(SearchRec)=0) do
       if TestFile then
       begin
-        ProcessFile;
-        Processed:=true;
+        if ProcessFile then Processed:=true;
       end;
     finally
       FindClose(SearchRec);
