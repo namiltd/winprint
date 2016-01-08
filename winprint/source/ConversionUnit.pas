@@ -465,6 +465,7 @@ var
   Count,i: integer;
   SS: TStringStream;
   XLATTable: array[char] of char;
+  XLAT10: char;
   UTF8Table: array[char] of string;
 
   ci: TConversionItem;
@@ -475,12 +476,18 @@ begin
      for i:=0 to 127 do UTF8Table[char(i)]:=char(i);
      for i:=128 to 255 do UTF8Table[char(i)]:=CodePageInfo[CodePage].UTF8^[i];
   end;
+  XLAT10:=#10;
   if UseCustomConversionTable then begin
     Count:=ConversionItems.Count;
     if Count>0 then
        for i:=0 to Count-1 do begin
          ci:=ConversionItems.Items[i];
-         if ci<>nil then XLATTable[char(ci.Incode)]:=char(ci.Outcode);
+         if ci<>nil then begin
+           if (ci.Incode<>10) then //LF conversion
+             XLATTable[char(ci.Incode)]:=char(ci.Outcode)
+           else
+             XLAT10:=char(ci.Outcode);
+         end;
        end;
   end;
   FS:=TFileStream.Create(FileName,fmOpenRead or fmShareDenyNone);
@@ -493,13 +500,18 @@ begin
         Count:=FS.Read(Buffer[1],1024);
         if (CodePageInfo[CodePage].CpNr=65001)
         and (CodePageInfo[CodePage].UTF8<>nil)then begin
-          for i:=1 to Count do
+          for i:=1 to Count do begin
+              if (XLAT10<>#10) and (Buffer[i]=#10) then
+                SS.WriteString(XLAT10);
               SS.WriteString(UTF8Table[XLATTable[Buffer[i]]]);
+          end;
         end
         else begin
-          for i:=1 to Count do
-            Buffer[i]:=XLATTable[Buffer[i]];
-          SS.WriteString(copy(Buffer,1,Count));
+          for i:=1 to Count do begin
+            if (XLAT10<>#10) and (Buffer[i]=#10) then
+              SS.WriteString(XLAT10);
+            SS.WriteString(XLATTable[Buffer[i]]);
+          end;
         end;
       end;
     finally
