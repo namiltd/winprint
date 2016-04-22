@@ -274,6 +274,7 @@ var
       kodig: integer; //kod dwu (nie liczac ESC) lub wiecej znakowy (dziala dla ig>0)
       ep: boolean; //empty page
       pcfsm:integer; //Printer.Canvas.Font.size memory
+      ucs: integer;
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -408,7 +409,7 @@ var
           ig:=0;
           kodig:=0;
           for licz:=1 to len do begin
-	           wstmp[1]:=ws[licz];
+             wstmp[1]:=ws[licz];
              if ig>0 then begin //ignore next znakow
                             if (kodig<>0) then begin
                                 case kodig of
@@ -490,14 +491,15 @@ var
 
              end
              else case integer(wstmp[1]) of
+             65279: ; //BOM
                 0..7,9..12,16,17,19,21..31: ; //puste by nic nie malowalo
                  8: if tw>0 then begin
-                     pcfsm:=Printer.Canvas.Font.size; //save 
+                     pcfsm:=Printer.Canvas.Font.size; //save
                      if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco
                                                    else Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco;
                      tw:=tw-printer.canvas.TextWidth('A');
                      Printer.Canvas.Font.size:=pcfsm; //restore
-                     if tw<0 then tw:=0;                   
+                     if tw<0 then tw:=0;
                    end;
 
             //     8: if tw< printer.canvas.TextWidth('A') then tw:=0 //backspace
@@ -543,10 +545,27 @@ var
                       1,
                       nil);
 
-                   pcfsm:=Printer.Canvas.Font.size; //save 
+                   pcfsm:=Printer.Canvas.Font.size; //save
                    if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco
                                                  else Printer.Canvas.Font.size:=(aFont.Size * 20) div charheightco;
-                   tw:=tw+printer.canvas.TextWidth('A');
+                   ucs:=integer(wstmp[1]);
+                   if ((ucs >= $1100) and
+                        ((ucs <= $115f) or                    // Hangul Jamo init. consonants
+                         (ucs = $2329) or (ucs = $232a) or
+                         ((ucs >= $2e80) and (ucs <= $a4cf) and
+                          (ucs <> $303f)) or                  // CJK ... Yi
+                         ((ucs >= $ac00) and (ucs <= $d7a3)) or // Hangul Syllables
+                         ((ucs >= $f900) and (ucs <= $faff)) or // CJK Compatibility Ideographs
+                         ((ucs >= $fe10) and (ucs <= $fe19)) or // Vertical forms
+                         ((ucs >= $fe30) and (ucs <= $fe6f)) or // CJK Compatibility Forms
+                         ((ucs >= $ff00) and (ucs <= $ff60)) or // Fullwidth Forms
+                         ((ucs >= $ffe0) and (ucs <= $ffe6)) )) then
+                         // or
+                         //((ucs >= $20000) and (ucs <= $2fffd)) or
+                         //((ucs >= $30000) and (ucs <= $3fffd)))) then
+                       tw:=tw+2*printer.canvas.TextWidth('A') //double width characters
+                   else
+                       tw:=tw+printer.canvas.TextWidth('A');
                    Printer.Canvas.Font.size:=pcfsm; //restore
 
                    //tw:=tw+printer.canvas.TextWidth(wstmp);
