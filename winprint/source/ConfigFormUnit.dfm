@@ -770,13 +770,25 @@ object ConfigForm: TConfigForm
         object CheckBox7: TCheckBox
           Left = 12
           Top = 106
-          Width = 165
+          Width = 137
           Height = 17
           Hint = 'CheckBox7'
           Caption = 'CheckBox7'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
+          OnClick = ConfigChanged
+        end
+        object CheckBox8: TCheckBox
+          Left = 150
+          Top = 106
+          Width = 137
+          Height = 17
+          Hint = 'CheckBox8'
+          Caption = 'CheckBox8'
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
           OnClick = ConfigChanged
         end
       end

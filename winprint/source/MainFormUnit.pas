@@ -401,13 +401,21 @@ var
   xDPM : DWORD;
   yDPM : DWORD;
   HandleToFile: THandle;
+  NowSystemTime : SYSTEMTIME;
 
 begin
   result:=true;
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
-
-    TmpFileName:=ChangeFileExt(InputFileName,'.tmp~');
+     
+    if ConfigForm.ConfigData.KeepInputFiles then
+    begin
+        GetSystemTime(NowSystemTime);
+        TmpFileName:=ChangeFileExt(InputFileName,'.tmp~'+IntToStr(SystemTimeToInt64(NowSystemTime) div 1000000)); //w setkach milisekund
+    end
+    else begin 
+        TmpFileName:=ChangeFileExt(InputFileName,'.tmp~');
+    end;
     if FileExists(TmpFileName) then DeleteFile(TmpFileName);
     if not RenameFile(InputFileName,TmpFileName) then //próbuj zmienic rozszerzenie na .tmp~
     begin
@@ -565,7 +573,7 @@ begin
             BadFileName:=ChangeFileExt(InputFileName,'.bad~');
             if FileExists(BadFileName) then DeleteFile(BadFileName);
             if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad~
-            if not DeleteFile(InputFileName) then //na koniec probuj skasowac plik
+            if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //na koniec probuj skasowac plik
             begin
               //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
               MustExit:=true;
@@ -585,7 +593,7 @@ begin
         end;
         Bitmap.free;
 
-        if not DeleteFile(InputFileName) then //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
+        if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
         begin
             //krytyczny b³¹d podczas usuwania pliku z kolejki - zakoñcz aplikacje
             MustExit:=true;

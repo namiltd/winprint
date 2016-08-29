@@ -278,6 +278,14 @@ BEGIN
  61166 "Ignore empty files"
  62166 "Ignoruj prázdné soubory"
 
+ 60167 "Zachowaj pliki wejœciowe"
+ 61167 "Keep input files"
+ 62167 "Zachovat vstupní soubory"
+
+ 60168 "Zachowaj pliki"
+ 61168 "Keep input files"
+ 62168 "Zachovat soubory"
+
 //------------------------CFU-ConfigForm-dynamic------------------
  60175 "pozostaw 0 by usun¹æ znak"
  61175 "set 0 to remove"

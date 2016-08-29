@@ -72,6 +72,7 @@ type
     IgnoreEmptyFiles: boolean;
     PrinterId: integer;
     PortCapturing: integer;
+    KeepInputFiles: boolean;
   end;
 
   TConfigForm = class(TForm)
@@ -158,6 +159,7 @@ type
     Label22: TLabel;
     Label23: TLabel;
     CheckBox7: TCheckBox;
+    CheckBox8: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -255,6 +257,7 @@ const
   DEFAULT_LOGO_1PAGE_ONLY = false;
   DEFAULT_PRINTER = '';
   DEFAULT_IGNORE_EMPTY_FILES = true;
+  DEFAULT_KEEP_INPUT_FILES = false;
 
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
@@ -604,6 +607,7 @@ begin
         LogoTop:=ReadFloat(section,'LogoTop',DEFAULT_LOGO_TOP);
         Logo1PageOnly:=ReadBool(section,'Logo1PageOnly',DEFAULT_LOGO_1PAGE_ONLY);
         IgnoreEmptyFiles:=ReadBool(section,'IgnoreEmptyFiles',DEFAULT_IGNORE_EMPTY_FILES);
+        KeepInputFiles:=ReadBool(section,'KeepInputFiles',DEFAULT_KEEP_INPUT_FILES);
 
         i := ComboBox2.Items.IndexOf(ReadString(section,'Printer',DEFAULT_PRINTER));
         if i>=0 then begin
@@ -805,6 +809,11 @@ begin
             except
               IgnoreEmptyFiles:=DEFAULT_IGNORE_EMPTY_FILES;
             end;
+            try
+              KeepInputFiles:=ReadBool('KeepInputFiles');
+            except
+              KeepInputFiles:=DEFAULT_KEEP_INPUT_FILES;
+            end;
             PrinterId:=-1;
           end
           else
@@ -838,7 +847,8 @@ begin
             LogoLeft:=DEFAULT_LOGO_LEFT;
             LogoTop:=DEFAULT_LOGO_TOP;
             Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
-            IgnoreEmptyfiles:=DEFAULT_IGNORE_EMPTY_FILES;
+            IgnoreEmptyFiles:=DEFAULT_IGNORE_EMPTY_FILES;
+            KeepInputFiles:=DEFAULT_KEEP_INPUT_FILES;
             PrinterId:=-1;
           end;
         finally
@@ -858,6 +868,7 @@ begin
     FloatEdit7.Value:=LogoTop;
     CheckBox6.Checked:=Logo1PageOnly;
     CheckBox7.Checked:=IgnoreEmptyFiles;
+    CheckBox8.Checked:=KeepInputFiles;
     if EnableFormatting then
     begin
       Edit3.Enabled:=true;
@@ -1046,6 +1057,7 @@ begin
     WriteFloat(section,'LogoTop',FloatEdit7.Value);
     WriteBool(section,'Logo1PageOnly',CheckBox6.Checked);
     WriteBool(section,'IgnoreEmptyFiles',CheckBox7.Checked);
+    WriteBool(section,'KeepInputFiles',CheckBox8.Checked);
     if ComboBox2.ItemIndex=0 then 
         WriteString(section,'Printer',DEFAULT_PRINTER)
     else
@@ -1232,6 +1244,7 @@ begin
   FloatEdit7.Value:=DEFAULT_LOGO_TOP;
   CheckBox6.Checked:=DEFAULT_LOGO_1PAGE_ONLY;
   CheckBox7.Checked:=DEFAULT_IGNORE_EMPTY_FILES;
+  CheckBox8.Checked:=DEFAULT_KEEP_INPUT_FILES;
   ComboBox2.ItemIndex:=0;
   IntEdit4.Value:=DEFAULT_NUMBER_OF_COPIES;
   ConfigChanged(Sender);
@@ -1542,6 +1555,9 @@ begin
 
   CheckBox7.Hint := RString(165);
   CheckBox7.Caption := RString(166);
+
+  CheckBox8.Hint := RString(167);
+  CheckBox8.Caption := RString(168);
 
   Button11.Caption := RString(000);
 
