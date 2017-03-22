@@ -73,6 +73,7 @@ type
     PrinterId: integer;
     PortCapturing: integer;
     KeepInputFiles: boolean;
+    SpecialSettings: integer;
   end;
 
   TConfigForm = class(TForm)
@@ -258,6 +259,7 @@ const
   DEFAULT_PRINTER = '';
   DEFAULT_IGNORE_EMPTY_FILES = true;
   DEFAULT_KEEP_INPUT_FILES = false;
+  DEFAULT_SPECIAL_SETTINGS = 0;
 
   MinPriorityClass = -1;
   MaxPriorityClass = 2;
@@ -608,6 +610,7 @@ begin
         Logo1PageOnly:=ReadBool(section,'Logo1PageOnly',DEFAULT_LOGO_1PAGE_ONLY);
         IgnoreEmptyFiles:=ReadBool(section,'IgnoreEmptyFiles',DEFAULT_IGNORE_EMPTY_FILES);
         KeepInputFiles:=ReadBool(section,'KeepInputFiles',DEFAULT_KEEP_INPUT_FILES);
+        SpecialSettings:=ReadInteger(section,'SpecialSettings',DEFAULT_SPECIAL_SETTINGS);
 
         i := ComboBox2.Items.IndexOf(ReadString(section,'Printer',DEFAULT_PRINTER));
         if i>=0 then begin
@@ -849,6 +852,7 @@ begin
             Logo1PageOnly:=DEFAULT_LOGO_1PAGE_ONLY;
             IgnoreEmptyFiles:=DEFAULT_IGNORE_EMPTY_FILES;
             KeepInputFiles:=DEFAULT_KEEP_INPUT_FILES;
+            SpecialSettings:=DEFAULT_SPECIAL_SETTINGS;
             PrinterId:=-1;
           end;
         finally
@@ -1058,6 +1062,8 @@ begin
     WriteBool(section,'Logo1PageOnly',CheckBox6.Checked);
     WriteBool(section,'IgnoreEmptyFiles',CheckBox7.Checked);
     WriteBool(section,'KeepInputFiles',CheckBox8.Checked);
+    if (ConfigData.SpecialSettings<>0) then
+        WriteInteger(section,'SpecialSettings',ConfigData.SpecialSettings);
     if ComboBox2.ItemIndex=0 then 
         WriteString(section,'Printer',DEFAULT_PRINTER)
     else

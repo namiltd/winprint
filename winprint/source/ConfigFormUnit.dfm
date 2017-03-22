@@ -82,6 +82,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'PageControl1'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)
@@ -226,6 +230,10 @@ object ConfigForm: TConfigForm
     object TabSheet1: TTabSheet
       BorderWidth = 8
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -459,6 +467,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'TabSheet3'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 0
@@ -485,7 +497,7 @@ object ConfigForm: TConfigForm
         object CheckBox3: TCheckBox
           Left = 12
           Top = 46
-          Width = 117
+          Width = 129
           Height = 17
           Caption = 'CheckBox3'
           TabOrder = 1
@@ -651,6 +663,10 @@ object ConfigForm: TConfigForm
       BorderWidth = 8
       Caption = 'TabSheet4'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         290
         282)

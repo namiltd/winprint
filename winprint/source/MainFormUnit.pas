@@ -565,6 +565,7 @@ begin
                        cMILTOINCH*TempConfigData.LogoTop,
                        TempConfigData.Logo1PageOnly,
                        TempConfigData.EOPCodes,
+                       TempConfigData.SpecialSettings,
                        false,
                        nil,nil);
           except

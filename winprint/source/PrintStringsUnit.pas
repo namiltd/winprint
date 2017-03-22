@@ -124,6 +124,7 @@ function PrintStrings(Title: string;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
                       const EOPcodes: TCharCodes;
+                      const SpecialSettings: integer;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 
@@ -148,6 +149,7 @@ function PrintStrings(Title: string;
                       const leftlogo,toplogo: single;
                       const firstpageonlylogo: boolean;
                       const EOPcodes: TCharCodes;
+                      const SpecialSettings: integer;
                       measureonly: boolean;
                       OnPrintheader,OnPrintfooter: THeaderFooterProc): integer;
 var
@@ -459,10 +461,10 @@ var
                      end;
                 84: sscriptco:=1;     //ESC T
                103: charheightco:=15; //ESC g
-             71,69: charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
-             72,70: charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
-                52: charstyleco:=charstyleco+[fsItalic]; //ESC 4
-                53: charstyleco:=charstyleco-[fsItalic]; //ESC 5
+             71,69: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
+             72,70: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
+                52: if (SpecialSettings and 2)=0 then charstyleco:=charstyleco+[fsItalic]; //ESC 4
+                53: if (SpecialSettings and 2)=0 then charstyleco:=charstyleco-[fsItalic]; //ESC 5
 
 
                 87: begin //ESC W  druk podwojnie szeroki
