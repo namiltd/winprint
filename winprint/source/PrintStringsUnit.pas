@@ -110,7 +110,7 @@ type
  | Created: 13.05.99 by P. Below
  +------------------------------------------------------------}
 function PrintStrings(Title: string;
-                      lines: TStrings;
+                      srclines: TStrings;
                       const CpNr: integer;
                       const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
@@ -135,7 +135,7 @@ uses
   Math;
 
 function PrintStrings(Title: string;
-                      lines: TStrings;
+                      srclines: TStrings;
                       const CpNr: integer;
                       const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
@@ -170,6 +170,7 @@ var
   ll,tl        : integer;     {logo position}
   X_resolution : Integer;     { horizontal printer resolution, in dpi }
   Y_resolution : Integer;     { vertical printer resolution, in dpi }
+  lines        : TStrings;    { copy of srclines }
 
   { Calculate text output and header/footer rectangles. }
   procedure CalcPrintRects;
@@ -590,7 +591,7 @@ var
     end;
 
 begin
-  if Lines.Count>0 then begin
+  if srclines.Count>0 then begin
     assert(Assigned(afont),'PrintString: requires a valid aFont parameter!');
     continuePrint := True;
     pagecount     := 0;
@@ -603,6 +604,8 @@ begin
     Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
     Printer.Orientation:=orientation;
     Printer.BeginDoc;
+    lines := TStringList.Create;
+    lines.Assign(srclines);
     try
       CalcPrintRects;
       {$IFNDEF WIN32}
@@ -622,6 +625,7 @@ begin
       while (textstart<lines.count) and continuePrint do
         PrintPage;
     finally
+      lines.Free;
       if continuePrint and not measureonly then
         Printer.EndDoc
       else
