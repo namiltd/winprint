@@ -172,6 +172,9 @@ var
   Y_resolution : Integer;     { vertical printer resolution, in dpi }
   lines        : TStrings;    { copy of srclines }
 
+  Device, Driver, Port: array[0..255] of Char; 
+  DevMode: THandle;
+
   { Calculate text output and header/footer rectangles. }
   procedure CalcPrintRects;
   var
@@ -600,6 +603,8 @@ begin
 //   Printer.Refresh; //odœwie¿ zainstalowane drukarki
 //   Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
     Printer.PrinterIndex:= PrinterId;
+    Printer.GetPrinter(Device, Driver, Port, DevMode); //prze³aduj ustawienia drukarki by poprawnie wczytalo wielkoœæ strony itp
+    Printer.SetPrinter(Device, Driver, Port, 0);
     Printer.Copies:= 1;
     Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
     Printer.Orientation:=orientation;
