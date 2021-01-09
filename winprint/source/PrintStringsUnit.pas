@@ -475,7 +475,7 @@ var
                                         else charstyleco:=charstyleco+[fsItalic]; //jak ESC 4
                                       end;
 
-                                      if (SpecialSettings and 3)=0 then begin
+                                      if (SpecialSettings and 4)=0 then begin
                                         if (integer(wstmp[1]) and 128)=0 then doustrike:=false //ESC H
                                         else doustrike:=true; //ESC G
                                       end;                                      
