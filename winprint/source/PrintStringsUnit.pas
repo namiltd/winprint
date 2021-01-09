@@ -39,6 +39,7 @@ uses
 const
 //  cMILTOINCH = 0.03937;
     cMILTOINCH = (1/25.4);
+    uLine : Widestring = '_';
 type
  { Prototype for a callback method that PrintString will call
    when it is time to print a header or footer on a page. The
@@ -165,6 +166,8 @@ var
   lineheightco : Integer;     { line spacing in dots coefficient (6,8,10)}
   sscriptco    : Integer;     { subscript/superscript coefficient (0,1,2)}
   doublewidthco: Integer;     { double width coefficient  (10 normal, 14 double)}
+  underline    : boolean;     { undeline mode }
+  doustrike    : boolean;     { double-strike mode }
   textstart    : Integer;     { index of first line to print on
                                 current page, 0-based. }
   ll,tl        : integer;     {logo position}
@@ -419,20 +422,64 @@ var
              if ig>0 then begin //ignore next znakow
                             if (kodig<>0) then begin
                                 case kodig of
-                                 87: if ig=1 then case integer(wstmp[1]) of
+                                 87: if ig=1 then case integer(wstmp[1]) of //ESC W n
                                       0,48: doublewidthco:=10; //10/10=1
                                       1,49: doublewidthco:=128+14; //+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4
                                      end;
-                                 83: if ig=1 then case integer(wstmp[1]) of
+                                 83: if ig=1 then case integer(wstmp[1]) of //ESC S n
                                       0,48: sscriptco:=0;
                                       1,49: sscriptco:=2;
                                      end;
-                                 91: if ig=1 then case integer(wstmp[1]) of
+                                 91: if ig=1 then case integer(wstmp[1]) of //ESC [ n
                                       100: ig:=4; //ESC [d  Set Print Quality
                                        73: ig:=5; //ESC [I  Select Font and Pitch
                                        75: ig:=3; //ESC [K  Set initial condition
                                       1,49: sscriptco:=2;
                                      end;
+                                 45: if ig=1 then case integer(wstmp[1]) of //ESC - n
+                                      0,48: underline:=false;
+                                      1,49: underline:=true;
+                                     end;
+                                 33: if ig=1 then begin  //ESC ! n
+                                      if (integer(wstmp[1]) and 1)=0 then case charheightco of //jak ESC P
+                                        17,20: charheightco:=17;
+                                        else charheightco:=10;
+                                      end else case charheightco of //jak ESC M
+                                        17,20: charheightco:=20;
+                                        else charheightco:=12;
+                                      end;
+
+                                      if (integer(wstmp[1]) and 4)=0 then case charheightco of //jak DC2
+                                        17: charheightco:=10;
+                                        20: charheightco:=12;
+                                      end else case charheightco of //jak ESC SI lub SI
+                                        10: charheightco:=17;
+                                        12: charheightco:=20;
+                                      end;
+
+                                      if (SpecialSettings and 1)=0 then begin
+                                        if (integer(wstmp[1]) and 8)=0 then charstyleco:=charstyleco-[fsBold] //jak ESC F
+                                        else charstyleco:=charstyleco+[fsBold]; //jak ESC E
+                                      end;
+
+                                      if (SpecialSettings and 8)=0 then begin
+                                        if (integer(wstmp[1]) and 16)=0 then doustrike:=false //jak ESC - 0
+                                        else doustrike:=false; //jak ESC - 1
+                                      end;
+
+                                      if (integer(wstmp[1]) and 32)=0 then doublewidthco:=10 //jak ESC W 0 (10/10=1)
+                                      else doublewidthco:=128+14; //jak ESC W 1 (+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4)
+
+                                      if (SpecialSettings and 2)=0 then begin
+                                        if (integer(wstmp[1]) and 64)=0 then charstyleco:=charstyleco-[fsItalic] //jak ESC 5
+                                        else charstyleco:=charstyleco+[fsItalic]; //jak ESC 4
+                                      end;
+
+                                      if (SpecialSettings and 3)=0 then begin
+                                        if (integer(wstmp[1]) and 128)=0 then doustrike:=false //ESC H
+                                        else doustrike:=true; //ESC G
+                                      end;                                      
+                                    end;
                                 end;
                                 kodig:=0;
                             end;
@@ -450,8 +497,10 @@ var
                       charstyleco:=[];
                       doublewidthco:=10; //10/10=1
                       sscriptco:=1;
+                      underline:=false;
+                      doustrike:=false;
                     end;
-                14: if doublewidthco<128 then doublewidthco:=14; //ESC SO to sam co SO  14/10=1.4
+                14: if doublewidthco<128 then doublewidthco:=14; //ESC SO to samo co SO  14/10=1.4
                 48: lineheightco:=8;  //ESC 0
                 50: lineheightco:=6;  //ESC 2
                 49: lineheightco:=10; //ESC 1
@@ -465,11 +514,17 @@ var
                      end;
                 84: sscriptco:=1;     //ESC T
                103: charheightco:=15; //ESC g
-             71,69: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco+[fsBold]; //ESC G i ESC E
-             72,70: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco-[fsBold]; //ESC H i ESC F
+                69: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco+[fsBold]; //ESC E
+                70: if (SpecialSettings and 1)=0 then charstyleco:=charstyleco-[fsBold]; //ESC F
                 52: if (SpecialSettings and 2)=0 then charstyleco:=charstyleco+[fsItalic]; //ESC 4
                 53: if (SpecialSettings and 2)=0 then charstyleco:=charstyleco-[fsItalic]; //ESC 5
+                71: if (SpecialSettings and 4)=0 then doustrike:=true; //ESC G
+                72: if (SpecialSettings and 4)=0 then doustrike:=false; //ESC H
 
+                45: begin //ESC -
+                     ig:=1;
+                     if (SpecialSettings and 8)=0 then kodig:=45;
+                    end;
 
                 87: begin //ESC W  druk podwojnie szeroki
                      ig:=1;
@@ -481,9 +536,14 @@ var
                      kodig:=83;
                     end;
 
-                91: begin //ESC [  rozne ignorowane kody ... okaze sie pozniej jakie
+                91: begin //ESC [1 i ESC [rozne ignorowane kody ... okaze sie pozniej jakie
                      ig:=1;
                      kodig:=91;
+                    end;
+
+                33: begin //ESC ! parametry czcionki jednym kodem
+                     ig:=1;
+                     kodig:=33;
                     end;
 
                120: ig:=1; //ESC x zignor.ustawianie NLQ
@@ -516,7 +576,7 @@ var
 
                 13: tw:=0;	       //CR czyli cofnij do poczatku linii
                 20: if doublewidthco<128 then doublewidthco:=10; //DC4  10/10=1
-                14: if doublewidthco<128 then doublewidthco:=14; //SO to sam co ESC SO  14/10=1.4
+                14: if doublewidthco<128 then doublewidthco:=14; //SO to samo co ESC SO  14/10=1.4
                 15: case charheightco of //SI to samo co ESC SI
                        10: charheightco:=17;
                        12: charheightco:=20;
@@ -543,13 +603,38 @@ var
                    // srodek - ((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 2) przesuwa w dó³ by byly w jednej linii
                    // troche nizej (4*(charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 5) przesuwa w dó³ by byly w jednej linii
 
-                   if integer(wstmp[1])<>32 then ExtTextOutW(Printer.Canvas.Handle,
-                      r.Left+tw,r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
-                      ETO_CLIPPED,
-                      @r,
-                      PWideChar(wstmp),
-                      1,
-                      nil);
+                   if underline then begin
+                     ExtTextOutW(Printer.Canvas.Handle,
+                       r.Left+tw,r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
+                       ETO_CLIPPED,
+                       @r,
+                       PWideChar(uLine),
+                       1,
+                       nil);
+                     if doustrike then ExtTextOutW(Printer.Canvas.Handle,
+                       r.Left+tw,1+r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
+                       ETO_CLIPPED,
+                       @r,
+                       PWideChar(uLine),
+                       1,
+                       nil);
+                   end;
+                   if integer(wstmp[1])<>32 then begin
+                     ExtTextOutW(Printer.Canvas.Handle,
+                       r.Left+tw,r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
+                       ETO_CLIPPED,
+                       @r,
+                       PWideChar(wstmp),
+                       1,
+                       nil);
+                     if doustrike then ExtTextOutW(Printer.Canvas.Handle,
+                       r.Left+tw,1+r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
+                       ETO_CLIPPED,
+                       @r,
+                       PWideChar(wstmp),
+                       1,
+                       nil);
+                   end;
 
                    pcfsm:=Printer.Canvas.Font.size; //save
                    if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco
@@ -627,6 +712,8 @@ begin
       doublewidthco:=10; //10/10=1
       sscriptco:=1;
       charstyleco:=[];
+      underline:=false;
+      doustrike:=false;
       while (textstart<lines.count) and continuePrint do
         PrintPage;
     finally
