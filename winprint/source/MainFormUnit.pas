@@ -569,7 +569,7 @@ begin
                        false,
                        nil,nil);
           except
-      		//wyj¹tek podczas drukowania plik nie wydrukowany
+            //wyj¹tek podczas drukowania plik nie wydrukowany
             //zmieñ rozszerzenie na .bad~ lub jesli nie chce zmienic skasuj plik
             BadFileName:=ChangeFileExt(InputFileName,'.bad~');
             if FileExists(BadFileName) then DeleteFile(BadFileName);

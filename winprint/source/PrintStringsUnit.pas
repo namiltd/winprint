@@ -284,6 +284,8 @@ var
       ep: boolean; //empty page
       pcfsm:integer; //Printer.Canvas.Font.size memory
       ucs: integer;
+      msa: boolean; //master select allowed
+      raw: integer; //integer value before conversion
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -411,9 +413,9 @@ var
         len:=MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
         if (len>0) then
         begin
+          msa:=(len=length(lines[textStart]));
           SetLength(ws,len);
           MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
-
           ks:=false;
           ig:=0;
           kodig:=0;
@@ -440,8 +442,9 @@ var
                                       0,48: underline:=false;
                                       1,49: underline:=true;
                                      end;
-                                 33: if ig=1 then begin  //ESC ! n
-                                      if (integer(wstmp[1]) and 1)=0 then case charheightco of //jak ESC P
+                                 33: if (ig=1) and msa then begin  //ESC ! n
+                                      raw:=integer(lines[textStart][licz]);
+                                      if (raw and 1)=0 then case charheightco of //jak ESC P
                                         17,20: charheightco:=17;
                                         else charheightco:=10;
                                       end else case charheightco of //jak ESC M
@@ -449,7 +452,7 @@ var
                                         else charheightco:=12;
                                       end;
 
-                                      if (integer(wstmp[1]) and 4)=0 then case charheightco of //jak DC2
+                                      if (raw and 4)=0 then case charheightco of //jak DC2
                                         17: charheightco:=10;
                                         20: charheightco:=12;
                                       end else case charheightco of //jak ESC SI lub SI
@@ -458,27 +461,27 @@ var
                                       end;
 
                                       if (SpecialSettings and 1)=0 then begin
-                                        if (integer(wstmp[1]) and 8)=0 then charstyleco:=charstyleco-[fsBold] //jak ESC F
+                                        if (raw and 8)=0 then charstyleco:=charstyleco-[fsBold] //jak ESC F
                                         else charstyleco:=charstyleco+[fsBold]; //jak ESC E
                                       end;
 
                                       if (SpecialSettings and 8)=0 then begin
-                                        if (integer(wstmp[1]) and 16)=0 then doustrike:=false //jak ESC - 0
-                                        else doustrike:=false; //jak ESC - 1
+                                        if (raw and 16)=0 then doustrike:=false //jak ESC H
+                                        else doustrike:=true; //jak ESC G
                                       end;
 
-                                      if (integer(wstmp[1]) and 32)=0 then doublewidthco:=10 //jak ESC W 0 (10/10=1)
+                                      if (raw and 32)=0 then doublewidthco:=10 //jak ESC W 0 (10/10=1)
                                       else doublewidthco:=128+14; //jak ESC W 1 (+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4)
 
                                       if (SpecialSettings and 2)=0 then begin
-                                        if (integer(wstmp[1]) and 64)=0 then charstyleco:=charstyleco-[fsItalic] //jak ESC 5
+                                        if (raw and 64)=0 then charstyleco:=charstyleco-[fsItalic] //jak ESC 5
                                         else charstyleco:=charstyleco+[fsItalic]; //jak ESC 4
                                       end;
 
                                       if (SpecialSettings and 4)=0 then begin
-                                        if (integer(wstmp[1]) and 128)=0 then doustrike:=false //ESC H
-                                        else doustrike:=true; //ESC G
-                                      end;                                      
+                                        if (raw and 128)=0 then underline:=false //jak ESC - 0
+                                        else underline:=true; //jak ESC - 1
+                                      end;
                                     end;
                                 end;
                                 kodig:=0;
