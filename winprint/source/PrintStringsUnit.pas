@@ -284,8 +284,7 @@ var
       ep: boolean; //empty page
       pcfsm:integer; //Printer.Canvas.Font.size memory
       ucs: integer;
-      msa: boolean; //master select allowed
-      raw: integer; //integer value before conversion
+      raw: integer; //n value from code ESC ! n
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -394,6 +393,7 @@ var
 
       SetLength(wstmp,1);
       y:=textrect.top;
+      raw:=-1;
       tw:=0;
       while (textStart<lines.count) and Filter do;
       while (textStart<lines.count) and (y<=(textrect.bottom-charheight)) do
@@ -413,7 +413,6 @@ var
         len:=MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),nil,0);
         if (len>0) then
         begin
-          msa:=(len=length(lines[textStart]));
           SetLength(ws,len);
           MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
           ks:=false;
@@ -424,67 +423,92 @@ var
              if ig>0 then begin //ignore next znakow
                             if (kodig<>0) then begin
                                 case kodig of
-                                 87: if ig=1 then case integer(wstmp[1]) of //ESC W n
-                                      0,48: doublewidthco:=10; //10/10=1
-                                      1,49: doublewidthco:=128+14; //+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4
+                                 87: begin //ESC W n
+                                       if ig=1 then case integer(wstmp[1]) of
+                                         0,48: doublewidthco:=10; //10/10=1
+                                         1,49: doublewidthco:=128+14; //+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4
+                                       end;
+                                       kodig:=0;
                                      end;
-                                 83: if ig=1 then case integer(wstmp[1]) of //ESC S n
-                                      0,48: sscriptco:=0;
-                                      1,49: sscriptco:=2;
+                                 83: begin //ESC S n
+                                       if ig=1 then case integer(wstmp[1]) of
+                                         0,48: sscriptco:=0;
+                                         1,49: sscriptco:=2;
+                                       end;
+                                       kodig:=0;
                                      end;
-                                 91: if ig=1 then case integer(wstmp[1]) of //ESC [ n
-                                      100: ig:=4; //ESC [d  Set Print Quality
-                                       73: ig:=5; //ESC [I  Select Font and Pitch
-                                       75: ig:=3; //ESC [K  Set initial condition
-                                      1,49: sscriptco:=2;
+                                 91: begin //ESC [ n
+                                       if ig=1 then case integer(wstmp[1]) of
+                                          100: ig:=4; //ESC [d  Set Print Quality
+                                           73: ig:=5; //ESC [I  Select Font and Pitch
+                                           75: ig:=3; //ESC [K  Set initial condition
+                                         1,49: sscriptco:=2;
+                                       end;
+                                       kodig:=0;
                                      end;
-                                 45: if ig=1 then case integer(wstmp[1]) of //ESC - n
-                                      0,48: underline:=false;
-                                      1,49: underline:=true;
+                                 45: begin //ESC - n
+                                       if ig=1 then case integer(wstmp[1]) of //ESC - n
+                                         0,48: underline:=false;
+                                         1,49: underline:=true;
+                                       end;
+                                       kodig:=0;
                                      end;
-                                 33: if (ig=1) and msa then begin  //ESC ! n
-                                      raw:=integer(lines[textStart][licz]);
-                                      if (raw and 1)=0 then case charheightco of //jak ESC P
-                                        17,20: charheightco:=17;
-                                        else charheightco:=10;
-                                      end else case charheightco of //jak ESC M
-                                        17,20: charheightco:=20;
-                                        else charheightco:=12;
-                                      end;
+                                 33: case ig of //ESC ! n (ESC ! XX)
+                                       2: case integer(wstmp[1]) of //ostatni bajt
+                                            48..57: raw:=(integer(wstmp[1])-48)*16;
+                                            65..70: raw:=(integer(wstmp[1])-55)*16;
+                                            else kodig:=0;
+                                          end;
+                                       1: begin
+                                            case integer(wstmp[1]) of //pierwszy bajt
+                                              48..57: raw:=raw+integer(wstmp[1])-48;
+                                              65..70: raw:=raw+integer(wstmp[1])-55;
+                                              else raw:=-1;
+                                            end;
+                                            if raw>=0 then begin
+                                              if (raw and 1)=0 then case charheightco of //jak ESC P
+                                                17,20: charheightco:=17;
+                                                else charheightco:=10;
+                                              end else case charheightco of //jak ESC M
+                                                17,20: charheightco:=20;
+                                                else charheightco:=12;
+                                              end;
 
-                                      if (raw and 4)=0 then case charheightco of //jak DC2
-                                        17: charheightco:=10;
-                                        20: charheightco:=12;
-                                      end else case charheightco of //jak ESC SI lub SI
-                                        10: charheightco:=17;
-                                        12: charheightco:=20;
-                                      end;
+                                              if (raw and 4)=0 then case charheightco of //jak DC2
+                                                17: charheightco:=10;
+                                                20: charheightco:=12;
+                                               end else case charheightco of //jak ESC SI lub SI
+                                                10: charheightco:=17;
+                                                12: charheightco:=20;
+                                              end;
 
-                                      if (SpecialSettings and 1)=0 then begin
-                                        if (raw and 8)=0 then charstyleco:=charstyleco-[fsBold] //jak ESC F
-                                        else charstyleco:=charstyleco+[fsBold]; //jak ESC E
-                                      end;
+                                              if (SpecialSettings and 1)=0 then begin
+                                                if (raw and 8)=0 then charstyleco:=charstyleco-[fsBold] //jak ESC F
+                                                else charstyleco:=charstyleco+[fsBold]; //jak ESC E
+                                              end;
 
-                                      if (SpecialSettings and 8)=0 then begin
-                                        if (raw and 16)=0 then doustrike:=false //jak ESC H
-                                        else doustrike:=true; //jak ESC G
-                                      end;
+                                              if (SpecialSettings and 8)=0 then begin
+                                                if (raw and 16)=0 then doustrike:=false //jak ESC H
+                                                else doustrike:=true; //jak ESC G
+                                              end;
 
-                                      if (raw and 32)=0 then doublewidthco:=10 //jak ESC W 0 (10/10=1)
-                                      else doublewidthco:=128+14; //jak ESC W 1 (+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4)
+                                              if (raw and 32)=0 then doublewidthco:=10 //jak ESC W 0 (10/10=1)
+                                              else doublewidthco:=128+14; //jak ESC W 1 (+128 bo ma sie nie kasowac po nastepnej linii  14/10=1.4)
 
-                                      if (SpecialSettings and 2)=0 then begin
-                                        if (raw and 64)=0 then charstyleco:=charstyleco-[fsItalic] //jak ESC 5
-                                        else charstyleco:=charstyleco+[fsItalic]; //jak ESC 4
-                                      end;
+                                              if (SpecialSettings and 2)=0 then begin
+                                                if (raw and 64)=0 then charstyleco:=charstyleco-[fsItalic] //jak ESC 5
+                                                else charstyleco:=charstyleco+[fsItalic]; //jak ESC 4
+                                              end;
 
-                                      if (SpecialSettings and 4)=0 then begin
-                                        if (raw and 128)=0 then underline:=false //jak ESC - 0
-                                        else underline:=true; //jak ESC - 1
-                                      end;
-                                    end;
+                                              if (SpecialSettings and 4)=0 then begin
+                                                if (raw and 128)=0 then underline:=false //jak ESC - 0
+                                                else underline:=true; //jak ESC - 1
+                                              end;
+                                            end;
+                                            kodig:=0;
+                                          end;
+                                     end;
                                 end;
-                                kodig:=0;
                             end;
                             dec(ig);
                             continue;
@@ -545,7 +569,7 @@ var
                     end;
 
                 33: begin //ESC ! parametry czcionki jednym kodem
-                     ig:=1;
+                     ig:=2;
                      kodig:=33;
                     end;
 

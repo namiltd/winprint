@@ -467,7 +467,7 @@ var
   XLATTable: array[char] of char;
   XLAT10: char;
   UTF8Table: array[char] of string;
-
+  detectMS: integer; //detection of code ESC ! n 
   ci: TConversionItem;
 begin
   for i:=0 to 255 do XLATTable[char(i)]:=char(i);
@@ -490,6 +490,7 @@ begin
          end;
        end;
   end;
+  detectMS:=0;
   FS:=TFileStream.Create(FileName,fmOpenRead or fmShareDenyNone);
   try
     SetLength(Buffer,1024);
@@ -501,16 +502,32 @@ begin
         if (CodePageInfo[CodePage].CpNr=65001)
         and (CodePageInfo[CodePage].UTF8<>nil)then begin
           for i:=1 to Count do begin
-              if (XLAT10<>#10) and (Buffer[i]=#10) then
-                SS.WriteString(XLAT10);
-              SS.WriteString(UTF8Table[XLATTable[Buffer[i]]]);
+              if detectMS=2 then SS.WriteString(IntToHex(Integer(Buffer[i]),2)) //conversion ESC ! n to ESC ! XX
+              else begin
+                if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
+                SS.WriteString(UTF8Table[XLATTable[Buffer[i]]]);
+              end;
+              case detectMS of
+                0: if (Buffer[i]=#27) then detectMS:=1;
+                1: if (Buffer[i]=#33) then detectMS:=2
+                   else detectMS:=0;
+                2: detectMS:=0;
+              end;
           end;
         end
         else begin
           for i:=1 to Count do begin
-            if (XLAT10<>#10) and (Buffer[i]=#10) then
-              SS.WriteString(XLAT10);
-            SS.WriteString(XLATTable[Buffer[i]]);
+            if detectMS=2 then SS.WriteString(IntToHex(Integer(Buffer[i]),2)) //conversion ESC ! n to ESC ! XX
+            else begin
+              if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
+              SS.WriteString(XLATTable[Buffer[i]]);
+            end;
+            case detectMS of
+              0: if (Buffer[i]=#27) then detectMS:=1;
+              1: if (Buffer[i]=#33) then detectMS:=2
+                 else detectMS:=0;
+              2: detectMS:=0;
+            end;
           end;
         end;
       end;
