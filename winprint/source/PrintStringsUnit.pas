@@ -285,6 +285,7 @@ var
       pcfsm:integer; //Printer.Canvas.Font.size memory
       ucs: integer;
       raw: integer; //n value from code ESC ! n
+      hpos: integer; //nn value from code ESC $ nn 
 
     procedure FireHeaderFooterEvent(event: THeaderFooterProc; r: TRect);
     begin
@@ -418,6 +419,7 @@ var
           ks:=false;
           ig:=0;
           kodig:=0;
+          hpos:=-1;
           for licz:=1 to len do begin
              wstmp[1]:=ws[licz];
              if ig>0 then begin //ignore next znakow
@@ -442,7 +444,6 @@ var
                                           100: ig:=4; //ESC [d  Set Print Quality
                                            73: ig:=5; //ESC [I  Select Font and Pitch
                                            75: ig:=3; //ESC [K  Set initial condition
-                                         1,49: sscriptco:=2;
                                        end;
                                        kodig:=0;
                                      end;
@@ -453,14 +454,43 @@ var
                                        end;
                                        kodig:=0;
                                      end;
+                                 36: case ig of //ESC $ nn (ESC $ XXXX)
+                                       4: case integer(wstmp[1]) of //pierwszy bajt
+                                            48..57: hpos:=(integer(wstmp[1])-48)*16;
+                                            65..70: hpos:=(integer(wstmp[1])-55)*16;
+                                            else kodig:=0;
+                                          end;
+                                       3: case integer(wstmp[1]) of //drugi bajt
+                                            48..57: hpos:=hpos+integer(wstmp[1])-48;
+                                            65..70: hpos:=hpos+integer(wstmp[1])-55;
+                                            else kodig:=0;
+                                          end;
+                                       2: case integer(wstmp[1]) of //trzeci bajt
+                                            48..57: hpos:=hpos+(integer(wstmp[1])-48)*16*256;
+                                            65..70: hpos:=hpos+(integer(wstmp[1])-55)*16*256;
+                                            else kodig:=0;
+                                          end;
+                                       1: begin
+                                            case integer(wstmp[1]) of //czwarty bajt
+                                               48..57: hpos:=hpos+(integer(wstmp[1])-48)*256;
+                                               65..70: hpos:=hpos+(integer(wstmp[1])-55)*256;
+                                               else hpos:=-1;
+                                             end;
+                                             if (hpos>=0) and (hpos<32768) then begin
+                                                tw:=round(X_resolution*hpos/60);
+                                                hpos:=-1;
+                                             end;
+                                             kodig:=0;
+                                          end;
+                                     end;
                                  33: case ig of //ESC ! n (ESC ! XX)
-                                       2: case integer(wstmp[1]) of //ostatni bajt
+                                       2: case integer(wstmp[1]) of //pierwszy bajt
                                             48..57: raw:=(integer(wstmp[1])-48)*16;
                                             65..70: raw:=(integer(wstmp[1])-55)*16;
                                             else kodig:=0;
                                           end;
                                        1: begin
-                                            case integer(wstmp[1]) of //pierwszy bajt
+                                            case integer(wstmp[1]) of //ostatni bajt
                                               48..57: raw:=raw+integer(wstmp[1])-48;
                                               65..70: raw:=raw+integer(wstmp[1])-55;
                                               else raw:=-1;
@@ -547,45 +577,44 @@ var
                 53: if (SpecialSettings and 2)=0 then charstyleco:=charstyleco-[fsItalic]; //ESC 5
                 71: if (SpecialSettings and 4)=0 then doustrike:=true; //ESC G
                 72: if (SpecialSettings and 4)=0 then doustrike:=false; //ESC H
-
                 45: begin //ESC -
                      ig:=1;
                      if (SpecialSettings and 8)=0 then kodig:=45;
                     end;
-
                 87: begin //ESC W  druk podwojnie szeroki
                      ig:=1;
                      kodig:=87;
                     end;
-
                 83: begin //ESC S  indeks gorny/dolny
                      ig:=1;
                      kodig:=83;
                     end;
-
-                91: begin //ESC [1 i ESC [rozne ignorowane kody ... okaze sie pozniej jakie
+                91: begin //ESC [rozne ignorowane kody ... okaze sie pozniej jakie
                      ig:=1;
                      kodig:=91;
                     end;
-
                 33: begin //ESC ! parametry czcionki jednym kodem
                      ig:=2;
                      kodig:=33;
                     end;
-
+                36: begin //ESC $
+                     ig:=4;
+                     kodig:=36;
+                    end;
+                92: begin //ESC \
+                     ig:=4;
+                     kodig:=92;
+                    end;
                120: ig:=1; //ESC x zignor.ustawianie NLQ
                116: ig:=1; //ESC t zignor.ustawianie chartable
-
                119: ig:=1; //ESC w zignor.ustawianie podwojna wysokosc
                 85: ig:=1; //ESC U zignor.ustawianie drukowanie jednokierunkowe
                112: ig:=1; //ESC p zignor.ustawianie druk proporcjonalny
-
                 67: ig:=1; //ESC C ignore page length
-
              end
              else case integer(wstmp[1]) of
              65279: ; //BOM
-                0..7,9..12,16,17,19,21..31: ; //puste by nic nie malowalo
+             0..7,9..12,16,17,19,21..31: ; //puste by nic nie malowalo
                  8: if tw>0 then begin
                      pcfsm:=Printer.Canvas.Font.size; //save
                      if (doublewidthco mod 128)=10 then Printer.Canvas.Font.size:=(aFont.Size * 10) div charheightco

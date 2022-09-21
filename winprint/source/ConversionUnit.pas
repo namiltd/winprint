@@ -298,7 +298,7 @@ const
               (name:'Russian KOI8-R (Win-20866)'; CpNr:20866; utf8:nil),
               (name:'Ukrainian KOI8-U (Win-21866)'; CpNr:21866; utf8:nil),
 
-              (name:'Latin 1 (ISO-8859-1)'; CpNr:28591; utf8:nil),
+              (name:'Latin 1 (ISO-8859-1)'; CpNr:285; utf8:nil),
               (name:'Latin 2 (ISO-8859-2)'; CpNr:28592; utf8:nil),
               (name:'Latin 3 (ISO-8859-3)'; CpNr:28593; utf8:nil),
               (name:'Baltic (ISO-8859-4)'; CpNr:28594; utf8:nil),
@@ -502,8 +502,8 @@ var
   XLATTable: array[char] of char;
   XLAT10: char;
   UTF8Table: array[char] of string;
-  detectMS: integer; //detection of code ESC ! n 
   ci: TConversionItem;
+  last0,last1,last2,last3,last4,last5,last6: char;
 begin
   for i:=0 to 255 do XLATTable[char(i)]:=char(i);
   if (CodePageInfo[CodePage].CpNr=65001)
@@ -525,7 +525,13 @@ begin
          end;
        end;
   end;
-  detectMS:=0;
+  last0:=#0;
+  last1:=#0;
+  last2:=#0;
+  last3:=#0;
+  last4:=#0;
+  last5:=#0;
+  //last5:=#0;  unnesessary
   FS:=TFileStream.Create(FileName,fmOpenRead or fmShareDenyNone);
   try
     SetLength(Buffer,1024);
@@ -537,32 +543,48 @@ begin
         if (CodePageInfo[CodePage].CpNr=65001)
         and (CodePageInfo[CodePage].UTF8<>nil)then begin
           for i:=1 to Count do begin
-              if detectMS=2 then SS.WriteString(IntToHex(Integer(Buffer[i]),2)) //conversion ESC ! n to ESC ! XX
+              last6:=last5;
+              last5:=last4;
+              last4:=last3;
+              last3:=last2;
+              last2:=last1;
+              last1:=last0;
+              last0:=Buffer[i];
+              
+              if (last6=#27) and (last5=#91) and (last4=#73) and (last3=#2) and (last2=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - second value
+              else if (last5=#27) and (last4=#91) and (last3=#73) and (last2=#2) and (last1=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - first value
+              else if (last5=#27) and (last4=#91) and (last3=#100) and (last2=#1) and (last1=#0) then SS.WriteString(#0) //conversion ESC [d n to ESC [d 0 
+              else if (last3=#27) and ((last2=#36) or (last2=#92)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - second value
+              else if (last2=#27) and ((last1=#36) or (last1=#92)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - first value
+              else if (last2=#27) and (last1=#33) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC ! n to ESC ! XX
+              else if (last2=#27) and (last1=#67) then SS.WriteString(#0) //conversion ESC C n to ESC C 0
               else begin
-                if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
-                SS.WriteString(UTF8Table[XLATTable[Buffer[i]]]);
-              end;
-              case detectMS of
-                0: if (Buffer[i]=#27) then detectMS:=1;
-                1: if (Buffer[i]=#33) then detectMS:=2
-                   else detectMS:=0;
-                2: detectMS:=0;
+                     if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
+                     SS.WriteString(UTF8Table[XLATTable[Buffer[i]]]);
               end;
           end;
         end
         else begin
           for i:=1 to Count do begin
-            if detectMS=2 then SS.WriteString(IntToHex(Integer(Buffer[i]),2)) //conversion ESC ! n to ESC ! XX
-            else begin
-              if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
-              SS.WriteString(XLATTable[Buffer[i]]);
-            end;
-            case detectMS of
-              0: if (Buffer[i]=#27) then detectMS:=1;
-              1: if (Buffer[i]=#33) then detectMS:=2
-                 else detectMS:=0;
-              2: detectMS:=0;
-            end;
+              last6:=last5;
+              last5:=last4;
+              last4:=last3;
+              last3:=last2;
+              last2:=last1;
+              last1:=last0;
+              last0:=Buffer[i];
+              
+              if (last6=#27) and (last5=#91) and (last4=#73) and (last3=#2) and (last2=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - second value
+              else if (last5=#27) and (last4=#91) and (last3=#73) and (last2=#2) and (last1=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - first value
+              else if (last5=#27) and (last4=#91) and (last3=#100) and (last2=#1) and (last1=#0) then SS.WriteString(#0) //conversion ESC [d n to ESC [d 0 
+              else if (last3=#27) and ((last2=#36) or (last2=#92) or (last2=#40) or (last2=#41)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - second value
+              else if (last2=#27) and ((last1=#36) or (last1=#92) or (last1=#40) or (last1=#41)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - first value
+              else if (last2=#27) and (last1=#33) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC ! n to ESC ! XX
+              else if (last2=#27) and (last1=#67) then SS.WriteString(#0) //conversion ESC C n to ESC C 0
+              else begin
+                     if (XLAT10<>#10) and (Buffer[i]=#10) then SS.WriteString(XLAT10);
+                      SS.WriteString(XLATTable[Buffer[i]]);
+              end;
           end;
         end;
       end;
