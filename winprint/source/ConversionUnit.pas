@@ -577,8 +577,8 @@ begin
               if (last6=#27) and (last5=#91) and (last4=#73) and (last3=#2) and (last2=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - second value
               else if (last5=#27) and (last4=#91) and (last3=#73) and (last2=#2) and (last1=#0) then SS.WriteString(#0) //conversion ESC [I nn to ESC [I 00 - first value
               else if (last5=#27) and (last4=#91) and (last3=#100) and (last2=#1) and (last1=#0) then SS.WriteString(#0) //conversion ESC [d n to ESC [d 0 
-              else if (last3=#27) and ((last2=#36) or (last2=#92) or (last2=#40) or (last2=#41)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - second value
-              else if (last2=#27) and ((last1=#36) or (last1=#92) or (last1=#40) or (last1=#41)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \ ( ) nn to ESC $ \ ( ) XXXX - first value
+              else if (last3=#27) and ((last2=#36) or (last2=#92)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \  nn to ESC $ \  XXXX - second value
+              else if (last2=#27) and ((last1=#36) or (last1=#92)) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC $ \  nn to ESC $ \  XXXX - first value
               else if (last2=#27) and (last1=#33) then SS.WriteString(IntToHex(Integer(last0),2)) //conversion ESC ! n to ESC ! XX
               else if (last2=#27) and (last1=#67) then SS.WriteString(#0) //conversion ESC C n to ESC C 0
               else begin

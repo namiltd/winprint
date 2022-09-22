@@ -162,7 +162,7 @@
 		<VersionInfoKeys>
 			<VersionInfoKeys Name="CompanyName">GNU GPL Software</VersionInfoKeys>
 			<VersionInfoKeys Name="FileDescription">WinPrint</VersionInfoKeys>
-			<VersionInfoKeys Name="FileVersion">1.5.0.55</VersionInfoKeys>
+			<VersionInfoKeys Name="FileVersion">1.5.0.56</VersionInfoKeys>
 			<VersionInfoKeys Name="InternalName">WinPrint</VersionInfoKeys>
 			<VersionInfoKeys Name="LegalCopyright">Przemysław Czerkas &amp; Mieczysław Nalewaj</VersionInfoKeys>
 			<VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
