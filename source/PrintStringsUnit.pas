@@ -415,7 +415,7 @@ var
         if (len>0) then
         begin
           SetLength(ws,len);
-          MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]), length(lines[textStart]),PWideChar(ws),len);
+          MultiByteToWideCharMy(CpNr,0,PChar(lines[textStart]),length(lines[textStart]),PWideChar(ws),len);
           ks:=false;
           ig:=0;
           kodig:=0;
