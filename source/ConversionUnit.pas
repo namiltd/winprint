@@ -45,9 +45,10 @@
 
 
 type
-  TCodePage = (cp437,cp620,cp708,cp720,cp737,cp775,cp790,cp850,cp852,cp855,cp857,cp858,cp862,cp865,cp866,cp869,cpmik,
+  TCodePage = (cp437,cp620,cp708,cp720,cp737,cp775,cp790,cp850,cp852,cp855,cp857,cp858,cp862,cp865,cp866,cp869,
                cp874,cp932,cp936,cp949,cp950,
                cp1250,cp1251,cp1252,cp1253,cp1254,cp1255,cp1256,cp1257,cp1258,
+               cp3021,
                cp20866,cp21866,
                cp28591,cp28592,cp28593,cp28594,cp28595,cp28596,cp28597,cp28598,cp28599,
                cp65000,cp65001);
@@ -223,7 +224,7 @@ const
    (#$C2+#$B0),(#$C2+#$A8),(#$C2+#$B7),(#$C2+#$B9),
    (#$C2+#$B3),(#$C2+#$B2),(#$E2+#$96+#$A0),(#$C2+#$A0));
 
- CPMIKtoUTF8: TUTF8Table=(
+ CP3021toUTF8: TUTF8Table=(
    (#$D0+#$90),(#$D0+#$91),(#$D0+#$92),(#$D0+#$93),
    (#$D0+#$94),(#$D0+#$95),(#$D0+#$96),(#$D0+#$97),
    (#$D0+#$98),(#$D0+#$99),(#$D0+#$9A),(#$D0+#$9B),
@@ -274,10 +275,9 @@ const
               (name:'MS-DOS Turkish (CP-857)'; CpNr:857; utf8:nil),
               (name:'MS-DOS Latin 1 + Euro (CP-858)'; CpNr:65001; utf8:@CP858toUTF8), //Posredniczaco UTF8
               (name:'MS-DOS Hebrew (CP-862)'; CpNr:862; utf8:nil),
-              (name:'MS-DOS Nordic (CP-865)'; CpNr:65001; utf8:@CP865toUTF8), //Posredniczaco UTF8, bo brak NLS dla Win95 i win98
+              (name:'MS-DOS Nordic (CP-865)'; CpNr:65001; utf8:@CP865toUTF8), //Posredniczaco UTF8, bo brak NLS dla Win95 i starych win98
               (name:'MS-DOS Cyrillic CIS 1 (CP-866)'; CpNr:866; utf8:nil),
               (name:'MS-DOS Modern Greek (CP-869)'; CpNr:869; utf8:nil),
-              (name:'Bulgarian (MIK)'; CpNr:65001; utf8:@CPMIKtoUTF8), //Posredniczaco UTF8
 
               (name:'Thai (Win-874)'; CpNr:874; utf8:nil),
               (name:'Japanese (Win-932)'; CpNr:932; utf8:nil),
@@ -294,6 +294,8 @@ const
               (name:'Arabic (Win-1256)'; CpNr:1256; utf8:nil),
               (name:'Baltic (Win-1257)'; CpNr:1257; utf8:nil),
               (name:'Vietnamese (Win-1258)'; CpNr:1258; utf8:nil),
+
+              (name:'Bulgarian MIK (CP-3021)'; CpNr:65001; utf8:@CP3021toUTF8), //Posredniczaco UTF8
 
               (name:'Russian KOI8-R (Win-20866)'; CpNr:20866; utf8:nil),
               (name:'Ukrainian KOI8-U (Win-21866)'; CpNr:21866; utf8:nil),
