@@ -298,7 +298,7 @@ const
               (name:'Russian KOI8-R (Win-20866)'; CpNr:20866; utf8:nil),
               (name:'Ukrainian KOI8-U (Win-21866)'; CpNr:21866; utf8:nil),
 
-              (name:'Latin 1 (ISO-8859-1)'; CpNr:285; utf8:nil),
+              (name:'Latin 1 (ISO-8859-1)'; CpNr:28591; utf8:nil),
               (name:'Latin 2 (ISO-8859-2)'; CpNr:28592; utf8:nil),
               (name:'Latin 3 (ISO-8859-3)'; CpNr:28593; utf8:nil),
               (name:'Baltic (ISO-8859-4)'; CpNr:28594; utf8:nil),
