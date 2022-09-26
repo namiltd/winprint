@@ -1596,7 +1596,7 @@ const
               (name:'MS-DOS Greek (CP-737)'; CpNr:737; utf8:@CP737toUTF8),
               (name:'MS-DOS Baltic Rim (CP-775)'; CpNr:775; utf8:@CP775toUTF8),
               (name:'FreeDOS Mazovia (CP-790)'; CpNr:790; utf8:@CP790toUTF8),
-              (name:'MS-DOS Cyrillic CIS 1 + Euro (CP-866)'; CpNr:808; utf8:@CP808toUTF8),
+              (name:'MS-DOS Cyrillic CIS 1 + Euro (CP-808)'; CpNr:808; utf8:@CP808toUTF8),
               (name:'MS-DOS Latin 1 (CP-850)'; CpNr:850; utf8:@CP850toUTF8),
               (name:'MS-DOS Latin 2 (CP-852)'; CpNr:852; utf8:@CP852toUTF8),
               (name:'MS-DOS Cyrillic (CP-855)'; CpNr:855; utf8:@CP855toUTF8),
@@ -1612,7 +1612,7 @@ const
               (name:'MS-DOS Hebrew + Euro (CP-867)'; CpNr:867; utf8:@CP867toUTF8),
               (name:'MS-DOS Pakistan (CP-868)'; CpNr:868; utf8:@CP868toUTF8),
               (name:'MS-DOS Modern Greek (CP-869)'; CpNr:869; utf8:@CP869toUTF8),
-              (name:'MS-DOS Cyrillic + Euro (CP-855)'; CpNr:872; utf8:@CP872toUTF8),
+              (name:'MS-DOS Cyrillic + Euro (CP-872)'; CpNr:872; utf8:@CP872toUTF8),
 
               (name:'Thai (Win-874)'; CpNr:874; utf8:@CP874toUTF8),
               (name:'Japanese (Win-932)'; CpNr:932; utf8:nil),
