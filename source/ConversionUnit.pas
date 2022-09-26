@@ -1596,7 +1596,7 @@ const
               (name:'MS-DOS Greek (CP-737)'; CpNr:737; utf8:@CP737toUTF8),
               (name:'MS-DOS Baltic Rim (CP-775)'; CpNr:775; utf8:@CP775toUTF8),
               (name:'FreeDOS Mazovia (CP-790)'; CpNr:790; utf8:@CP790toUTF8),
-              (name:'MS-DOS Cyrillic CIS 1 + Euro (CP-808)'; CpNr:808; utf8:@CP808toUTF8),
+              (name:'MS-DOS Cyrillic CIS 1 + E.(CP-808)'; CpNr:808; utf8:@CP808toUTF8),
               (name:'MS-DOS Latin 1 (CP-850)'; CpNr:850; utf8:@CP850toUTF8),
               (name:'MS-DOS Latin 2 (CP-852)'; CpNr:852; utf8:@CP852toUTF8),
               (name:'MS-DOS Cyrillic (CP-855)'; CpNr:855; utf8:@CP855toUTF8),
