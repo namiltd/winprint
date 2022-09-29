@@ -94,11 +94,11 @@ ESC SI	27 15 Select condensed mode (17/20 CPI) (if 10 or 12 CPI)
 
 DC2	18 Cancel condensed mode (return to 10 or 12 CPI) (if 17 or 20 CPI) 
 
-Esc M	27 77 Select 12 CPI (or 20 if condensed)
+ESC M	27 77 Select 12 CPI (or 20 if condensed)
 
-Esc P	27 80 Select 10 CPI (or 17 if condensed)
+ESC P	27 80 Select 10 CPI (or 17 if condensed)
 
-Esc g	27 103 Select 15-pitch chars
+ESC g	27 103 Select 15-pitch chars
 
 SO	14 and
 ESC SO	27 14 Select double-wide mode (one line)
@@ -107,25 +107,25 @@ DC4	20 Cancel double-wide mode (one line)
 
 ESC W {0,1}	27 87 0,1 Turn double-wide mode Off/On
 
-Esc @	27 64 Initialize printer
+ESC @	27 64 Initialize printer
 
-Esc 0	27 48 Select 1/8-inch line spacing
+ESC 0	27 48 Select 1/8-inch line spacing
 
-Esc 2	27 50 Select 1/6-inch line spacing
+ESC 2	27 50 Select 1/6-inch line spacing
 
-Esc 1	27 49 Select 7/72-inch line spacing
+ESC 1	27 49 Select 7/72-inch line spacing
 
-Esc E	27 69 Select bold mode
+ESC E	27 69 Select bold mode
 
-Esc F	27 70 Cancel bold mode 
+ESC F	27 70 Cancel bold mode 
 
-Esc G	27 71 Select double-strike mode
+ESC G	27 71 Select double-strike mode
 
-Esc H	27 72 Cancel double-strike mode
+ESC H	27 72 Cancel double-strike mode
 
-Esc 4	27 52 Select italic mode
+ESC 4	27 52 Select italic mode
 
-Esc 5	27 53 Cancel Italic mode
+ESC 5	27 53 Cancel Italic mode
 
 ESC S {0,1}	27 83 0,1 Select superscript/subscript mode
 
