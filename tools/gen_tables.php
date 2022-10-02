@@ -4,18 +4,20 @@ function toPAS($cp) {
     for ($i=0; $i<32; $i++) {
         for ($j=0; $j<4; $j++) {
             $c = 128+$i*4+$j;
-            if ($cp==20866) {
+            if ($cp==808) {
+                $out=iconv('cp866','utf-8//IGNORE', chr($c));
+            } elseif ($cp==858) {
+                $out=iconv('cp850','utf-8//IGNORE', chr($c));
+            } elseif ($cp==867) {
+                $out=iconv('cp862','utf-8//IGNORE', chr($c));
+            } elseif ($cp==872) {
+                $out=iconv('cp855','utf-8//IGNORE', chr($c));
+            } elseif ($cp==3021) {
+                $out=iconv('mik','utf-8//IGNORE', chr($c));
+            } elseif ($cp==20866) {
                 $out=iconv('koi8-r','utf-8//IGNORE', chr($c));
             } elseif ($cp==21866) {
                 $out=iconv('koi8-u','utf-8//IGNORE', chr($c));
-            } elseif ($cp==3021) {
-                $out=iconv('mik','utf-8//IGNORE', chr($c));
-            } elseif ($cp==808) {
-                $out=iconv('cp866','utf-8//IGNORE', chr($c));
-            } elseif ($cp==872) {
-                $out=iconv('cp855','utf-8//IGNORE', chr($c));
-            } elseif ($cp==867) {
-                $out=iconv('cp862','utf-8//IGNORE', chr($c));
             } elseif (($cp<28591)||($cp>28599)) {
                 $out=iconv('cp'.$cp,'utf-8//IGNORE', chr($c));
             } else {
@@ -27,7 +29,8 @@ function toPAS($cp) {
             }
 
             if ((($cp==808)&&($c==253))
-               ||(($cp==872)&&($c==207))) {
+               ||(($cp==872)&&($c==207))
+               ||(($cp==858)&&($c==213))) {
                 $out=chr(226).chr(130).chr(172);
             } elseif($cp==867) {
                 if ($c==159) $out=chr(226).chr(130).chr(170);
@@ -70,7 +73,7 @@ toPAS(850);
 toPAS(852);
 toPAS(855);
 toPAS(857);
-//toPAS(858);
+toPAS(858);
 toPAS(860);
 toPAS(861);
 toPAS(862);
