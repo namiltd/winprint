@@ -61,7 +61,7 @@ type
  | Function PrintStrings
  |
  | Parameters :
- |   lines:
+ |   srclines:
  |     contains the text to print, already formatted into
  |     lines of suitable length. No additional wordwrapping
  |     will be done by this routine and also no text clipping
