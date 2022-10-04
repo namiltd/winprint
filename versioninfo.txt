@@ -1,4 +1,4 @@
-Release Name: 1.5.0.56
+Release Name: 1.5.0.57
 
 Notes:
 New version compiled via Turbo Delphi 2006 Explorer Edition.
@@ -34,7 +34,9 @@ FreeDOS Mazovia (CP-790)
 MS-DOS Cyrillic CIS 1 + E.(CP-808)
 MS-DOS Latin 1 (CP-850)
 MS-DOS Latin 2 (CP-852)
+MS-DOS Latin 3 (CP-853)
 MS-DOS Cyrillic (CP-855)
+MS-DOS Hebrew (CP-856)
 MS-DOS Turkish (CP-857)
 MS-DOS Latin 1 + Euro (CP-858)
 MS-DOS Portuguese (CP-860)
@@ -53,6 +55,7 @@ Japanese (Win-932)
 Simplified Chinese (Win-936)
 Korean (Win-949)
 Traditional Chinese (Win-950)
+Traditional Chinese HKSCS(Win-951)
 Central European (Win-1250)
 Cyrillic (Win-1251)
 Western European (Win-1252)
