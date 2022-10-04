@@ -39,3 +39,107 @@ COMPILATION
     As of now this project compiles from command-line (dcc32.exe - makefile included),
     compilation under IDE requires that source\auxiliary units are installed as Components.
     English translation 'under construction' ...
+
+
+SUPPORTED CODEPAGES
+-------------------
+
+    MS-DOS Latin US (CP-437)
+    Mazovia (CP-620)
+    MS-DOS Arabic ASMO (CP-708)
+    MS-DOS Arabic (CP-720)
+    MS-DOS Greek (CP-737)
+    MS-DOS Baltic Rim (CP-775)
+    FreeDOS Mazovia (CP-790)
+    MS-DOS Cyrillic CIS 1 + E.(CP-808)
+    MS-DOS Latin 1 (CP-850)
+    MS-DOS Latin 2 (CP-852)
+    MS-DOS Latin 3 (CP-853)
+    MS-DOS Cyrillic (CP-855)
+    MS-DOS Hebrew (CP-856)
+    MS-DOS Turkish (CP-857)
+    MS-DOS Latin 1 + Euro (CP-858)
+    MS-DOS Portuguese (CP-860)
+    MS-DOS Icelandic (CP-861)
+    MS-DOS Hebrew (CP-862)
+    MS-DOS French Canada (CP-863)
+    MS-DOS Arabic (CP-864)
+    MS-DOS Nordic (CP-865)
+    MS-DOS Cyrillic CIS 1 (CP-866)
+    MS-DOS Hebrew + Euro (CP-867)
+    MS-DOS Pakistan (CP-868)
+    MS-DOS Modern Greek (CP-869)
+    MS-DOS Cyrillic + Euro (CP-872)
+    Thai (Win-874)
+    Japanese (Win-932)
+    Simplified Chinese (Win-936)
+    Korean (Win-949)
+    Traditional Chinese (Win-950)
+    Traditional Chinese HKSCS(Win-951)
+    Central European (Win-1250)
+    Cyrillic (Win-1251)
+    Western European (Win-1252)
+    Greek (Win-1253)
+    Turkish (Win-1254)
+    Hebrew (Win-1255)
+    Arabic (Win-1256)
+    Baltic (Win-1257)
+    Vietnamese (Win-1258)
+    Bulgarian MIK (CP-3021)
+    Russian KOI8-R (Win-20866)
+    Ukrainian KOI8-U (Win-21866)
+    Latin 1 (ISO-8859-1)
+    Latin 2 (ISO-8859-2)
+    Latin 3 (ISO-8859-3)
+    Baltic (ISO-8859-4)
+    Cyrillic KOI8-E (ISO-8859-5)
+    Arabic (ISO-8859-6)
+    Greek (ISO-8859-7)
+    Hebrew (ISO-8859-8)
+    Turkish (ISO-8859-9)
+    Unicode (UTF-7)
+    Unicode (UTF-8)
+
+SUPPORTED EPSON ESCAPE CODES
+----------------------------
+
+    ASCII         DEC       Effect
+    ------------------------------
+    CR            13        Carriage Return
+    LF            10        (Line Feed) New Line
+    FF            12        Form Feed
+    BS            8         Backspace
+    SI            15 and
+    ESC SI        27 15     Select condensed mode (17/20 CPI) (if 10 or 12 CPI)
+    DC2           18        Cancel condensed mode (return to 10 or 12 CPI) (if 17 or 20 CPI)
+    ESC M         27 77     Select 12 CPI (or 20 if condensed)
+    ESC P         27 80     Select 10 CPI (or 17 if condensed)
+    ESC g         27 103    Select 15-pitch chars
+    SO            14 and
+    ESC SO        27 14     Select double-wide mode (one line)
+    DC4           20        Cancel double-wide mode (one line)
+    ESC W {0,1}   27 87 0,1 Turn double-wide mode Off/On
+    ESC @         27 64     Initialize printer
+    ESC 0         27 48     Select 1/8-inch line spacing
+    ESC 2         27 50     Select 1/6-inch line spacing
+    ESC 1         27 49     Select 7/72-inch line spacing
+    ESC E         27 69     Select bold mode
+    ESC F         27 70     Cancel bold mode 
+    ESC G         27 71     Select double-strike mode
+    ESC H         27 72     Cancel double-strike mode
+    ESC 4         27 52     Select italic mode
+    ESC 5         27 53     Cancel Italic mode
+    ESC S {0,1}   27 83 0,1 Select superscript/subscript mode
+    ESC T         27 84     Deselect superscript/subscript mode
+    ESC - {0,1}   27 45 0,1 Turn underline mode Off/On
+    ESC ! {n}     27 33 n   Master select
+    ESC $ {l} {h} 27 36 l h Set absolute horizontal print position
+
+FRM FILE FORMAT
+---------------
+
+Sample frm file: (parameters must be defined in second line) 
+>>>>>
+;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage 
+12 0 12,7 12,7 12,7 12,7 80 
+>>>>>

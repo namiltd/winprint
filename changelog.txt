@@ -1,0 +1,27 @@
+Changelog of WinPrint
+=====================
+
+WinPrint 1.5.0.57
+-----------------
+ - [ADD] Added code pages CP-853, CP-856 and Win-951 to supported ones
+
+WinPrint 1.5.0.56 nad below
+---------------------------
+
+ - [NEW] New version compiled via Turbo Delphi 2006 Explorer Edition.
+ - [NEW] Epson ESC/P 2 code implementation.
+ - [NEW] Implemented codepage conversion
+ - [NEW] Implemented characters transcoding (for example: 10=>13 converts the line endings in a text file from UNIX to DOS format)
+ - [NEW] Implemented skip empty page option 
+ - [NEW] Ability to print BMP logos (with DPI detection)
+ - [NEW] English, Polish and Czech interface
+ - [NEW] Configuration stored in ini file
+ - [NEW] Multiple runnings (if winprint.exe renamed)
+ - [NEW] Printer selection
+ - [NEW] Number of copies
+ - [NEW] Implemented PageEnd codes
+ - [NEW] Subscript/superscript codes
+ - [NEW] Implemented CR (#13), LF (#10) and BKSP (#8) codes
+ - [NEW] Direct port capturing (Windows XP or above)
+ - [NEW] Paraller port info (for example: winprint.exe /LPT1) (Windows XP or above)
+ - [NEW] Ability to disable bold and italic fonts (SpecialSettings)
