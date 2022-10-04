@@ -100,6 +100,7 @@ SUPPORTED CODEPAGES
     Unicode (UTF-7)
     Unicode (UTF-8)
 
+
 SUPPORTED EPSON ESCAPE CODES
 ----------------------------
 
@@ -134,6 +135,7 @@ SUPPORTED EPSON ESCAPE CODES
     ESC - {0,1}   27 45 0,1 Turn underline mode Off/On
     ESC ! {n}     27 33 n   Master select
     ESC $ {l} {h} 27 36 l h Set absolute horizontal print position
+
 
 FRM FILE FORMAT
 ---------------
