@@ -82,7 +82,7 @@ toPAS(864);
 toPAS(865);
 toPAS(866);
 toPAS(867);
-toPAS(868);
+//toPAS(868); different than ibm868
 toPAS(869);
 toPAS(872);
 toPAS(874);
