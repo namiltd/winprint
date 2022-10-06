@@ -152,7 +152,7 @@
 			<VersionInfo Name="Release">0</VersionInfo>
 			<VersionInfo Name="Build">57</VersionInfo>
 			<VersionInfo Name="Debug">False</VersionInfo>
-			<VersionInfo Name="PreRelease">True</VersionInfo>
+			<VersionInfo Name="PreRelease">False</VersionInfo>
 			<VersionInfo Name="Special">False</VersionInfo>
 			<VersionInfo Name="Private">False</VersionInfo>
 			<VersionInfo Name="DLL">False</VersionInfo>
