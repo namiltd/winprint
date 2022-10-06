@@ -63,6 +63,7 @@ type
     SkipEmptyPages: boolean;
     ClipperCompatible: boolean;
     CodePage: TCodePage;
+    UseOwnNLSConversion: boolean; //only to convert when NLS is missing, not saved
     UseCustomConversionTable: boolean;
     ConversionItems: TConversionItems;
     Logo: string;
@@ -1007,6 +1008,12 @@ begin
     SetPriorityClass(GetCurrentProcess,PriorityClassValues[Priority]);
     Button3.Enabled:=false; //Klawisz Zastosuj
   end;
+//---------------------------------------------------------------------
+  if MultiByteToWideCharMy(CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,0,'A',1,nil,0)>0 then
+    ConfigData.UseOwnNLSConversion := false
+  else if CodePageInfo[ConfigForm.ConfigData.CodePage].utf8<>nil then
+    ConfigData.UseOwnNLSConversion := true
+  else ConfigData.UseOwnNLSConversion := false;
 end;
 
 procedure TConfigForm.WriteConfig;
@@ -1146,7 +1153,7 @@ procedure TConfigForm.Button1Click(Sender: TObject);
 begin
   if Button3.Enabled=true then begin
     WriteConfig;
-//    ReadConfig;
+//    ReadConfig; executed in TConfigForm.FormClose 
   end;  
   Close;
 end;

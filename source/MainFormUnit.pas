@@ -390,6 +390,8 @@ var
   ImageSize : Cardinal;
   Info : PBitmapInfo;
   InfoSize : Cardinal;
+  SrcCodePage : TCodePage;
+  OwnNLSCodePage :TCodePage;
 
   Header : Record
     FileHeader : tBitmapFileHeader;
@@ -405,6 +407,15 @@ var
 
 begin
   result:=true;
+
+  if ConfigForm.ConfigData.UseOwnNLSConversion then begin //if no NLS
+     OwnNLSCodePage := ConfigForm.ConfigData.CodePage;
+     SrcCodePage := cp65001;
+  end else begin
+     OwnNLSCodePage := cp65001; //for cp65001 there is no conversion
+     SrcCodePage := ConfigForm.ConfigData.CodePage;
+  end;
+
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
      
@@ -446,7 +457,7 @@ begin
 
     StringList:=TStringList.Create;
     try
-      ReadANDConvert(ConfigForm.ConfigData.CodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
+      ReadANDConvert(OwnNLSCodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
       TempFont:=TFont.Create;
       try
         TempConfigData:=ConfigForm.ConfigData;
@@ -548,7 +559,7 @@ begin
             //procedure drukujaca StringList
             PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
                        StringList,
-                       CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,
+                       CodePageInfo[SrcCodePage].CpNr,
                        TempConfigData.PrinterId,
                        cMILTOINCH*TempConfigData.MarginLeft,
                        cMILTOINCH*TempConfigData.MarginRight,

@@ -1805,11 +1805,11 @@ const
 
 (*   Function TXlat(Var Source: String; Var Table: String):String; *)
 
-   procedure ReadANDConvert(CodePage: TCodePage;  //CodePage index
-                            FileName: string;     //input file
-                              var SL: TStringList;//output strings
-            UseCustomConversionTable: boolean;
-                     ConversionItems: TConversionItems);
+   procedure ReadANDConvert(OwnNLSCodePage: TCodePage; //CodePage index
+                                   FileName: string;     //input file
+                                     var SL: TStringList;//output strings
+                   UseCustomConversionTable: boolean;
+                            ConversionItems: TConversionItems);
 
    function RString(ID: WORD):string;
 
@@ -1981,10 +1981,9 @@ var
   last0,last1,last2,last3,last4,last5,last6: char;
 begin
   for i:=0 to 255 do XLATTable[char(i)]:=char(i);
-  if (CodePageInfo[CodePage].CpNr=65001)
-        and (CodePageInfo[CodePage].UTF8<>nil)then begin
+  if (OwnNLSCodePage<>cp65001) and (CodePageInfo[OwnNLSCodePage].UTF8<>nil) then begin
      for i:=0 to 127 do UTF8Table[char(i)]:=char(i);
-     for i:=128 to 255 do UTF8Table[char(i)]:=CodePageInfo[CodePage].UTF8^[i];
+     for i:=128 to 255 do UTF8Table[char(i)]:=CodePageInfo[OwnNLSCodePage].UTF8^[i];
   end;
   XLAT10:=#10;
   if UseCustomConversionTable then begin
@@ -2015,8 +2014,7 @@ begin
       while (FS.Position<FS.Size) do
       begin
         Count:=FS.Read(Buffer[1],1024);
-        if (CodePageInfo[CodePage].CpNr=65001)
-        and (CodePageInfo[CodePage].UTF8<>nil)then begin
+        if (OwnNLSCodePage<>cp65001) and (CodePageInfo[OwnNLSCodePage].UTF8<>nil) then begin
           for i:=1 to Count do begin
               last6:=last5;
               last5:=last4;
