@@ -129,7 +129,7 @@ const
    (#$C3+#$AE),(#$C4+#$87),(#$C3+#$84),(#$C4+#$84),
    (#$C4+#$98),(#$C4+#$99),(#$C5+#$82),(#$C3+#$B4),
    (#$C3+#$B6),(#$C4+#$86),(#$C3+#$BB),(#$C3+#$B9),
-   (#$C5+#$9A),(#$C3+#$96),(#$C3+#$9C),(#$EF+#$BF+#$BD), // Code point $9B is "zloty" symbol (z&#0142;), which is not widely used and for which there is no Unicode equivalent.
+   (#$C5+#$9A),(#$C3+#$96),(#$C3+#$9C),(#$7A+#$08+#$7C), //z backspace | instead #$EF+#$BF+#$BD. Code point $9B is "zloty" symbol (z&#0142;), which is not widely used and for which there is no Unicode equivalent.
    (#$C5+#$81),(#$C2+#$A5),(#$C5+#$9B),(#$C6+#$92),
    (#$C5+#$B9),(#$C5+#$BB),(#$C3+#$B3),(#$C3+#$93),
    (#$C5+#$84),(#$C5+#$83),(#$C5+#$BA),(#$C5+#$BC),
