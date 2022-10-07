@@ -46,7 +46,7 @@ SUPPORTED CODEPAGES
 
     MS-DOS Latin US (CP-437)
     Freedos Mazovia (CP-620,CP-991)
-    PTS-DOS Mazovia (CP-667,CP-790)
+    S/DOS Mazovia (CP-667,CP-790)
     MS-DOS Arabic ASMO (CP-708)
     MS-DOS Arabic (CP-720)
     MS-DOS Greek (CP-737)
