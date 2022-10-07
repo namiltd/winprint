@@ -1761,7 +1761,7 @@ const
        end = (
               (name:'MS-DOS Latin US (CP-437)'; CpNr:437; utf8:@CP437toUTF8),
               (name:'Freedos Mazovia (CP-620,CP-991)'; CpNr:620; utf8:@CP620toUTF8),
-              (name:'PTS-DOS Mazovia (CP-667,CP-790)'; CpNr:667; utf8:@CP667toUTF8),
+              (name:'S/DOS Mazovia (CP-667,CP-790)'; CpNr:667; utf8:@CP667toUTF8),
               (name:'MS-DOS Arabic ASMO (CP-708)'; CpNr:708; utf8:@CP708toUTF8),
               (name:'MS-DOS Arabic (CP-720)'; CpNr:720; utf8:@CP720toUTF8),
               (name:'MS-DOS Greek (CP-737)'; CpNr:737; utf8:@CP737toUTF8),

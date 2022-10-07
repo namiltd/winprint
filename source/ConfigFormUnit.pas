@@ -541,6 +541,7 @@ var
   OldInputFilesDir: string;
   OldInputFilesMask: string;
   HandleToFile: THandle;
+  CPstring:string;
 begin
   with ConfigData do
   begin
@@ -591,7 +592,9 @@ begin
         StringToSet(ReadString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),EOPCodes)),TypeInfo(TCharCodes),EOPCodes);
         SkipEmptyPages:=ReadBool(section,'SkipEmptyPages',DEFAULT_SKIP_EMPTY_PAGES);
         ClipperCompatible:=ReadBool(section,'ClipperCompatible',DEFAULT_CLIPPER_COMPATIBLE);
-        CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)))));
+        CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
+        if CPstring='cp790' then CPstring:='cp667'; //old mazovia
+        CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
         if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
         UseCustomConversionTable:=ReadBool(section,'UseCustomConversionTable',DEFAULT_USE_CUSTOM_CONVERSION_TABLE);
         try
@@ -767,7 +770,9 @@ begin
               ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
             end;
             try
-              CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),ReadString('CodePage')));
+              CPstring:=ReadString('CodePage');
+              if CPstring='cp790' then CPstring:='cp667'; //old mazovia
+              CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
               if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
             except
               CodePage:=DEFAULT_CODE_PAGE;
