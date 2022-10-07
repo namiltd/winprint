@@ -45,12 +45,12 @@ SUPPORTED CODEPAGES
 -------------------
 
     MS-DOS Latin US (CP-437)
-    Mazovia (CP-620)
+    Freedos Mazovia (CP-620,CP-991)
+    PTS-DOS Mazovia (CP-667,CP-790)
     MS-DOS Arabic ASMO (CP-708)
     MS-DOS Arabic (CP-720)
     MS-DOS Greek (CP-737)
     MS-DOS Baltic Rim (CP-775)
-    FreeDOS Mazovia (CP-790)
     MS-DOS Cyrillic CIS 1 + Euro (CP-808)
     MS-DOS Latin 1 (CP-850)
     MS-DOS Latin 2 (CP-852)
