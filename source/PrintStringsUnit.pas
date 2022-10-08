@@ -175,7 +175,7 @@ var
   Y_resolution : Integer;     { vertical printer resolution, in dpi }
   lines        : TStrings;    { copy of srclines }
 
-  Device, Driver, Port: array[0..255] of Char; 
+  Device, Driver, Port: array[0..255] of Char;
   DevMode: THandle;
 
   { Calculate text output and header/footer rectangles. }
@@ -548,7 +548,7 @@ var
                        10: charheightco:=17;
                        12: charheightco:=20;
                      end;
-                64: begin //ESC @ reset ustawieñ
+                64: begin //ESC @ reset ustawien
                       charheightco:=10;
                       lineheightco:=6;
                       charstyleco:=[];
@@ -656,8 +656,8 @@ var
                    end;
                    Printer.Canvas.Font.size:=(aFont.Size * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)));
                    Printer.Canvas.Font.style:=aFont.style + charstyleco;
-                   // srodek - ((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 2) przesuwa w dó³ by byly w jednej linii
-                   // troche nizej (4*(charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 5) przesuwa w dó³ by byly w jednej linii
+                   // srodek - ((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 2) przesuwa w dol by byly w jednej linii
+                   // troche nizej (4*(charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (2+abs(1-sscriptco))))) div 5) przesuwa w dol by byly w jednej linii
 
                    if underline then begin
                      ExtTextOutW(Printer.Canvas.Handle,
@@ -675,8 +675,28 @@ var
                        1,
                        nil);
                    end;
-                   if integer(wstmp[1])<>32 then begin
-                     ExtTextOutW(Printer.Canvas.Handle,
+                   if integer(wstmp[1])=$20C1 then begin //Polish Zloty
+                       Printer.Canvas.Font.size:=((aFont.Size * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))) div 2;
+                       ExtTextOutW(Printer.Canvas.Handle,
+                       r.Left+tw,r.Top+((((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2))
+                       + (((charheight * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))) div 3),
+                       ETO_CLIPPED,
+                       @r,
+                       #$005A+#$0141,
+                       2,
+                       nil);
+                       if doustrike then Printer.Canvas.Font.size:=((aFont.Size * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))) div 2;
+                         ExtTextOutW(Printer.Canvas.Handle,
+                         r.Left+tw,1+r.Top+((((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2))
+                         + (((charheight * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))) div 3),
+                         ETO_CLIPPED,
+                         @r,
+                         #$005A+#$0141,
+                         2,
+                         nil);
+                       Printer.Canvas.Font.size:=(aFont.Size * (doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)));
+                   end else if integer(wstmp[1])<>32 then begin
+                       ExtTextOutW(Printer.Canvas.Handle,
                        r.Left+tw,r.Top+(((charheight-((charheight*(doublewidthco mod 128)) div ((charheightco*3) div (3-abs(1-sscriptco)))))*sscriptco) div 2),
                        ETO_CLIPPED,
                        @r,
@@ -741,13 +761,13 @@ begin
     pagecount     := 0;
     textstart     := 0;
 
-//   Printer.Refresh; //odœwie¿ zainstalowane drukarki
-//   Printer.PrinterIndex:=-1; //wybierz domyœln¹ drukarkê
+//   Printer.Refresh; //odswiez zainstalowane drukarki
+//   Printer.PrinterIndex:=-1; //wybierz domyslna drukarke
     Printer.PrinterIndex:= PrinterId;
-    Printer.GetPrinter(Device, Driver, Port, DevMode); //prze³aduj ustawienia drukarki by poprawnie wczytalo wielkoœæ strony itp
+    Printer.GetPrinter(Device, Driver, Port, DevMode); //przeladuj ustawienia drukarki by poprawnie wczytalo wielkosc strony itp
     Printer.SetPrinter(Device, Driver, Port, 0);
     Printer.Copies:= 1;
-    Printer.Title:=Title; //tytu³ dokumentu wyœwietlany w menad¿erze kolejki
+    Printer.Title:=Title; //tytul dokumentu wyswietlany w menadzerze kolejki
     Printer.Orientation:=orientation;
     Printer.BeginDoc;
     lines := TStringList.Create;
@@ -759,9 +779,9 @@ begin
         Printer.Canvas.Font.PixelsPerInch := Y_resolution;
       {$ENDIF }
       Printer.Canvas.Font := aFont;
-      Printer.Canvas.Brush.Style:=bsClear; //przeŸroczyste t³o czcionek
-      Printer.Canvas.Font.style:=Printer.Canvas.Font.style+[fsBold]; //bold do testu wielkosci bo wy¿sze
-      charheight:=printer.canvas.TextHeight('Äy');
+      Printer.Canvas.Brush.Style:=bsClear; //przezroczyste tlo czcionek
+      Printer.Canvas.Font.style:=Printer.Canvas.Font.style+[fsBold]; //bold do testu wielkosci bo wyzsze
+      charheight:=printer.canvas.TextHeight('|');
       Printer.Canvas.Font.style:=Printer.Canvas.Font.style-[fsBold]; //normal
       charheightco:=10; //10/10=1
       lineheightco:=6; //6/6=1

@@ -170,7 +170,7 @@ begin
       PChar(RString(501)),
 
       MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_SYSTEMMODAL)=IDNO) then
-        Halt; //zakoñcz program
+        Halt; //zakoncz program
 //    Atom1:=GlobalAddAtom(PChar(CompanyName+' '+ProductName));
   end;
 end;
@@ -221,7 +221,7 @@ begin
 end;
 
 //////////////////////////////////////////////////////////////
-//Funkcje konwersji ró¿nych formatów reprezentacji daty/czasu
+//Funkcje konwersji roznych formatow reprezentacji daty/czasu
 
 function FileTimeToInt64(AFileTime : FILETIME) : Int64;
 var
@@ -268,7 +268,7 @@ var
   FNLength : integer;
 begin
   FNLength := Length(SearchRec.Name);
-  if (FNLength<1) or (SearchRec.Name[FNLength]='~') then //Nazwa tymczasowa lub archiwalna po b³êdzie
+  if (FNLength<1) or (SearchRec.Name[FNLength]='~') then //Nazwa tymczasowa lub archiwalna po bledzie
   begin
     result:=false;
     exit;
@@ -290,7 +290,7 @@ begin
     end;
   end else TestResult := false;
 
-  //10*1000*1000 = 1 sekunda wyra¿ona w setkach nanosekund
+  //10*1000*1000 = 1 sekunda wyrazona w setkach nanosekund
   with SearchRec.FindData do
       result:=TestResult and ((SystemTimeToInt64(NowSystemTime)-Int64(ConfigForm.ConfigData.MinFileAge)*10*1000)>max(FileTimeToInt64(ftCreationTime),FileTimeToInt64(ftLastWriteTime))) and
             ((dwFileAttributes and FILE_ATTRIBUTE_READONLY)=0);
@@ -322,7 +322,7 @@ begin
   try
     ConfigData.FontSize:=StrToInt(trim(LeftString));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -330,7 +330,7 @@ begin
   try
     ConfigData.Orientation:=TPrinterOrientation(StrToInt(trim(LeftString)));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -338,7 +338,7 @@ begin
   try
     ConfigData.MarginLeft:=StrToFloat(trim(LeftString));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -346,7 +346,7 @@ begin
   try
     ConfigData.MarginRight:=StrToFloat(trim(LeftString));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -354,7 +354,7 @@ begin
   try
     ConfigData.MarginTop:=StrToFloat(trim(LeftString));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -362,7 +362,7 @@ begin
   try
     ConfigData.MarginBottom:=StrToFloat(trim(LeftString));
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 
   SplitLeft(TempLine,' ',LeftString,TempLine);
@@ -371,7 +371,7 @@ begin
     ConfigData.LinesPerPage:=StrToInt(trim(LeftString));
     ConfigData.LinesPerInch:=0;
   except
-    on EConvertError do; //odrzuc wyj¹tki konwersji
+    on EConvertError do; //odrzuc wyjatki konwersji
   end;
 end;
 
@@ -428,9 +428,9 @@ begin
         TmpFileName:=ChangeFileExt(InputFileName,'.tmp~');
     end;
     if FileExists(TmpFileName) then DeleteFile(TmpFileName);
-    if not RenameFile(InputFileName,TmpFileName) then //próbuj zmienic rozszerzenie na .tmp~
+    if not RenameFile(InputFileName,TmpFileName) then //probuj zmienic rozszerzenie na .tmp~
     begin
-        //krytyczny b³¹d podczas zmiany nazwy pliku wydruku na tymczasow¹ - zakoñcz aplikacje
+        //krytyczny blad podczas zmiany nazwy pliku wydruku na tymczasowa - zakoncz aplikacje
         //MustExit:=true;
         //raise EInOutError.Create(RString(505));
         result:=false;
@@ -445,7 +445,7 @@ begin
             HandleToFile:=CreateFile(PChar(InputFileName), GENERIC_WRITE, 0, NIL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
             if HandleToFile = INVALID_HANDLE_VALUE then
             begin
-                //krytyczny b³¹d podczas tworzenia pliku spoolera - zakoñcz aplikacje
+                //krytyczny blad podczas tworzenia pliku spoolera - zakoncz aplikacje
                 MustExit:=true;
                 raise EInOutError.Create(RString(506)); 
             end
@@ -580,18 +580,18 @@ begin
                        false,
                        nil,nil);
           except
-            //wyj¹tek podczas drukowania plik nie wydrukowany
-            //zmieñ rozszerzenie na .bad~ lub jesli nie chce zmienic skasuj plik
+            //wyjatek podczas drukowania plik nie wydrukowany
+            //zmien rozszerzenie na .bad~ lub jesli nie chce zmienic skasuj plik
             BadFileName:=ChangeFileExt(InputFileName,'.bad~');
             if FileExists(BadFileName) then DeleteFile(BadFileName);
-            if not RenameFile(InputFileName,BadFileName) then //najpierw próbuj zmienic rozszerzenie na .bad~
+            if not RenameFile(InputFileName,BadFileName) then //najpierw probuj zmienic rozszerzenie na .bad~
             if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //na koniec probuj skasowac plik
             begin
-              //krytyczny b³¹d podczas archiwizowania b³êdnego pliku wydruku - zakoñcz aplikacje
+              //krytyczny blad podczas archiwizowania blednego pliku wydruku - zakoncz aplikacje
               MustExit:=true;
               raise EInOutError.Create(RString(502));
             end;
-            //re-raise inne wyj¹tki powstale przy wydruku
+            //re-raise inne wyjatki powstale przy wydruku
             raise;
             break;
           end;
@@ -605,19 +605,19 @@ begin
         end;
         Bitmap.free;
 
-        if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //plik zosta³ wydrukowany pomyœlnie - probuj skasowac plik
+        if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //plik zostal wydrukowany pomyslnie - probuj skasowac plik
         begin
-            //krytyczny b³¹d podczas usuwania pliku z kolejki - zakoñcz aplikacje
+            //krytyczny blad podczas usuwania pliku z kolejki - zakoncz aplikacje
             MustExit:=true;
             raise EInOutError.Create(RString(503));
         end;
 
-        //jezeli w³¹czono formatowanie próbuj usun¹æ plik formatuj¹cy
+        //jezeli wlaczono formatowanie probuj usunac plik formatujacy
         if ConfigForm.ConfigData.EnableFormatting then
         if FileExists(FormatFileName) then
         if not DeleteFile(FormatFileName) then
         begin
-            //krytyczny b³¹d podczas usuwania pliku formatuj¹cego z kolejki - zakoñcz aplikacje
+            //krytyczny blad podczas usuwania pliku formatujacego z kolejki - zakoncz aplikacje
             MustExit:=true;
             raise EInOutError.Create(RString(504));
         end;

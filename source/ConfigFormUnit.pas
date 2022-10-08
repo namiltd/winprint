@@ -452,7 +452,7 @@ begin
   combobox2.Items.Add(RString(163));
   combobox2.ItemIndex:=0;
 
-  Printer.Refresh; //odœwie¿ zainstalowane drukarki
+  Printer.Refresh; //odswiez zainstalowane drukarki
   if Printer.Printers.Count>0 then
     for i:=0 to Printer.Printers.Count - 1 do
       combobox2.Items.Add(printer.Printers.Strings[i]);
@@ -996,7 +996,7 @@ begin
                 HandleToFile:=CreateFile(PChar(InputFilesDir+InputFilesMask+'spl.tmp'), GENERIC_WRITE, 0, NIL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
                 if HandleToFile = INVALID_HANDLE_VALUE then
                 begin
-                    //krytyczny b³¹d podczas tworzenia pliku spoolera - zakoñcz aplikacje
+                    //krytyczny blad podczas tworzenia pliku spoolera - zakoncz aplikacje
                     raise EInOutError.Create(RString(507)); 
                 end
                 else CloseHandle(HandleToFile);
@@ -1143,7 +1143,7 @@ begin
    if Button3.Enabled=true then ReadConfig;
 end;
 
-//Klawisz jêzyka
+//Klawisz jezyka
 procedure TConfigForm.Button11Click(Sender: TObject);
 begin
   if LANG=60000 then LANG:=61000
@@ -1177,7 +1177,7 @@ begin
   ReadConfig;
 end;
 
-//Klawisz Wybierz czcionkê
+//Klawisz Wybierz czcionke
 procedure TConfigForm.Button4Click(Sender: TObject);
 begin
   with MainForm do
@@ -1200,7 +1200,7 @@ begin
   end;
 end;
 
-//Karta Opcje u¿ytkowe - Klawisz domyœlne
+//Karta Opcje uzytkowe - Klawisz domyslne
 procedure TConfigForm.Button5Click(Sender: TObject);
 begin
   Edit1.Text:=DEFAULT_INPUT_FILES_DIR;
@@ -1214,7 +1214,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Karta Ustawienia strony - Klawisz domyœlne
+//Karta Ustawienia strony - Klawisz domyslne
 procedure TConfigForm.Button6Click(Sender: TObject);
 begin
   Memo1.Font.Name:=DEFAULT_FONT_NAME;
@@ -1240,7 +1240,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Karta Format danych - Klawisz domyœlne
+//Karta Format danych - Klawisz domyslne
 procedure TConfigForm.Button7Click(Sender: TObject);
 var
   TempSet: TCharCodes;
@@ -1254,7 +1254,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Karta Inne - Klawisz domyœlne
+//Karta Inne - Klawisz domyslne
 procedure TConfigForm.Button10Click(Sender: TObject);
 begin
   Edit8.Text:=DEFAULT_LOGO;
@@ -1275,7 +1275,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Zmiana Iloœci linii na cal
+//Zmiana Ilosci linii na cal
 procedure TConfigForm.FloatEdit5Change(Sender: TObject);
 begin
   if IgnoreOnChange then exit;
@@ -1290,7 +1290,7 @@ begin
   end;
 end;
 
-//Zmiana Iloœci linii na stronê
+//Zmiana Ilosci linii na strone
 procedure TConfigForm.IntEdit1Change(Sender: TObject);
 begin
   if IgnoreOnChange then exit;
@@ -1313,7 +1313,7 @@ begin
   IntEdit1.Value:=DEFAULT_LINES_PER_PAGE;
 end;
 
-//w³¹cz formatowanie
+//wlacz formatowanie
 procedure TConfigForm.CheckBox2Click(Sender: TObject);
 begin
   if CheckBox2.Checked then
@@ -1329,7 +1329,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//w³¹cz dodatkowe przekodowywanie
+//wlacz dodatkowe przekodowywanie
 procedure TConfigForm.CheckBox4Click(Sender: TObject);
 begin
   if CheckBox4.Checked then
@@ -1369,7 +1369,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Dodaj pozycjê dodatkowego przekodowania
+//Dodaj pozycje dodatkowego przekodowania
 procedure TConfigForm.SpeedButton2Click(Sender: TObject);
 var
   TempItem: TConversionItem;
@@ -1389,7 +1389,7 @@ begin
   ConfigChanged(Sender);
 end;
 
-//Usuñ pozycjê dodatkowego przekodowania
+//Usun pozycje dodatkowego przekodowania
 procedure TConfigForm.SpeedButton3Click(Sender: TObject);
 begin
   with ListBox1 do
@@ -1449,7 +1449,7 @@ begin
     Application.CancelHint;
 end;
 
-//Zapisz tabelê konwersji
+//Zapisz tabele konwersji
 procedure TConfigForm.Button8Click(Sender: TObject);
 var
   FileStream: TFileStream;
@@ -1466,7 +1466,7 @@ begin
   end;
 end;
 
-//Wczytaj tabelê konwersji
+//Wczytaj tabele konwersji
 procedure TConfigForm.Button9Click(Sender: TObject);
 var
   FileStream: TFileStream;
