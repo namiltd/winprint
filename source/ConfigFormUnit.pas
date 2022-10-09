@@ -593,7 +593,7 @@ begin
         SkipEmptyPages:=ReadBool(section,'SkipEmptyPages',DEFAULT_SKIP_EMPTY_PAGES);
         ClipperCompatible:=ReadBool(section,'ClipperCompatible',DEFAULT_CLIPPER_COMPATIBLE);
         CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
-        if CPstring='cp790' then CPstring:='cp667'; //Mazovia aliases
+        if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
         else if CPstring='cp991' then CPstring:='cp620';
         CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
         if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
