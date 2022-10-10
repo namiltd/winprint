@@ -3,7 +3,7 @@ Changelog of WinPrint
 
 WinPrint 1.5.0.58
 -----------------
- - [ADD] Added code pages Mac-10000, Mac-10001, Mac-10002, Mac-10003, Mac-10004, Mac-10005, Mac-10006, Mac-10007, Mac-10008, Mac-10010, Mac-10017, Mac-10021, Mac-10029, Mac-10079, Mac-10081, Mac-10082 and CP-859 to supported ones
+ - [ADD] Added code pages CP-859, Mac-10000, Mac-10001, Mac-10002, Mac-10003, Mac-10004, Mac-10005, Mac-10006, Mac-10007, Mac-10008, Mac-10010, Mac-10017, Mac-10021, Mac-10029, Mac-10079, Mac-10081 and Mac-10082 to supported ones
 
 WinPrint 1.5.0.57
 -----------------
