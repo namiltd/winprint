@@ -270,7 +270,7 @@ var
 
   { Print a page with headers and footers. }
   procedure PrintPage;
-   var
+  var
       y: Integer;
       r: TRect;
       do_break: boolean;
@@ -312,8 +312,8 @@ var
       FireHeaderFooterEvent( OnPrintFooter, footerrect );
     end;
 
-     procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer; const X_resolution,Y_resolution: integer);
-     begin
+    procedure DoLogo(const Info: PBitmapInfo; const Image: TmemoryStream; const ll,tl:integer; const X_resolution,Y_resolution: integer);
+    begin
      if (Image<>nil) and (Info<>nil) then begin
        try
 //          Printer.Canvas.Draw(ll, tl, Bitmap);
@@ -376,7 +376,7 @@ var
           end;
     end;
 
-    begin
+  begin
       ep:= true;
              { Figure textrect in paper coordinates }
       if not SkipEmptyPages then begin
@@ -752,7 +752,7 @@ var
         inc(y,(lineheight * 6) div lineheightco);
       end;
       if not ep then DoFooter;
-    end;
+  end;
 
 begin
   if srclines.Count>0 then begin
