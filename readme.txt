@@ -50,7 +50,11 @@ EXECUTION
 
 SUPPORTED CODEPAGES
 -------------------
-
+    Polish Combined ASCII
+    Polish Microvex
+    Polish CSK
+    Polish Cyfromat
+    Polish DHN
     MS-DOS Latin US (CP-437)
     Freedos Mazovia (CP-620,CP-991)
     S/DOS Mazovia (CP-667,CP-790)
