@@ -1016,11 +1016,8 @@ begin
     Button3.Enabled:=false; //Klawisz Zastosuj
   end;
 //---------------------------------------------------------------------
-  if MultiByteToWideCharMy(CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,0,'A',1,nil,0)>0 then
-    ConfigData.UseOwnNLSConversion := false
-  else if CodePageInfo[ConfigForm.ConfigData.CodePage].utf8<>nil then
-    ConfigData.UseOwnNLSConversion := true
-  else ConfigData.UseOwnNLSConversion := false;
+  if (CodePageInfo[ConfigForm.ConfigData.CodePage].utf8=nil) or (MultiByteToWideCharMy(CodePageInfo[ConfigForm.ConfigData.CodePage].CpNr,0,'A',1,nil,0)>0) then ConfigData.UseOwnNLSConversion := false
+  else ConfigData.UseOwnNLSConversion := true;
 end;
 
 procedure TConfigForm.WriteConfig;
