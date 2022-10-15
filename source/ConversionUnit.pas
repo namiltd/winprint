@@ -45,7 +45,7 @@
 
 
 type
-  TCodePage = (cp437,cp620,cp667,cp708,cp737,cp775,cp790,cp808,cp850,cp852,cp853,cp855,cp856,cp857,cp858,cp859,cp860,cp861,cp862,cp863,cp864,cp865,cp866,cp867,cp868,cp869,cp872,
+  TCodePage = (cp437,cp620,cp667,cp708,cp720,cp737,cp775,cp808,cp850,cp852,cp853,cp855,cp856,cp857,cp858,cp859,cp860,cp861,cp862,cp863,cp864,cp865,cp866,cp867,cp868,cp869,cp872,
                cp874,cp932,cp936,cp949,cp950,cp951,
                cp1250,cp1251,cp1252,cp1253,cp1254,cp1255,cp1256,cp1257,cp1258,
                cp3021,
