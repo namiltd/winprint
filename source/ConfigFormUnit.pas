@@ -490,7 +490,7 @@ begin
            FS:=FileSize(TempFile);
            CloseFile(TempFile);
            if FS=0 then DeleteFile(ConfigData.InputFilesDir+ConfigData.InputFilesMask+'spl.tmp');
-        except;
+        except
         end;
   end;
 end;
@@ -532,7 +532,7 @@ procedure TConfigForm.ReadConfig;
 var
   TempFile: File;
   FS: Cardinal;
-  Registry: TRegistry;
+  Registry,RegistryCP: TRegistry;
   IniFile: TIniFile;
   i: integer;
   MemStream: TMemoryStream;
@@ -634,7 +634,7 @@ begin
     else
     begin
       //backward compatibility for older version with registry-based config
-      Registry:=TRegistry.Create;
+      Registry:=TRegistry.Create(KEY_READ);
       with Registry do
       try
         RootKey:=HKEY_LOCAL_MACHINE;
@@ -853,6 +853,23 @@ begin
             SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
             ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
             CodePage:=DEFAULT_CODE_PAGE;
+            RegistryCP:=TRegistry.Create(KEY_READ);
+            with RegistryCP do
+            try
+               RootKey:=HKEY_LOCAL_MACHINE;
+               try
+                  if OpenKey('SYSTEM\CurrentControlSet\Control\Nls\CodePage',false) then
+                  try
+                     CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+ReadString('OEMCP')));
+                     if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
+                  except
+                  end;
+               finally
+                  CloseKey;
+               end;
+            finally
+               RegistryCP.Free;
+            end;
             UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
             Logo:=DEFAULT_LOGO;
             LogoLeft:=DEFAULT_LOGO_LEFT;
@@ -986,7 +1003,7 @@ begin
                    FS:=FileSize(TempFile);
                    CloseFile(TempFile);
                    if FS=0 then DeleteFile(OldInputFilesDir+OldInputFilesMask+'spl.tmp');
-                except;
+                except
                 end;
         end;
         nazwa:=UpperCase(InputFilesMask);
