@@ -595,8 +595,10 @@ begin
         CPInteger:=ReadInteger(section,'CodePage',-1);
         if CPInteger>=0 then //new syntax CodePage=NR
             CPstring:='cp'+IntToStr(CPInteger)
-        else //old synstax CodePage=cpNR
+        else begin//old synstax CodePage=cpNR
             CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
+            if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE));
+        end;
         if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
         else if CPstring='cp991' then CPstring:='cp620';
         CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
@@ -776,7 +778,8 @@ begin
             end;
             try
               CPstring:=ReadString('CodePage');
-              if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
+              if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE))
+              else if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
               else if CPstring='cp991' then CPstring:='cp620';
               CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
               if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
