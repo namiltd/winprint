@@ -48,8 +48,11 @@ EXECUTION
     For Windows 95 and 98 it requires DCOM Fix and the unicows.dll library for Windows 95.
 
 
-SUPPORTED CODEPAGES                         CodePageNr
-------------------------------------------------------
+SUPPORTED CODEPAGES
+-------------------
+
+    CodePageInfo                           CodePageNr
+    -------------------------------------------------
     MS-DOS Latin US (CP-437)                437
     Freedos Mazovia (CP-620,CP-991)         620
     S/DOS Mazovia (CP-667,CP-790)           667
