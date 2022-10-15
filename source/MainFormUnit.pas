@@ -302,6 +302,7 @@ var
   TempFile: TextFile;
   TempLine,LeftString: string;
   TempCodePage: TCodePage;
+  CPstring:string;
 begin
   if not FileExists(FileName) then exit;
 
@@ -379,7 +380,10 @@ begin
   SplitLeft(TempLine,' ',LeftString,TempLine);
   if (LeftString<>'') then
   try
-    TempCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+trim(LeftString)));
+    CPstring:='cp'+trim(LeftString);
+    if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
+    else if CPstring='cp991' then CPstring:='cp620';
+    TempCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
     if (TempCodePage in [CodePageLow..CodePageHigh]) then ConfigData.CodePage:=TempCodePage;
   except
     on EConvertError do; //odrzuc wyjatki konwersji
