@@ -470,7 +470,8 @@ begin
     end;
 
     if ((CodePageInfo[TempConfigData.CodePage].utf8=nil) or
-        ((CodePageInfo[TempConfigData.CodePage].CpNr>=437) and (MultiByteToWideCharMy(CodePageInfo[TempConfigData.CodePage].CpNr,0,'A',1,nil,0)>0)))
+        (((CodePageInfo[TempConfigData.CodePage].CpNr<60000) or (CodePageInfo[TempConfigData.CodePage].CpNr>60099)) //outside user defined code pages
+        and (MultiByteToWideCharMy(CodePageInfo[TempConfigData.CodePage].CpNr,0,'A',1,nil,0)>0)))
     then begin
        OwnNLSCodePage := cp65001; //for cp65001 there is no conversion
        SrcCodePage := TempConfigData.CodePage;
