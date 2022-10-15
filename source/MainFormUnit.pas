@@ -392,6 +392,7 @@ var
   InfoSize : Cardinal;
   SrcCodePage : TCodePage;
   OwnNLSCodePage :TCodePage;
+  fattr : Integer;
 
   Header : Record
     FileHeader : tBitmapFileHeader;
@@ -614,12 +615,17 @@ begin
 
         //jezeli wlaczono formatowanie probuj usunac plik formatujacy
         if ConfigForm.ConfigData.EnableFormatting then
-        if FileExists(FormatFileName) then
-        if not DeleteFile(FormatFileName) then
-        begin
-            //krytyczny blad podczas usuwania pliku formatujacego z kolejki - zakoncz aplikacje
-            MustExit:=true;
-            raise EInOutError.Create(RString(504));
+        if FileExists(FormatFileName) then begin
+            {$WARN SYMBOL_PLATFORM OFF}
+            fattr:=FileGetAttr(FormatFileName);
+            if (fattr>0) and ((fattr and faReadOnly)=0) then fattr:=-1; //not readonly
+            {$WARN SYMBOL_PLATFORM ON}
+            if (fattr<0) and (not DeleteFile(FormatFileName)) then
+            begin
+                //krytyczny blad podczas usuwania pliku formatujacego z kolejki - zakoncz aplikacje
+                MustExit:=true;
+                raise EInOutError.Create(RString(504));
+            end;
         end;
 
       finally
