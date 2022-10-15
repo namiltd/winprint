@@ -540,7 +540,8 @@ var
   OldInputFilesDir: string;
   OldInputFilesMask: string;
   HandleToFile: THandle;
-  CPstring:string;
+  CPinteger: Integer;
+  CPstring: string;
 begin
   with ConfigData do
   begin
@@ -591,7 +592,11 @@ begin
         StringToSet(ReadString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),EOPCodes)),TypeInfo(TCharCodes),EOPCodes);
         SkipEmptyPages:=ReadBool(section,'SkipEmptyPages',DEFAULT_SKIP_EMPTY_PAGES);
         ClipperCompatible:=ReadBool(section,'ClipperCompatible',DEFAULT_CLIPPER_COMPATIBLE);
-        CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
+        CPInteger:=ReadInteger(section,'CodePage',-1);
+        if CPInteger>=0 then //new syntax CodePage=NR
+            CPstring:='cp'+IntToStr(CPInteger)
+        else //old synstax CodePage=cpNR
+            CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
         if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
         else if CPstring='cp991' then CPstring:='cp620';
         CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
@@ -1069,7 +1074,7 @@ begin
     StringToSet(Edit4.Text,TypeInfo(TCharCodes),TempSet); WriteString(section,'EOPCodes',SetToString(TypeInfo(TCharCodes),TempSet));
     WriteBool(section,'SkipEmptyPages',CheckBox3.Checked);
     WriteBool(section,'ClipperCompatible',CheckBox5.Checked);
-    WriteString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ComboBox1.ItemIndex));
+    WriteString(section,'CodePage',IntToStr(CodePageInfo[TCodePage(ComboBox1.ItemIndex)].CpNr));
     WriteBool(section,'UseCustomConversionTable',CheckBox4.Checked);
     ConfigData.ConversionItems.Assign(TempConversionItems);
     MemStream:=TMemoryStream.Create;
