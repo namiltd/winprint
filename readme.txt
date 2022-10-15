@@ -168,8 +168,13 @@ SUPPORTED EPSON ESCAPE CODES
 FRM FILE FORMAT
 ---------------
 
-Sample frm file: (parameters must be defined in second line) 
+Sample frm file: (parameters must be defined in second line)
 >>>>>
-;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage 
-12 0 12,7 12,7 12,7 12,7 80 
+;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage CodePageNr
+12 0 12,7 12,7 12,7 12,7 80 852
+>>>>>
+or
+>>>>>
+;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage CodePageNr
+* * * * * * * 852
 >>>>>

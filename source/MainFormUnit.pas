@@ -82,7 +82,8 @@ var
 implementation
 
 uses
-  ShellAPI, Math, PrintStringsUnit, Printers, MyStrings, ConversionUnit;
+  ShellAPI, Math, PrintStringsUnit, Printers, MyStrings, ConversionUnit,
+  SetString; //dla SetToString
 
 {$R *.DFM}
 
@@ -300,6 +301,7 @@ procedure TMainForm.ProcessFormatFile(FileName: string; var ConfigData: TConfigD
 var
   TempFile: TextFile;
   TempLine,LeftString: string;
+  TempCodePage: TCodePage;
 begin
   if not FileExists(FileName) then exit;
 
@@ -373,6 +375,15 @@ begin
   except
     on EConvertError do; //odrzuc wyjatki konwersji
   end;
+
+  SplitLeft(TempLine,' ',LeftString,TempLine);
+  if (LeftString<>'') then
+  try
+    TempCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+trim(LeftString)));
+    if (TempCodePage in [CodePageLow..CodePageHigh]) then ConfigData.CodePage:=TempCodePage;
+  except
+    on EConvertError do; //odrzuc wyjatki konwersji
+  end;
 end;
 
 function TMainForm.ProcessFile;
@@ -408,15 +419,6 @@ var
 
 begin
   result:=true;
-
-  if ConfigForm.ConfigData.UseOwnNLSConversion then begin //if no NLS
-     OwnNLSCodePage := ConfigForm.ConfigData.CodePage;
-     SrcCodePage := cp65001;
-  end else begin
-     OwnNLSCodePage := cp65001; //for cp65001 there is no conversion
-     SrcCodePage := ConfigForm.ConfigData.CodePage;
-  end;
-
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
      
@@ -455,22 +457,32 @@ begin
         InputFileName := TmpFileName;
     end;
  
+    TempConfigData:=ConfigForm.ConfigData;
+
+    if TempConfigData.EnableFormatting then
+    begin
+      FormatFileName:=ChangeFileExt(InputFileName,'.'+TempConfigData.FormatFileExtension);
+      ProcessFormatFile(FormatFileName,TempConfigData);
+    end;
+
+    if ((CodePageInfo[TempConfigData.CodePage].utf8=nil) or
+        ((CodePageInfo[TempConfigData.CodePage].CpNr>=437) and (MultiByteToWideCharMy(CodePageInfo[TempConfigData.CodePage].CpNr,0,'A',1,nil,0)>0)))
+    then begin
+       OwnNLSCodePage := cp65001; //for cp65001 there is no conversion
+       SrcCodePage := TempConfigData.CodePage;
+    end else begin //if no NLS
+       OwnNLSCodePage := TempConfigData.CodePage;
+       SrcCodePage := cp65001;
+    end;
 
     StringList:=TStringList.Create;
     try
-      ReadANDConvert(OwnNLSCodePage, InputFileName,StringList,ConfigForm.ConfigData.UseCustomConversionTable,ConfigForm.ConfigData.ConversionItems); //Reads from file and change CodePage
+      ReadANDConvert(OwnNLSCodePage, InputFileName,StringList,TempConfigData.UseCustomConversionTable,TempConfigData.ConversionItems); //Reads from file and change CodePage
       TempFont:=TFont.Create;
       try
-        TempConfigData:=ConfigForm.ConfigData;
 
-        if ConfigForm.ConfigData.ClipperCompatible and (StringList.Count>0) and ((length(StringList.Strings[0])=0) or ((length(StringList.Strings[0])=1)and(StringList.Strings[0][1]=#13)))  then
+        if TempConfigData.ClipperCompatible and (StringList.Count>0) and ((length(StringList.Strings[0])=0) or ((length(StringList.Strings[0])=1)and(StringList.Strings[0][1]=#13)))  then
           StringList.Delete(0);
-
-        if ConfigForm.ConfigData.EnableFormatting then
-        begin
-          FormatFileName:=ChangeFileExt(InputFileName,'.'+ConfigForm.ConfigData.FormatFileExtension);
-          ProcessFormatFile(FormatFileName,TempConfigData);
-        end;
 
         TempFont.Name:=TempConfigData.FontName;
         TempFont.Charset:=TempConfigData.FontCharset;
@@ -586,7 +598,7 @@ begin
             BadFileName:=ChangeFileExt(InputFileName,'.bad~');
             if FileExists(BadFileName) then DeleteFile(BadFileName);
             if not RenameFile(InputFileName,BadFileName) then //najpierw probuj zmienic rozszerzenie na .bad~
-            if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //na koniec probuj skasowac plik
+            if (not TempConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //na koniec probuj skasowac plik
             begin
               //krytyczny blad podczas archiwizowania blednego pliku wydruku - zakoncz aplikacje
               MustExit:=true;
@@ -606,7 +618,7 @@ begin
         end;
         Bitmap.free;
 
-        if (not ConfigForm.ConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //plik zostal wydrukowany pomyslnie - probuj skasowac plik
+        if (not TempConfigData.KeepInputFiles) and (not DeleteFile(InputFileName)) then //plik zostal wydrukowany pomyslnie - probuj skasowac plik
         begin
             //krytyczny blad podczas usuwania pliku z kolejki - zakoncz aplikacje
             MustExit:=true;
@@ -614,7 +626,7 @@ begin
         end;
 
         //jezeli wlaczono formatowanie probuj usunac plik formatujacy
-        if ConfigForm.ConfigData.EnableFormatting then
+        if TempConfigData.EnableFormatting then
         if FileExists(FormatFileName) then begin
             {$WARN SYMBOL_PLATFORM OFF}
             fattr:=FileGetAttr(FormatFileName);

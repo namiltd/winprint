@@ -6,6 +6,7 @@ WinPrint 1.5.0.58
  - [ADD] Added code page CP-859 to supported ones
  - [ADD] Added Mac code pages 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10010, 10017, 10021, 10029, 10079, 10081 and 10082 to supported ones
  - [ADD] Added Polish code pages Combined ASCII, Microvex, CSK, Cyfromat and DHN to supported ones
+ - [ADD] Added CodePageNr to FRM file
 
 WinPrint 1.5.0.57
 -----------------
