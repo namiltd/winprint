@@ -237,7 +237,7 @@ const
   DEFAULT_AUTO_START = false;
   DEFAULT_FONT_NAME = 'Courier New';
   DEFAULT_FONT_SIZE = 12;
-  DEFAULT_FONT_CHARSET = 238; //Central Europe
+  DEFAULT_FONT_CHARSET = 238; //EASTEUROPE_CHARSET
   DEFAULT_FONT_STYLES = [];
   DEFAULT_MARGIN_LEFT = 12.7;
   DEFAULT_MARGIN_RIGHT = 12.7;
@@ -1617,13 +1617,13 @@ begin
                 OEMCPCodePage:=DEFAULT_CODE_PAGE;
                 OEMCPFontCharset:=DEFAULT_FONT_CHARSET;
             end 
-            else if StringCP='737' then OEMCPFontCharset:=161
-            else if StringCP='775' then OEMCPFontCharset:=186
-            else if StringCP='852' then OEMCPFontCharset:=238
-            else if StringCP='855' then OEMCPFontCharset:=204
-            else if StringCP='857' then OEMCPFontCharset:=162
-            else if StringCP='866' then OEMCPFontCharset:=204
-            else if StringCP='869' then OEMCPFontCharset:=161
+            else if StringCP='737' then OEMCPFontCharset:=161 //GREEK_CHARSET
+            else if StringCP='775' then OEMCPFontCharset:=186 //BALTIC_CHARSET
+            else if StringCP='852' then OEMCPFontCharset:=238 //EASTEUROPE_CHARSET
+            else if StringCP='855' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
+            else if StringCP='857' then OEMCPFontCharset:=162 //TURKISH_CHARSET
+            else if StringCP='866' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
+            else if StringCP='869' then OEMCPFontCharset:=161 //GREEK_CHARSET
             else OEMCPFontCharset:=0;
          except
          end;
