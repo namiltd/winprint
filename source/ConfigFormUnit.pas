@@ -237,7 +237,7 @@ const
   DEFAULT_AUTO_START = false;
   DEFAULT_FONT_NAME = 'Courier New';
   DEFAULT_FONT_SIZE = 12;
-  DEFAULT_FONT_CHARSET = 238; //Eastern Europe
+  DEFAULT_FONT_CHARSET = 238; //Central Europe
   DEFAULT_FONT_STYLES = [];
   DEFAULT_MARGIN_LEFT = 12.7;
   DEFAULT_MARGIN_RIGHT = 12.7;
@@ -272,7 +272,9 @@ const
 var
   PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string;
   RegistryCP: TRegistry;
+  StringCP: string;
   OEMCPCodePage: TCodePage;
+  OEMCPFontCharset: integer;
 
 procedure SaveCollectionToStream(Collection: TCollection; Stream: TStream);
 begin
@@ -573,7 +575,7 @@ begin
         if (FontName='') then FontName:=DEFAULT_FONT_NAME;
         FontSize:=ReadInteger(section,'FontSize',DEFAULT_FONT_SIZE);
         if (FontSize<=0) then FontSize:=DEFAULT_FONT_SIZE;
-        FontCharset:=ReadInteger(section,'FontCharset',DEFAULT_FONT_CHARSET);
+        FontCharset:=ReadInteger(section,'FontCharset',OEMCPFontCharset);
         FontStyles:=DEFAULT_FONT_STYLES;
         StringToSet(ReadString(section,'FontStyles',SetToString(TypeInfo(TFontStyles),FontStyles)),TypeInfo(TFontStyles),FontStyles);
         MarginLeft:=ReadFloat(section,'MarginLeft',DEFAULT_MARGIN_LEFT);
@@ -710,7 +712,7 @@ begin
             try
               FontCharset:=ReadInteger('FontCharset');
             except
-              FontCharset:=DEFAULT_FONT_CHARSET;
+              FontCharset:=OEMCPFontCharset;
             end;
             try
               StringToSet(ReadString('FontStyles'),TypeInfo(TFontStyles),FontStyles);
@@ -847,7 +849,7 @@ begin
             AutoStart:=DEFAULT_AUTO_START;
             FontName:=DEFAULT_FONT_NAME;
             FontSize:=DEFAULT_FONT_SIZE;
-            FontCharset:=DEFAULT_FONT_CHARSET;
+            FontCharset:=OEMCPFontCharset;
             FontStyles:=DEFAULT_FONT_STYLES;
             MarginLeft:=DEFAULT_MARGIN_LEFT;
             MarginRight:=DEFAULT_MARGIN_RIGHT;
@@ -1223,7 +1225,7 @@ procedure TConfigForm.Button6Click(Sender: TObject);
 begin
   Memo1.Font.Name:=DEFAULT_FONT_NAME;
   Memo1.Font.Size:=DEFAULT_FONT_SIZE;
-  Memo1.Font.Charset:=DEFAULT_FONT_CHARSET;
+  Memo1.Font.Charset:=OEMCPFontCharset;
   if Memo1.Font.Charset=238 then begin //East Europe
                                    Memo1.Lines.Strings[0]:=RString(50000);
                                    Memo1.Lines.Strings[1]:=RString(50001);
@@ -1609,8 +1611,20 @@ begin
       try
          if OpenKey('SYSTEM\CurrentControlSet\Control\Nls\CodePage',false) then
          try
-            OEMCPCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+ReadString('OEMCP')));
-            if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then OEMCPCodePage:=DEFAULT_CODE_PAGE;
+            StringCP:=ReadString('OEMCP');
+            OEMCPCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+StringCP));
+            if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then begin
+                OEMCPCodePage:=DEFAULT_CODE_PAGE;
+                OEMCPFontCharset:=DEFAULT_FONT_CHARSET;
+            end 
+            else if StringCP='737' then OEMCPFontCharset:=161
+            else if StringCP='775' then OEMCPFontCharset:=186
+            else if StringCP='852' then OEMCPFontCharset:=238
+            else if StringCP='855' then OEMCPFontCharset:=204
+            else if StringCP='857' then OEMCPFontCharset:=162
+            else if StringCP='866' then OEMCPFontCharset:=204
+            else if StringCP='869' then OEMCPFontCharset:=161
+            else OEMCPFontCharset:=0;
          except
          end;
       finally
