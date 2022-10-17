@@ -1615,13 +1615,17 @@ begin
             StringCP:=ReadString('OEMCP');
             OEMCPCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+StringCP));
             if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then OEMCPCodePage:=DEFAULT_CODE_PAGE
+            else if StringCP='720' then OEMCPFontCharset:=178 //ARABIC_CHARSET
             else if StringCP='737' then OEMCPFontCharset:=161 //GREEK_CHARSET
             else if StringCP='775' then OEMCPFontCharset:=186 //BALTIC_CHARSET
             else if StringCP='852' then OEMCPFontCharset:=238 //EASTEUROPE_CHARSET
             else if StringCP='855' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
             else if StringCP='857' then OEMCPFontCharset:=162 //TURKISH_CHARSET
+            else if StringCP='862' then OEMCPFontCharset:=177 //HEBREW_CHARSET
             else if StringCP='866' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
             else if StringCP='869' then OEMCPFontCharset:=161 //GREEK_CHARSET
+            else if StringCP='874' then OEMCPFontCharset:=222 //THAI_CHARSET
+            else if StringCP='1258' then OEMCPFontCharset:=163 //VIETNAMESE_CHARSET
             else OEMCPFontCharset:=0;
          except
          end;
