@@ -271,7 +271,8 @@ const
          REALTIME_PRIORITY_CLASS);
 var
   PriorityClassNames: array[MinPriorityClass..MaxPriorityClass] of string;
-
+  RegistryCP: TRegistry;
+  OEMCPCodePage: TCodePage;
 
 procedure SaveCollectionToStream(Collection: TCollection; Stream: TStream);
 begin
@@ -531,7 +532,7 @@ procedure TConfigForm.ReadConfig;
 var
   TempFile: File;
   FS: Cardinal;
-  Registry,RegistryCP: TRegistry;
+  Registry: TRegistry;
   IniFile: TIniFile;
   i: integer;
   MemStream: TMemoryStream;
@@ -596,13 +597,13 @@ begin
         if CPInteger>=0 then //new syntax CodePage=NR
             CPstring:='cp'+IntToStr(CPInteger)
         else begin//old synstax CodePage=cpNR
-            CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE)));
-            if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE));
+            CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage)));
+            if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage));
         end;
         if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
         else if CPstring='cp991' then CPstring:='cp620';
         CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
-        if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
+        if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=OEMCPCodePage;
         UseCustomConversionTable:=ReadBool(section,'UseCustomConversionTable',DEFAULT_USE_CUSTOM_CONVERSION_TABLE);
         try
           MemStream:=TMemoryStream.Create;
@@ -778,13 +779,13 @@ begin
             end;
             try
               CPstring:=ReadString('CodePage');
-              if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(DEFAULT_CODE_PAGE))
+              if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage))
               else if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
               else if CPstring='cp991' then CPstring:='cp620';
               CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
-              if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
+              if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=OEMCPCodePage;
             except
-              CodePage:=DEFAULT_CODE_PAGE;
+              CodePage:=OEMCPCodePage;
             end;
             try
               UseCustomConversionTable:=ReadBool('UseCustomConversionTable');
@@ -859,24 +860,7 @@ begin
             EOPCodes:=DEFAULT_EOP_CODES;
             SkipEmptyPages:=DEFAULT_SKIP_EMPTY_PAGES;
             ClipperCompatible:=DEFAULT_CLIPPER_COMPATIBLE;
-            CodePage:=DEFAULT_CODE_PAGE;
-            RegistryCP:=TRegistry.Create(KEY_READ);
-            with RegistryCP do
-            try
-               RootKey:=HKEY_LOCAL_MACHINE;
-               try
-                  if OpenKey('SYSTEM\CurrentControlSet\Control\Nls\CodePage',false) then
-                  try
-                     CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+ReadString('OEMCP')));
-                     if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=DEFAULT_CODE_PAGE;
-                  except
-                  end;
-               finally
-                  CloseKey;
-               end;
-            finally
-               RegistryCP.Free;
-            end;
+            CodePage:=OEMCPCodePage;
             UseCustomConversionTable:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
             Logo:=DEFAULT_LOGO;
             LogoLeft:=DEFAULT_LOGO_LEFT;
@@ -1269,7 +1253,7 @@ begin
   Edit4.Text:=SetToString(TypeInfo(TCharCodes),TempSet,',','','');
   CheckBox3.Checked:=DEFAULT_SKIP_EMPTY_PAGES;
   CheckBox5.Checked:=DEFAULT_CLIPPER_COMPATIBLE;
-  ComboBox1.ItemIndex:=ord(DEFAULT_CODE_PAGE);
+  ComboBox1.ItemIndex:=ord(OEMCPCodePage);
   CheckBox4.Checked:=DEFAULT_USE_CUSTOM_CONVERSION_TABLE;
   ConfigChanged(Sender);
 end;
@@ -1616,5 +1600,24 @@ begin
 
 end;
 
+begin
+   OEMCPCodePage:=DEFAULT_CODE_PAGE;
+   RegistryCP:=TRegistry.Create(KEY_READ);
+   with RegistryCP do
+   try
+      RootKey:=HKEY_LOCAL_MACHINE;
+      try
+         if OpenKey('SYSTEM\CurrentControlSet\Control\Nls\CodePage',false) then
+         try
+            OEMCPCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+ReadString('OEMCP')));
+            if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then OEMCPCodePage:=DEFAULT_CODE_PAGE;
+         except
+         end;
+      finally
+         CloseKey;
+      end;
+   finally
+     RegistryCP.Free;
+   end;
 end.
 
