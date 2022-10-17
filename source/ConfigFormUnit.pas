@@ -1604,6 +1604,7 @@ end;
 
 begin
    OEMCPCodePage:=DEFAULT_CODE_PAGE;
+   OEMCPFontCharset:=DEFAULT_FONT_CHARSET;
    RegistryCP:=TRegistry.Create(KEY_READ);
    with RegistryCP do
    try
@@ -1613,10 +1614,7 @@ begin
          try
             StringCP:=ReadString('OEMCP');
             OEMCPCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),'cp'+StringCP));
-            if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then begin
-                OEMCPCodePage:=DEFAULT_CODE_PAGE;
-                OEMCPFontCharset:=DEFAULT_FONT_CHARSET;
-            end 
+            if not (OEMCPCodePage in [CodePageLow..CodePageHigh]) then OEMCPCodePage:=DEFAULT_CODE_PAGE
             else if StringCP='737' then OEMCPFontCharset:=161 //GREEK_CHARSET
             else if StringCP='775' then OEMCPFontCharset:=186 //BALTIC_CHARSET
             else if StringCP='852' then OEMCPFontCharset:=238 //EASTEUROPE_CHARSET
