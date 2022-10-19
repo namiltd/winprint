@@ -19,6 +19,8 @@ int main(int argc, char **argv)
        cpinnew=866;
 //   } else if (cpin==858) {
 //       cpinnew=850;
+   } else if (cpin==859) {
+       cpinnew=850;
    } else if (cpin==867) {
        cpinnew=862;
    } else if (cpin==872) {
@@ -35,8 +37,16 @@ int main(int argc, char **argv)
        if (((cpin==808)&&(i==253))
             ||((cpin==872)&&(i==207))
             //||((cpin==858)&&(i==213))
-            ) {
-              chars_num = 3; strTo[0]=226; strTo[1]=130; strTo[2]=172;
+        ) { chars_num = 3; strTo[0]=226; strTo[1]=130; strTo[2]=172;
+        } else if ((cpin==859)&&(i==171)) { chars_num = 2; strTo[0]=197; strTo[1]=223;
+        } else if ((cpin==859)&&(i==172)) { chars_num = 2; strTo[0]=197; strTo[1]=222;
+        } else if ((cpin==859)&&(i==213)) { chars_num = 3; strTo[0]=226; strTo[1]=130; strTo[2]=172;
+        } else if ((cpin==859)&&(i==221)) { chars_num = 2; strTo[0]=197; strTo[1]=160;
+        } else if ((cpin==859)&&(i==239)) { chars_num = 2; strTo[0]=197; strTo[1]=189;
+        } else if ((cpin==859)&&(i==242)) { chars_num = 3; strTo[0]=239; strTo[1]=191; strTo[2]=189;
+        } else if ((cpin==859)&&(i==243)) { chars_num = 2; strTo[0]=197; strTo[1]=184;
+        } else if ((cpin==859)&&(i==247)) { chars_num = 2; strTo[0]=197; strTo[1]=190;
+        } else if ((cpin==859)&&(i==249)) { chars_num = 2; strTo[0]=197; strTo[1]=161;
         } else if ((cpin==867)&&(i==159)) { chars_num = 3; strTo[0]=226; strTo[1]=130; strTo[2]=170;
         } else if ((cpin==867)&&(i==160)) { chars_num = 3; strTo[0]=226; strTo[1]=128; strTo[2]=142;
         } else if ((cpin==867)&&(i==161)) { chars_num = 3; strTo[0]=226; strTo[1]=128; strTo[2]=143;

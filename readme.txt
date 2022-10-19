@@ -41,64 +41,95 @@ COMPILATION
     English translation 'under construction' ...
 
 
+EXECUTION
+---------
+
+    The program works on windows version 95 and higher and NT version 4.0 and higher.
+    For Windows 95 and 98 it requires DCOM Fix and the unicows.dll library for Windows 95.
+
+
 SUPPORTED CODEPAGES
 -------------------
 
-    MS-DOS Latin US (CP-437)
-    Mazovia (CP-620)
-    MS-DOS Arabic ASMO (CP-708)
-    MS-DOS Arabic (CP-720)
-    MS-DOS Greek (CP-737)
-    MS-DOS Baltic Rim (CP-775)
-    FreeDOS Mazovia (CP-790)
-    MS-DOS Cyrillic CIS 1 + E.(CP-808)
-    MS-DOS Latin 1 (CP-850)
-    MS-DOS Latin 2 (CP-852)
-    MS-DOS Latin 3 (CP-853)
-    MS-DOS Cyrillic (CP-855)
-    MS-DOS Hebrew (CP-856)
-    MS-DOS Turkish (CP-857)
-    MS-DOS Latin 1 + Euro (CP-858)
-    MS-DOS Portuguese (CP-860)
-    MS-DOS Icelandic (CP-861)
-    MS-DOS Hebrew (CP-862)
-    MS-DOS French Canada (CP-863)
-    MS-DOS Arabic (CP-864)
-    MS-DOS Nordic (CP-865)
-    MS-DOS Cyrillic CIS 1 (CP-866)
-    MS-DOS Hebrew + Euro (CP-867)
-    MS-DOS Pakistan (CP-868)
-    MS-DOS Modern Greek (CP-869)
-    MS-DOS Cyrillic + Euro (CP-872)
-    Thai (Win-874)
-    Japanese (Win-932)
-    Simplified Chinese (Win-936)
-    Korean (Win-949)
-    Traditional Chinese (Win-950)
-    Traditional Chinese HKSCS(Win-951)
-    Central European (Win-1250)
-    Cyrillic (Win-1251)
-    Western European (Win-1252)
-    Greek (Win-1253)
-    Turkish (Win-1254)
-    Hebrew (Win-1255)
-    Arabic (Win-1256)
-    Baltic (Win-1257)
-    Vietnamese (Win-1258)
-    Bulgarian MIK (CP-3021)
-    Russian KOI8-R (Win-20866)
-    Ukrainian KOI8-U (Win-21866)
-    Latin 1 (ISO-8859-1)
-    Latin 2 (ISO-8859-2)
-    Latin 3 (ISO-8859-3)
-    Baltic (ISO-8859-4)
-    Cyrillic KOI8-E (ISO-8859-5)
-    Arabic (ISO-8859-6)
-    Greek (ISO-8859-7)
-    Hebrew (ISO-8859-8)
-    Turkish (ISO-8859-9)
-    Unicode (UTF-7)
-    Unicode (UTF-8)
+    CodePageInfo                           CodePageNr
+    -------------------------------------------------
+    MS-DOS Latin US (CP-437)                437
+    Freedos Mazovia (CP-620,CP-991)         620
+    S/DOS Mazovia (CP-667,CP-790)           667
+    MS-DOS Arabic ASMO (CP-708)             708
+    MS-DOS Arabic (CP-720)                  720
+    MS-DOS Greek (CP-737)                   737
+    MS-DOS Baltic Rim (CP-775)              775
+    MS-DOS Cyrillic CIS 1 + Euro (CP-808)   808
+    MS-DOS Latin 1 (CP-850)                 850
+    MS-DOS Latin 2 (CP-852)                 852
+    MS-DOS Latin 3 (CP-853)                 853
+    MS-DOS Cyrillic (CP-855)                855
+    MS-DOS Hebrew (CP-856)                  856
+    MS-DOS Turkish (CP-857)                 857
+    MS-DOS Latin 1 + Euro (CP-858)          858
+    MS-DOS Latin 9 (CP-859)                 859
+    MS-DOS Portuguese (CP-860)              860
+    MS-DOS Icelandic (CP-861)               861
+    MS-DOS Hebrew (CP-862)                  862
+    MS-DOS French Canada (CP-863)           863
+    MS-DOS Arabic (CP-864)                  864
+    MS-DOS Nordic (CP-865)                  865
+    MS-DOS Cyrillic CIS 1 (CP-866)          866
+    MS-DOS Hebrew + Euro (CP-867)           867
+    MS-DOS Pakistan (CP-868)                868
+    MS-DOS Modern Greek (CP-869)            869
+    MS-DOS Cyrillic + Euro (CP-872)         872
+    Thai (Win-874)                          874
+    Japanese (Win-932)                      932
+    Simplified Chinese (Win-936)            936
+    Korean (Win-949)                        949
+    Traditional Chinese (Win-950)           950
+    Traditional Chinese HKSCS (Win-951)     951
+    Central European (Win-1250)             1250
+    Cyrillic (Win-1251)                     1251
+    Western European (Win-1252)             1252
+    Greek (Win-1253)                        1253
+    Turkish (Win-1254)                      1254
+    Hebrew (Win-1255)                       1255
+    Arabic (Win-1256)                       1256
+    Baltic (Win-1257)                       1257
+    Vietnamese (Win-1258)                   1258
+    Bulgarian MIK (CP-3021)                 3021
+    Apple Western European (Mac-10000)      10000
+    Apple Japanese (Mac-10001)              10001
+    Apple Traditional Chinese (Mac-10002)   10002
+    Apple Korean (Mac-10003)                10003
+    Apple Arabic (Mac-10004)                10004
+    Apple Hebrew (Mac-10005)                10005
+    Apple Greek (Mac-10006)                 10006
+    Apple Cyrillic (Mac-10007)              10007
+    Apple Simplified Chinese (Mac-10008)    10008
+    Apple Romanian (Mac-10010)              10010
+    Apple Ukrainian (Mac-10017)             10017
+    Apple Thai (Mac-10021)                  10021
+    Apple Central Europe (Mac-10029)        10029
+    Apple Icelandic (Mac-10079)             10079
+    Apple Turkish (Mac-10081)               10081
+    Apple Croatian (Mac-10082)              10082
+    Russian KOI8-R (Win-20866)              20866
+    Ukrainian KOI8-U (Win-21866)            21866
+    Latin 1 (ISO-8859-1)                    28591
+    Latin 2 (ISO-8859-2)                    28592
+    Latin 3 (ISO-8859-3)                    28593
+    Baltic (ISO-8859-4)                     28594
+    Cyrillic KOI8-E (ISO-8859-5)            28595
+    Arabic (ISO-8859-6)                     28596
+    Greek (ISO-8859-7)                      28597
+    Hebrew (ISO-8859-8)                     28598
+    Turkish (ISO-8859-9)                    28599
+    Polish Combined ASCII                   60000
+    Polish Microvex                         60001
+    Polish CSK                              60002
+    Polish Cyfromat                         60003
+    Polish DHN                              60004
+    Unicode (UTF-7)                         65000
+    Unicode (UTF-8)                         65001
 
 
 SUPPORTED EPSON ESCAPE CODES
@@ -140,8 +171,13 @@ SUPPORTED EPSON ESCAPE CODES
 FRM FILE FORMAT
 ---------------
 
-Sample frm file: (parameters must be defined in second line) 
+Sample frm file: (parameters must be defined in second line)
 >>>>>
-;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage 
-12 0 12,7 12,7 12,7 12,7 80 
+;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage CodePageNr
+12 0 12,7 12,7 12,7 12,7 80 852
+>>>>>
+or
+>>>>>
+;FRM File: FontSize Orientation MarginLeft MarginRight MarginTop MarginBottom LinesPerPage CodePageNr
+* * * * * * * 852
 >>>>>
