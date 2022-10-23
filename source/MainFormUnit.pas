@@ -673,14 +673,16 @@ begin
       if PortCapturing=1 then addtomask:='spl.tmp'
                          else addtomask:='';
       if FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0 then
-      if TestFile then
       begin
-        if ProcessFile then Processed:=true;
-      end;
-      while (not Processed) and (FindNext(SearchRec)=0) do
-      if TestFile then
-      begin
-        if ProcessFile then Processed:=true;
+        if TestFile then
+        begin
+          if ProcessFile then Processed:=true;
+        end;
+        while (not Processed) and (FindNext(SearchRec)=0) do
+        if TestFile then
+        begin
+          if ProcessFile then Processed:=true;
+        end;
       end;
     finally
       FindClose(SearchRec);
