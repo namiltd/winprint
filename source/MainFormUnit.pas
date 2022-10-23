@@ -661,18 +661,21 @@ end;
 procedure TMainForm.Timer1Timer(Sender: TObject);
 var
   Processed: boolean;
+  Finded: boolean;
   addtomask: string;
 begin
   Timer1.Enabled:=false;
   if not MustExit then
   try
+    Finded:=false;
     with ConfigForm.ConfigData do
     if (InputFilesDir<>'') and DirectoryExists(InputFilesDir) then
     try
       Processed:=false;
       if PortCapturing=1 then addtomask:='spl.tmp'
                          else addtomask:='';
-      if FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0 then
+      Finded:=(FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0);
+      if Finded then
       begin
         if TestFile then
         begin
@@ -685,7 +688,7 @@ begin
         end;
       end;
     finally
-      FindClose(SearchRec);
+      if Finded then FindClose(SearchRec);
     end;
   finally
     Timer1.Enabled:=true;
