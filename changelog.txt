@@ -1,6 +1,10 @@
 Changelog of WinPrint
 =====================
 
+WinPrint 1.5.0.59
+-----------------
+ - [ADD] Added code page CP-774 to supported ones
+
 WinPrint 1.5.0.58
 -----------------
  - [ADD] Added code page CP-859 to supported ones

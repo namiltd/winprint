@@ -602,8 +602,9 @@ begin
             CPstring:=ReadString(section,'CodePage',OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage)));
             if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage));
         end;
-        if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
-        else if CPstring='cp991' then CPstring:='cp620';
+        if CPstring='cp790' then CPstring:='cp667' //aliases
+        else if CPstring='cp991' then CPstring:='cp620'
+        else if CPstring='cp1118' then CPstring:='cp774';
         CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
         if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=OEMCPCodePage;
         UseCustomConversionTable:=ReadBool(section,'UseCustomConversionTable',DEFAULT_USE_CUSTOM_CONVERSION_TABLE);
@@ -782,8 +783,9 @@ begin
             try
               CPstring:=ReadString('CodePage');
               if CPstring='' then CPstring:=OrdToString(TypeInfo(TCodePage),ord(OEMCPCodePage))
-              else if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
-              else if CPstring='cp991' then CPstring:='cp620';
+              else if CPstring='cp790' then CPstring:='cp667' //aliases
+              else if CPstring='cp991' then CPstring:='cp620'
+              else if CPstring='cp1118' then CPstring:='cp774';
               CodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
               if not (CodePage in [CodePageLow..CodePageHigh]) then CodePage:=OEMCPCodePage;
             except

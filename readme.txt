@@ -59,6 +59,7 @@ SUPPORTED CODEPAGES
     MS-DOS Arabic ASMO (CP-708)             708
     MS-DOS Arabic (CP-720)                  720
     MS-DOS Greek (CP-737)                   737
+    MS-DOS Lithuanian (CP-774,CP-1118)      774
     MS-DOS Baltic Rim (CP-775)              775
     MS-DOS Cyrillic CIS 1 + Euro (CP-808)   808
     MS-DOS Latin 1 (CP-850)                 850

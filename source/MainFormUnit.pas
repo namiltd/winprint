@@ -381,8 +381,9 @@ begin
   if (LeftString<>'') then
   try
     CPstring:='cp'+trim(LeftString);
-    if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
-    else if CPstring='cp991' then CPstring:='cp620';
+    if CPstring='cp790' then CPstring:='cp667' //aliases
+    else if CPstring='cp991' then CPstring:='cp620'
+    else if CPstring='cp1118' then CPstring:='cp774';
     TempCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
     if (TempCodePage in [CodePageLow..CodePageHigh]) then ConfigData.CodePage:=TempCodePage;
   except
