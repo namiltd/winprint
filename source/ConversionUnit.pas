@@ -2379,7 +2379,7 @@ const
               (name:'MS-DOS Arabic ASMO (CP-708)'; CpNr:708; utf8:@CP708toUTF8),
               (name:'MS-DOS Arabic (CP-720)'; CpNr:720; utf8:@CP720toUTF8),
               (name:'MS-DOS Greek (CP-737)'; CpNr:737; utf8:@CP737toUTF8),
-              (name:'MS-DOS Lithua.(CP-774,CP-1118)'; CpNr:774; utf8:@CP774toUTF8),
+              (name:'Lithuanian (CP-774,CP-1118)'; CpNr:774; utf8:@CP774toUTF8),
               (name:'MS-DOS Baltic Rim (CP-775)'; CpNr:775; utf8:@CP775toUTF8),
               (name:'MS-DOS Cyrillic CIS 1 + E.(CP-808)'; CpNr:808; utf8:@CP808toUTF8),
               (name:'MS-DOS Latin 1 (CP-850)'; CpNr:850; utf8:@CP850toUTF8),
