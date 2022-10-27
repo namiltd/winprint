@@ -98,6 +98,8 @@ SUPPORTED CODEPAGES
     Baltic (Win-1257)                       1257
     Vietnamese (Win-1258)                   1258
     Bulgarian MIK (CP-3021)                 3021
+    Czech Kamenicky (CP-3844)               3844
+    Hungarian CWI-2 (CP-3845)               3845
     Apple Western European (Mac-10000)      10000
     Apple Japanese (Mac-10001)              10001
     Apple Traditional Chinese (Mac-10002)   10002
