@@ -63,8 +63,8 @@ SUPPORTED CODEPAGES
     MS-DOS Baltic Rim (CP-775)              775
     MS-DOS Cyrillic CIS 1 + Euro (CP-808)   808
     MS-DOS Latin 1 (CP-850)                 850
-    MS-DOS Latin 2 (CP-852)                 852
     MS-DOS Greek 1 (CP-851)                 851
+    MS-DOS Latin 2 (CP-852)                 852
     MS-DOS Latin 3 (CP-853)                 853
     MS-DOS Cyrillic (CP-855)                855
     MS-DOS Hebrew (CP-856)                  856
