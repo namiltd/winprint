@@ -294,7 +294,7 @@ begin
   //10*1000*1000 = 1 sekunda wyrazona w setkach nanosekund
   with SearchRec.FindData do
       result:=TestResult and ((SystemTimeToInt64(NowSystemTime)-Int64(ConfigForm.ConfigData.MinFileAge)*10*1000)>max(FileTimeToInt64(ftCreationTime),FileTimeToInt64(ftLastWriteTime))) and
-            ((dwFileAttributes and FILE_ATTRIBUTE_READONLY)=0);
+            ((dwFileAttributes and faReadOnly)=0);
 end;
 
 procedure TMainForm.ProcessFormatFile(FileName: string; var ConfigData: TConfigData);
