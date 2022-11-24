@@ -56,6 +56,7 @@ SUPPORTED CODEPAGES
     MS-DOS Latin US (CP-437)                437
     Polish Mazovia ZL (CP-620,CP-991)       620
     Polish Mazovia (CP-667,CP-790)          667
+    PTS-DOS Polish (CP-668)                 668
     MS-DOS Arabic ASMO (CP-708)             708
     MS-DOS Arabic (CP-720)                  720
     MS-DOS Greek (CP-737)                   737
