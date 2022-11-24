@@ -2595,7 +2595,7 @@ const
               (name:'Polish CSK'; CpNr:60002; utf8:@CP60002toUTF8),
               (name:'Polish Cyfromat'; CpNr:60003; utf8:@CP60003toUTF8),
               (name:'Polish DHN'; CpNr:60004; utf8:@CP60004toUTF8),
-              (name:'Polish Latin 2 compatible'; CpNr:60005; utf8:@CP60005toUTF8),
+              (name:'Polish MS-DOS Latin 2 compatible'; CpNr:60005; utf8:@CP60005toUTF8),
 
               (name:'Unicode (UTF-7)'; CpNr:65000; utf8:nil),
               (name:'Unicode (UTF-8)'; CpNr:65001; utf8:nil)

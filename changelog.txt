@@ -4,7 +4,7 @@ Changelog of WinPrint
 WinPrint 1.5.0.59
 -----------------
  - [ADD] Added code pages CP-774 and CP-851 to supported ones
- - [ADD] Added code pages Kamenicky, CWI-2 and Polish Latin 2 compatible to supported ones
+ - [ADD] Added code pages Kamenicky, CWI-2 and Polish MS-DOS Latin 2 compatible to supported ones
 
 WinPrint 1.5.0.58
 -----------------

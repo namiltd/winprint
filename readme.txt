@@ -132,7 +132,7 @@ SUPPORTED CODEPAGES
     Polish CSK                              60002
     Polish Cyfromat                         60003
     Polish DHN                              60004
-    Polish Latin 2 compatible               60005
+    Polish MS-DOS Latin 2 compatible        60005
     Unicode (UTF-7)                         65000
     Unicode (UTF-8)                         65001
 
