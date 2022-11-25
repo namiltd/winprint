@@ -56,7 +56,7 @@ SUPPORTED CODEPAGES
     MS-DOS Latin US (CP-437)                437
     Polish Mazovia ZL (CP-620,CP-991)       620
     Polish Mazovia (CP-667,CP-790)          667
-    PTS-DOS Polish (CP-668)                 668
+    Polish CP-852 compatible (CP-668)       668
     MS-DOS Arabic ASMO (CP-708)             708
     MS-DOS Arabic (CP-720)                  720
     MS-DOS Greek (CP-737)                   737
@@ -133,7 +133,6 @@ SUPPORTED CODEPAGES
     Polish CSK                              60002
     Polish Cyfromat                         60003
     Polish DHN                              60004
-    Polish MS-DOS Latin 2 compatible        60005
     Unicode (UTF-7)                         65000
     Unicode (UTF-8)                         65001
 
