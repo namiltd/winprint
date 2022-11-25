@@ -128,6 +128,12 @@ SUPPORTED CODEPAGES
     Greek (ISO-8859-7)                      28597
     Hebrew (ISO-8859-8)                     28598
     Turkish (ISO-8859-9)                    28599
+    Latin 6 (ISO-8859-10)                   28600
+    Thai (ISO-8859-11)                      28601
+    Estonian (ISO-8859-13)                  28603
+    Latin 8 (ISO-8859-14)                   28604
+    Latin 9 (ISO-8859-15)                   28605
+    Latin 10 (ISO-8859-16)                  28606
     Polish Combined ASCII                   60000
     Polish Microvex                         60001
     Polish CSK                              60002
