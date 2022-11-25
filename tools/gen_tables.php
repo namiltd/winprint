@@ -18,7 +18,7 @@ function toPAS($cp) {
                 $out=iconv('koi8-r','utf-8//IGNORE', chr($c));
             } elseif ($cp==21866) {
                 $out=iconv('koi8-u','utf-8//IGNORE', chr($c));
-            } elseif (($cp<28591)||($cp>28599)) {
+            } elseif (($cp<28591)||($cp>28606)) {
                 $out=iconv('cp'.$cp,'utf-8//IGNORE', chr($c));
             } else {
                 $out=iconv('ISO-8859-'.($cp-28590),'utf-8//IGNORE', chr($c));
@@ -107,3 +107,9 @@ toPAS(28596);
 toPAS(28597);
 toPAS(28598);
 toPAS(28599);
+toPAS(28600);
+toPAS(28601);
+toPAS(28603);
+toPAS(28604);
+toPAS(28605);
+toPAS(28606);
