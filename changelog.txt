@@ -1,6 +1,12 @@
 Changelog of WinPrint
 =====================
 
+WinPrint 1.5.0.59
+-----------------
+ - [ADD] Added code pages CP-668, CP-774 and CP-851 to supported ones
+ - [ADD] Added code pages Kamenicky and CWI-2 to supported ones
+ - [ADD] Added code pages ISO-8859-10 to ISO-8859-16 to supported ones
+
 WinPrint 1.5.0.58
 -----------------
  - [ADD] Added code page CP-859 to supported ones

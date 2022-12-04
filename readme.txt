@@ -12,8 +12,8 @@ ABOUT
 COPYRIGHT
 ---------
 
-    Copyright (C) 2004 Przemyslaw Czerkas <przemekc@users.sourceforge.net>
-                  2008 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
+    Copyright (C) 2004-2008 Przemyslaw Czerkas <przemekc@users.sourceforge.net>
+                  2008-2022 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
 
     See GPL.TXT for copyright and license details.
 
@@ -54,14 +54,17 @@ SUPPORTED CODEPAGES
     CodePageInfo                           CodePageNr
     -------------------------------------------------
     MS-DOS Latin US (CP-437)                437
-    Freedos Mazovia (CP-620,CP-991)         620
-    S/DOS Mazovia (CP-667,CP-790)           667
+    Polish Mazovia ZL (CP-620,CP-991)       620
+    Polish Mazovia (CP-667,CP-790)          667
+    Polish CP-852 compatible (CP-668)       668
     MS-DOS Arabic ASMO (CP-708)             708
     MS-DOS Arabic (CP-720)                  720
     MS-DOS Greek (CP-737)                   737
+    Lithuanian (CP-774,CP-1118)             774
     MS-DOS Baltic Rim (CP-775)              775
     MS-DOS Cyrillic CIS 1 + Euro (CP-808)   808
     MS-DOS Latin 1 (CP-850)                 850
+    MS-DOS Greek 1 (CP-851)                 851
     MS-DOS Latin 2 (CP-852)                 852
     MS-DOS Latin 3 (CP-853)                 853
     MS-DOS Cyrillic (CP-855)                855
@@ -96,6 +99,8 @@ SUPPORTED CODEPAGES
     Baltic (Win-1257)                       1257
     Vietnamese (Win-1258)                   1258
     Bulgarian MIK (CP-3021)                 3021
+    Czech Kamenicky (CP-3844)               3844
+    Hungarian CWI-2 (CP-3845)               3845
     Apple Western European (Mac-10000)      10000
     Apple Japanese (Mac-10001)              10001
     Apple Traditional Chinese (Mac-10002)   10002
@@ -123,6 +128,12 @@ SUPPORTED CODEPAGES
     Greek (ISO-8859-7)                      28597
     Hebrew (ISO-8859-8)                     28598
     Turkish (ISO-8859-9)                    28599
+    Latin 6 (ISO-8859-10)                   28600
+    Thai (ISO-8859-11)                      28601
+    Estonian (ISO-8859-13)                  28603
+    Latin 8 (ISO-8859-14)                   28604
+    Latin 9 (ISO-8859-15)                   28605
+    Latin 10 (ISO-8859-16)                  28606
     Polish Combined ASCII                   60000
     Polish Microvex                         60001
     Polish CSK                              60002
@@ -141,13 +152,13 @@ SUPPORTED EPSON ESCAPE CODES
     LF            10        (Line Feed) New Line
     FF            12        Form Feed
     BS            8         Backspace
-    SI            15 and
+    SI            15  and
     ESC SI        27 15     Select condensed mode (17/20 CPI) (if 10 or 12 CPI)
     DC2           18        Cancel condensed mode (return to 10 or 12 CPI) (if 17 or 20 CPI)
     ESC M         27 77     Select 12 CPI (or 20 if condensed)
     ESC P         27 80     Select 10 CPI (or 17 if condensed)
     ESC g         27 103    Select 15-pitch chars
-    SO            14 and
+    SO            14  and
     ESC SO        27 14     Select double-wide mode (one line)
     DC4           20        Cancel double-wide mode (one line)
     ESC W {0,1}   27 87 0,1 Turn double-wide mode Off/On

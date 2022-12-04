@@ -381,8 +381,9 @@ begin
   if (LeftString<>'') then
   try
     CPstring:='cp'+trim(LeftString);
-    if CPstring='cp790' then CPstring:='cp667' //Mazovia aliases
-    else if CPstring='cp991' then CPstring:='cp620';
+    if CPstring='cp790' then CPstring:='cp667' //aliases
+    else if CPstring='cp991' then CPstring:='cp620'
+    else if CPstring='cp1118' then CPstring:='cp774';
     TempCodePage:=TCodePage(StringToOrd(TypeInfo(TCodePage),CPstring));
     if (TempCodePage in [CodePageLow..CodePageHigh]) then ConfigData.CodePage:=TempCodePage;
   except
@@ -635,7 +636,7 @@ begin
         if FileExists(FormatFileName) then begin
             {$WARN SYMBOL_PLATFORM OFF}
             fattr:=FileGetAttr(FormatFileName);
-            if (fattr>0) and ((fattr and faReadOnly)=0) then fattr:=-1; //not readonly
+            if (fattr>0) and ((fattr and FILE_ATTRIBUTE_READONLY)=0) then fattr:=-1; //not readonly
             {$WARN SYMBOL_PLATFORM ON}
             if (fattr<0) and (not DeleteFile(FormatFileName)) then
             begin
@@ -661,29 +662,34 @@ end;
 procedure TMainForm.Timer1Timer(Sender: TObject);
 var
   Processed: boolean;
+  Finded: boolean;
   addtomask: string;
 begin
   Timer1.Enabled:=false;
   if not MustExit then
   try
+    Finded:=false;
     with ConfigForm.ConfigData do
     if (InputFilesDir<>'') and DirectoryExists(InputFilesDir) then
     try
       Processed:=false;
       if PortCapturing=1 then addtomask:='spl.tmp'
                          else addtomask:='';
-      if FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0 then
-      if TestFile then
+      Finded:=(FindFirst(InputFilesDir+InputFilesMask+addtomask,0,SearchRec)=0);
+      if Finded then
       begin
-        if ProcessFile then Processed:=true;
-      end;
-      while (not Processed) and (FindNext(SearchRec)=0) do
-      if TestFile then
-      begin
-        if ProcessFile then Processed:=true;
+        if TestFile then
+        begin
+          if ProcessFile then Processed:=true;
+        end;
+        while (not Processed) and (FindNext(SearchRec)=0) do
+        if TestFile then
+        begin
+          if ProcessFile then Processed:=true;
+        end;
       end;
     finally
-      FindClose(SearchRec);
+      if Finded then FindClose(SearchRec);
     end;
   finally
     Timer1.Enabled:=true;
