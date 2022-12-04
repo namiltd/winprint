@@ -152,13 +152,13 @@ SUPPORTED EPSON ESCAPE CODES
     LF            10        (Line Feed) New Line
     FF            12        Form Feed
     BS            8         Backspace
-    SI            15 and
+    SI            15  and
     ESC SI        27 15     Select condensed mode (17/20 CPI) (if 10 or 12 CPI)
     DC2           18        Cancel condensed mode (return to 10 or 12 CPI) (if 17 or 20 CPI)
     ESC M         27 77     Select 12 CPI (or 20 if condensed)
     ESC P         27 80     Select 10 CPI (or 17 if condensed)
     ESC g         27 103    Select 15-pitch chars
-    SO            14 and
+    SO            14  and
     ESC SO        27 14     Select double-wide mode (one line)
     DC4           20        Cancel double-wide mode (one line)
     ESC W {0,1}   27 87 0,1 Turn double-wide mode Off/On
