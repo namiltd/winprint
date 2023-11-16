@@ -13,7 +13,7 @@ COPYRIGHT
 ---------
 
     Copyright (C) 2004-2008 Przemyslaw Czerkas <przemekc@users.sourceforge.net>
-                  2008-2022 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
+                  2008-2023 Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
 
     See GPL.TXT for copyright and license details.
 

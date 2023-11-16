@@ -113,7 +113,6 @@ type
 function PrintStrings(Title: string;
                       srclines: TStrings;
                       const CpNr: integer;
-                      const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -138,7 +137,6 @@ uses
 function PrintStrings(Title: string;
                       srclines: TStrings;
                       const CpNr: integer;
-                      const PrinterId: integer;
                       const leftmargin,rightmargin,topmargin,bottommargin: single;
                       const orientation: TPrinterOrientation;
                       const linesPerInch: single;
@@ -761,9 +759,6 @@ begin
     pagecount     := 0;
     textstart     := 0;
 
-//   Printer.Refresh; //odswiez zainstalowane drukarki
-//   Printer.PrinterIndex:=-1; //wybierz domyslna drukarke
-    Printer.PrinterIndex:= PrinterId;
     Printer.GetPrinter(Device, Driver, Port, DevMode); //przeladuj ustawienia drukarki by poprawnie wczytalo wielkosc strony itp
     Printer.SetPrinter(Device, Driver, Port, 0);
     Printer.Copies:= 1;
