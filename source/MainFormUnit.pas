@@ -409,6 +409,10 @@ var
   SrcCodePage : TCodePage;
   OwnNLSCodePage :TCodePage;
   fattr : Integer;
+  PrinterId : Integer;
+  Device, Driver, Port: array[0..255] of Char;
+  DevMode: THandle;
+  CurrentPrinterName: string;
 
   Header : Record
     FileHeader : tBitmapFileHeader;
@@ -426,13 +430,13 @@ begin
   result:=true;
   try
     InputFileName:=ConfigForm.ConfigData.InputFilesDir+SearchRec.Name;
-     
+
     if ConfigForm.ConfigData.KeepInputFiles then
     begin
         GetSystemTime(NowSystemTime);
         TmpFileName:=ChangeFileExt(InputFileName,'.tmp~'+IntToStr(SystemTimeToInt64(NowSystemTime) div 1000000)); //w setkach milisekund
     end
-    else begin 
+    else begin
         TmpFileName:=ChangeFileExt(InputFileName,'.tmp~');
     end;
     if FileExists(TmpFileName) then DeleteFile(TmpFileName);
@@ -455,13 +459,13 @@ begin
             begin
                 //krytyczny blad podczas tworzenia pliku spoolera - zakoncz aplikacje
                 MustExit:=true;
-                raise EInOutError.Create(RString(506)); 
+                raise EInOutError.Create(RString(506));
             end
             else CloseHandle(HandleToFile);
         end;
         InputFileName := TmpFileName;
     end;
- 
+
     TempConfigData:=ConfigForm.ConfigData;
 
     if TempConfigData.EnableFormatting then
@@ -573,13 +577,27 @@ begin
         kopii := TempConfigData.NumberOfCopies;
         if kopii<1 then kopii:=1
         else if kopii>99 then kopii:=99;
+
+        Printer.Refresh; //odswiez zainstalowane drukarki
+        if Printer.Printers.Count=0 then kopii:=0 //brak drukarek
+        else if TempConfigData.PrinterName = '' then begin  //domyslna
+            Printer.PrinterIndex:= -1; //ustaw drukarke domyslna
+            Printer.GetPrinter(Device, Driver, Port, DevMode); //pobierz ustawienia by sprawdzic czy istnieje domyslna
+            CurrentPrinterName := Device; //konwersja typow
+            if CurrentPrinterName='' then kopii:=0; //nie ma ustawionej drukarki domyslnej wiec nic nie drukuj
+        end else begin //nie domyslna wiec szuka id
+            for PrinterId:=0 to Printer.Printers.Count - 1 do
+                if CompareText(printer.Printers.Strings[PrinterId], TempConfigData.PrinterName)=0 then break; //znalazlo drukarke
+            if PrinterId>=Printer.Printers.Count then kopii:=0 //nie znalazlo wiec nic nie drukuj
+            else Printer.PrinterIndex:= PrinterId; //ustaw drukarke
+        end;
+    
         while (kopii>0) do begin
           try
             //procedure drukujaca StringList
             PrintStrings('Dokument programu '+PROGRAMNAME+' - '+SearchRec.Name,
                        StringList,
                        CodePageInfo[SrcCodePage].CpNr,
-                       TempConfigData.PrinterId,
                        cMILTOINCH*TempConfigData.MarginLeft,
                        cMILTOINCH*TempConfigData.MarginRight,
                        cMILTOINCH*TempConfigData.MarginTop,

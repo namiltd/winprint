@@ -70,7 +70,7 @@ type
     LogoTop: double;
     Logo1PageOnly: boolean;
     IgnoreEmptyFiles: boolean;
-    PrinterId: integer;
+    PrinterName: string;
     PortCapturing: integer;
     KeepInputFiles: boolean;
     SpecialSettings: integer;
@@ -627,14 +627,14 @@ begin
         KeepInputFiles:=ReadBool(section,'KeepInputFiles',DEFAULT_KEEP_INPUT_FILES);
         SpecialSettings:=ReadInteger(section,'SpecialSettings',DEFAULT_SPECIAL_SETTINGS);
 
-        i := ComboBox2.Items.IndexOf(ReadString(section,'Printer',DEFAULT_PRINTER));
+        PrinterName:=ReadString(section,'Printer',DEFAULT_PRINTER);
+        i := ComboBox2.Items.IndexOf(PrinterName);
         if i>=0 then begin
                        ComboBox2.ItemIndex:= i;
-                       PrinterId:= i-1;
                      end
                 else begin
                        ComboBox2.ItemIndex:= 0;
-                       PrinterId:=-1;
+                       PrinterName:='';
                      end;
 
       finally
@@ -837,7 +837,7 @@ begin
             except
               KeepInputFiles:=DEFAULT_KEEP_INPUT_FILES;
             end;
-            PrinterId:=-1;
+            PrinterName:='';
           end
           else
           begin
@@ -873,7 +873,7 @@ begin
             IgnoreEmptyFiles:=DEFAULT_IGNORE_EMPTY_FILES;
             KeepInputFiles:=DEFAULT_KEEP_INPUT_FILES;
             SpecialSettings:=DEFAULT_SPECIAL_SETTINGS;
-            PrinterId:=-1;
+            PrinterName:='';
           end;
         finally
           CloseKey;
