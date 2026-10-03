@@ -1625,6 +1625,7 @@ begin
             else if StringCP='857' then OEMCPFontCharset:=162 //TURKISH_CHARSET
             else if StringCP='862' then OEMCPFontCharset:=177 //HEBREW_CHARSET
             else if StringCP='866' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
+            else if StringCP='1125' then OEMCPFontCharset:=204 //RUSSIAN_CHARSET
             else if StringCP='869' then OEMCPFontCharset:=161 //GREEK_CHARSET
             else if StringCP='874' then OEMCPFontCharset:=222 //THAI_CHARSET
             else if StringCP='1258' then OEMCPFontCharset:=163 //VIETNAMESE_CHARSET
