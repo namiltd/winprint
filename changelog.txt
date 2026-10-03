@@ -1,6 +1,10 @@
 Changelog of WinPrint
 =====================
 
+WinPrint 1.5.0.61
+-----------------
+ - [ADD] Added code page CP-1125 (Ukrainian DOS) to supported ones
+
 WinPrint 1.5.0.60
 -----------------
  - [NEW] Automatic printer switching when changing the printer list and default printer
