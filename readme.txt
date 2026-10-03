@@ -83,6 +83,7 @@ SUPPORTED CODEPAGES
     MS-DOS Pakistan (CP-868)                868
     MS-DOS Modern Greek (CP-869)            869
     MS-DOS Cyrillic + Euro (CP-872)         872
+    MS-DOS Ukrainian (CP-1125)              1125
     Thai (Win-874)                          874
     Japanese (Win-932)                      932
     Simplified Chinese (Win-936)            936
